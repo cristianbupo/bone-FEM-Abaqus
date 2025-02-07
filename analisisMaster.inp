@@ -1,0 +1,51 @@
+*Heading
+** Job name: InputFileTemplate
+*Preprint, echo=NO, model=NO, history=NO, contact=NO
+************************************************************************
+** PARTS
+**
+*INCLUDE, INPUT=nodos.inp 
+*INCLUDE, INPUT=conectividades.inp 
+*INCLUDE, INPUT=cuerpo.inp 
+*INCLUDE, INPUT=contorno.inp
+************************************************************************
+** 
+** MATERIALS
+** 
+************************************************************************
+*Solid Section, elset=Cartilago, material=Cartilago
+1.0
+*Material, name=Cartilago
+*Depvar
+8,
+*Elastic
+6, 0.47
+************************************************************************
+*Solid Section, elset=Hueso, material=Hueso
+1.0
+*Material, name=Hueso
+*Depvar
+8,
+*Elastic
+500, 0.2
+************************************************************************
+*RESTART, WRITE, FREQ=0
+** STEP: Step-1
+*Step, name=Step-1
+*Static
+************************************************************************
+** BOUNDARY CONDITIONS
+** Name: encastre Type: Displacement/Rotation
+*INCLUDE, INPUT=condicionesContorno.inp
+************************************************************************
+** LOADS
+** 
+** Name: Load-1
+*INCLUDE, INPUT=distribucion.inp 
+************************************************************************
+** OUTPUT REQUESTS
+*NODE FILE, FREQ=1
+U
+*EL FILE, FREQ=1, POSITION=CENTROIDAL
+E, S, SINV
+*End Step

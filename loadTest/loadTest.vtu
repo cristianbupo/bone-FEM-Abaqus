@@ -1,0 +1,56 @@
+<VTKFile type="UnstructuredGrid" version="1, 0" byte_order="LittleEndian">
+<UnstructuredGrid>
+<Piece NumberOfPoints="4" NumberOfCells="1">
+<Points>
+<DataArray type="Float64" NumberOfComponents="3" format="ascii">
+ 0.0000000000000E+00  0.0000000000000E+00  0.0000000000000E+00
+ 0.1000000000000E+01  0.0000000000000E+00  0.0000000000000E+00
+ 0.1000000000000E+01  0.1000000000000E+01  0.0000000000000E+00
+ 0.0000000000000E+00  0.1000000000000E+01  0.0000000000000E+00
+</DataArray>
+</Points>
+<Cells>
+<DataArray type="Int64" Name="connectivity" format="ascii">
+0 1 2 3
+</DataArray>
+<DataArray type="Int64" Name="offsets" format="ascii">
+4
+</DataArray>
+<DataArray type="Int64" Name="types" format="ascii">
+9
+</DataArray>
+</Cells>
+<PointData Vectors="'U'">
+<DataArray type="Float32" Name="U" NumberOfComponents="2" ComponentName0="U1" ComponentName1="U2" format="ascii">
+-0.9926470977956E-37 -0.5000000179696E-36
+ 0.9926470977956E-37 -0.5000000179696E-36
+ 0.2007353007793E+00 -0.9702205657959E+00
+-0.2007353007793E+00 -0.9702205657959E+00
+</DataArray>
+</PointData>
+<CellData Tensors="'E_Centroid', 'S_Centroid'">
+<DataArray type="Float32" Name="E_Centroid" NumberOfComponents="4" ComponentName0="E11" ComponentName1="E22" ComponentName2="E33" ComponentName3="E12" format="ascii">
+ 0.2007353007793E+00 -0.9702205657959E+00  0.7632783294298E-16  0.0000000000000E+00
+</DataArray>
+<DataArray type="Float32" Name="S_Centroid" NumberOfComponents="4" ComponentName0="S11" ComponentName1="S22" ComponentName2="S33" ComponentName3="S12" format="ascii">
+-0.9926470369101E-01 -0.1000000000000E+01  0.2775557561563E-16  0.0000000000000E+00
+</DataArray>
+<DataArray type="Float32" Name="S_Mises" NumberOfComponents="1" ComponentName0="S_Mises" format="ascii">
+ 0.9542477726936E+00
+</DataArray>
+<DataArray type="Float32" Name="S_Hyd" NumberOfComponents="1" ComponentName0="S_Hyd" format="ascii">
+-0.3664215803146E+00
+</DataArray>
+<DataArray type="Float32" Name="S_Oct" NumberOfComponents="1" ComponentName0="S_Oct" format="ascii">
+ 0.4498367011547E+00
+</DataArray>
+<DataArray type="Float32" Name="IO" NumberOfComponents="1" ComponentName0="IO" format="ascii">
+ 0.4771238863468E+00
+</DataArray>
+<DataArray type="Float32" Name="CK" NumberOfComponents="1" ComponentName0="IO" format="ascii">
+-0.1284784301170E-07
+</DataArray>
+</CellData>
+</Piece>
+</UnstructuredGrid>
+</VTKFile>

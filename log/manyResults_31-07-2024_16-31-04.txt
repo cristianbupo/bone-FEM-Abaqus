@@ -1,0 +1,27 @@
+2024-07-31 16:31:04 - Starting the loop
+
+
+ case0:
+Command: analisis.bat "-ne 12 -rx 2.0 -ry 2.5 -hm 1.9 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.00" true
+Analysis completed successfully
+2024-07-31 16:31:24 (Elapsed time: 19.35 seconds, Step time:19.35)
+
+ case1:
+Command: analisis.bat "-ne 12 -rx 2.0 -ry 2.5 -hm 1.9 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.25" true
+Analysis completed successfully
+2024-07-31 16:31:42 (Elapsed time: 37.31 seconds, Step time:17.96)
+
+ case2:
+Command: analisis.bat "-ne 12 -rx 2.0 -ry 2.5 -hm 1.9 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.50" true
+Analysis completed successfully
+2024-07-31 16:32:00 (Elapsed time: 55.35 seconds, Step time:18.04)
+
+ case3:
+Command: analisis.bat "-ne 12 -rx 2.0 -ry 2.5 -hm 1.9 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.75" true
+Analysis completed successfully
+2024-07-31 16:32:21 (Elapsed time: 76.34 seconds, Step time:20.99)
+
+ case4:
+Command: analisis.bat "-ne 12 -rx 2.0 -ry 2.5 -hm 1.9 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 -hl 0.0 -kl 6.85 -rl 0.81 -koi 1.00" true
+Analysis completed successfully
+2024-07-31 16:32:39 (Elapsed time: 94.34 seconds, Step time:18.01)

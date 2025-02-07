@@ -1,0 +1,82 @@
+{
+    "geom_vars": {
+        "radius_x": {
+            "min_value": 0.8,
+            "max_value": 3.0,
+            "default": 1.8,
+            "short_name": "rx"
+        },
+        "radius_y": {
+            "min_value": 0.8,
+            "max_value": 3.0,
+            "default": 1.5,
+            "short_name": "ry"
+        },
+        "head_angle": {
+            "min_value": -30.0,
+            "max_value": 30.0,
+            "default": 30.0,
+            "short_name": "ha"
+        },
+        "bone_width": {
+            "min_value": 2.0,
+            "max_value": 8.0,
+            "default": 2.4,
+            "short_name": "bw"
+        },
+        "head_height": {
+            "min_value": 2.0,
+            "max_value": 10.0,
+            "default": 4.5,
+            "short_name": "hh"
+        },
+        "bone_height": {
+            "min_value": -2,
+            "max_value": 1.0,
+            "default": -1.0,
+            "short_name": "bh"
+        },
+        "curve_angle": {
+            "min_value": -30.0,
+            "max_value": 30.0,
+            "default": 15.0,
+            "short_name": "ca"
+        }
+    },
+    "load_vars": {
+        "load_center": {
+            "min_value": -100.0,
+            "default": 0.0,
+            "short_name": "hl"
+        },
+        "load_amplitude": {
+            "min_value": 0.0,
+            "default": 6.85,
+            "short_name": "kl"
+        },
+        "load_radius": {
+            "min_value": 0.0,
+            "default": 0.81,
+            "short_name": "rl"
+        },
+        "k_OI": {
+            "min_value": 0.0,
+            "max_value": 4.0,
+            "default": 0.5,
+            "short_name": "koi"
+        },
+        "load_extension": {
+            "default": 6.85
+        },
+        "number_loads": {
+            "default": 5
+        }
+    },
+    "mesh_vars": {
+        "number_elements": {
+            "min_value": 1,
+            "default": 3,
+            "short_name": "ne"
+        }
+    }
+}

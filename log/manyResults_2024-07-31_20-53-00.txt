@@ -1,0 +1,7 @@
+2024-07-31 20:53:00 - Starting the loop
+
+
+ case0 - i,j,k = 0,0,0:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.2 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case0
+2024-07-31 20:53:06 (Elapsed time: 6.25 seconds, Step time:6.25)

@@ -1,0 +1,627 @@
+2024-07-31 21:21:55 - Starting the loop
+
+
+ case0 - i, j, k = 0, 0, 0:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.2 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:22:22 (Elapsed time: 26.89 seconds, Step time:26.89)
+
+ case1 - i, j, k = 0, 0, 1:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.525 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:22:40 (Elapsed time: 44.96 seconds, Step time:18.08)
+
+ case2 - i, j, k = 0, 0, 2:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.85 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:22:58 (Elapsed time: 62.90 seconds, Step time:17.94)
+
+ case3 - i, j, k = 0, 0, 3:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 2.175 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:23:15 (Elapsed time: 79.98 seconds, Step time:17.08)
+
+ case4 - i, j, k = 0, 0, 4:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 2.5 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:23:33 (Elapsed time: 97.97 seconds, Step time:17.98)
+
+ case5 - i, j, k = 0, 1, 0:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.2 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:23:50 (Elapsed time: 114.93 seconds, Step time:16.96)
+
+ case6 - i, j, k = 0, 1, 1:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.525 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:24:08 (Elapsed time: 132.92 seconds, Step time:18.00)
+
+ case7 - i, j, k = 0, 1, 2:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.85 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:24:26 (Elapsed time: 150.96 seconds, Step time:18.04)
+
+ case8 - i, j, k = 0, 1, 3:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 2.175 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:24:43 (Elapsed time: 167.88 seconds, Step time:16.92)
+
+ case9 - i, j, k = 0, 1, 4:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 2.5 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:25:00 (Elapsed time: 185.01 seconds, Step time:17.13)
+
+ case10 - i, j, k = 0, 2, 0:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.2 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:25:18 (Elapsed time: 202.86 seconds, Step time:17.84)
+
+ case11 - i, j, k = 0, 2, 1:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.525 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:25:35 (Elapsed time: 219.82 seconds, Step time:16.96)
+
+ case12 - i, j, k = 0, 2, 2:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.85 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:25:52 (Elapsed time: 236.98 seconds, Step time:17.17)
+
+ case13 - i, j, k = 0, 2, 3:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 2.175 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:26:10 (Elapsed time: 254.85 seconds, Step time:17.87)
+
+ case14 - i, j, k = 0, 2, 4:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 2.5 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:26:28 (Elapsed time: 272.91 seconds, Step time:18.06)
+
+ case15 - i, j, k = 0, 3, 0:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 1.2 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:26:53 (Elapsed time: 297.96 seconds, Step time:25.05)
+
+ case16 - i, j, k = 0, 3, 1:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 1.525 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:27:11 (Elapsed time: 315.83 seconds, Step time:17.87)
+
+ case17 - i, j, k = 0, 3, 2:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 1.85 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:27:28 (Elapsed time: 332.84 seconds, Step time:17.01)
+
+ case18 - i, j, k = 0, 3, 3:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 2.175 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:27:45 (Elapsed time: 349.85 seconds, Step time:17.01)
+
+ case19 - i, j, k = 0, 3, 4:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 2.5 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:28:02 (Elapsed time: 366.83 seconds, Step time:16.98)
+
+ case20 - i, j, k = 0, 4, 0:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 1.2 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:28:19 (Elapsed time: 383.90 seconds, Step time:17.07)
+
+ case21 - i, j, k = 0, 4, 1:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 1.525 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:28:36 (Elapsed time: 400.84 seconds, Step time:16.94)
+
+ case22 - i, j, k = 0, 4, 2:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 1.85 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:28:53 (Elapsed time: 417.92 seconds, Step time:17.08)
+
+ case23 - i, j, k = 0, 4, 3:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 2.175 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:29:10 (Elapsed time: 434.95 seconds, Step time:17.02)
+
+ case24 - i, j, k = 0, 4, 4:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 2.5 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:29:27 (Elapsed time: 451.82 seconds, Step time:16.87)
+
+ case25 - i, j, k = 1, 0, 0:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.2 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:29:44 (Elapsed time: 468.82 seconds, Step time:16.99)
+
+ case26 - i, j, k = 1, 0, 1:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.525 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:30:01 (Elapsed time: 485.91 seconds, Step time:17.09)
+
+ case27 - i, j, k = 1, 0, 2:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.85 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:30:18 (Elapsed time: 502.94 seconds, Step time:17.03)
+
+ case28 - i, j, k = 1, 0, 3:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 2.175 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:30:35 (Elapsed time: 519.84 seconds, Step time:16.90)
+
+ case29 - i, j, k = 1, 0, 4:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 2.5 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:30:52 (Elapsed time: 536.85 seconds, Step time:17.01)
+
+ case30 - i, j, k = 1, 1, 0:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.2 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:31:09 (Elapsed time: 553.78 seconds, Step time:16.93)
+
+ case31 - i, j, k = 1, 1, 1:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.525 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:31:26 (Elapsed time: 570.82 seconds, Step time:17.04)
+
+ case32 - i, j, k = 1, 1, 2:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.85 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:31:43 (Elapsed time: 587.98 seconds, Step time:17.16)
+
+ case33 - i, j, k = 1, 1, 3:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 2.175 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:32:00 (Elapsed time: 604.80 seconds, Step time:16.82)
+
+ case34 - i, j, k = 1, 1, 4:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 2.5 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:32:17 (Elapsed time: 621.93 seconds, Step time:17.13)
+
+ case35 - i, j, k = 1, 2, 0:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.2 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:32:34 (Elapsed time: 638.93 seconds, Step time:17.01)
+
+ case36 - i, j, k = 1, 2, 1:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.525 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:32:51 (Elapsed time: 655.85 seconds, Step time:16.92)
+
+ case37 - i, j, k = 1, 2, 2:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.85 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:33:08 (Elapsed time: 672.97 seconds, Step time:17.12)
+
+ case38 - i, j, k = 1, 2, 3:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 2.175 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:33:25 (Elapsed time: 689.96 seconds, Step time:16.99)
+
+ case39 - i, j, k = 1, 2, 4:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 2.5 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:33:42 (Elapsed time: 706.88 seconds, Step time:16.92)
+
+ case40 - i, j, k = 1, 3, 0:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 1.2 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:33:59 (Elapsed time: 723.91 seconds, Step time:17.04)
+
+ case41 - i, j, k = 1, 3, 1:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 1.525 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:34:16 (Elapsed time: 740.85 seconds, Step time:16.93)
+
+ case42 - i, j, k = 1, 3, 2:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 1.85 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:34:33 (Elapsed time: 757.91 seconds, Step time:17.07)
+
+ case43 - i, j, k = 1, 3, 3:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 2.175 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:34:50 (Elapsed time: 774.91 seconds, Step time:16.99)
+
+ case44 - i, j, k = 1, 3, 4:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 2.5 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:35:07 (Elapsed time: 791.99 seconds, Step time:17.08)
+
+ case45 - i, j, k = 1, 4, 0:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 1.2 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:35:24 (Elapsed time: 808.89 seconds, Step time:16.90)
+
+ case46 - i, j, k = 1, 4, 1:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 1.525 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:35:41 (Elapsed time: 825.82 seconds, Step time:16.93)
+
+ case47 - i, j, k = 1, 4, 2:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 1.85 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:35:58 (Elapsed time: 842.82 seconds, Step time:17.00)
+
+ case48 - i, j, k = 1, 4, 3:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 2.175 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:36:15 (Elapsed time: 860.04 seconds, Step time:17.23)
+
+ case49 - i, j, k = 1, 4, 4:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 2.5 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:36:33 (Elapsed time: 877.82 seconds, Step time:17.77)
+
+ case50 - i, j, k = 2, 0, 0:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.2 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:36:50 (Elapsed time: 894.97 seconds, Step time:17.15)
+
+ case51 - i, j, k = 2, 0, 1:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.525 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:37:07 (Elapsed time: 911.85 seconds, Step time:16.88)
+
+ case52 - i, j, k = 2, 0, 2:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.85 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:37:24 (Elapsed time: 928.96 seconds, Step time:17.11)
+
+ case53 - i, j, k = 2, 0, 3:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 2.175 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:37:41 (Elapsed time: 945.82 seconds, Step time:16.86)
+
+ case54 - i, j, k = 2, 0, 4:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 2.5 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:38:02 (Elapsed time: 966.95 seconds, Step time:21.13)
+
+ case55 - i, j, k = 2, 1, 0:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.2 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:38:20 (Elapsed time: 984.96 seconds, Step time:18.01)
+
+ case56 - i, j, k = 2, 1, 1:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.525 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:38:38 (Elapsed time: 1002.98 seconds, Step time:18.02)
+
+ case57 - i, j, k = 2, 1, 2:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.85 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:38:56 (Elapsed time: 1020.80 seconds, Step time:17.82)
+
+ case58 - i, j, k = 2, 1, 3:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 2.175 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:39:14 (Elapsed time: 1038.87 seconds, Step time:18.07)
+
+ case59 - i, j, k = 2, 1, 4:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 2.5 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:39:32 (Elapsed time: 1056.84 seconds, Step time:17.97)
+
+ case60 - i, j, k = 2, 2, 0:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.2 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:39:50 (Elapsed time: 1074.83 seconds, Step time:17.99)
+
+ case61 - i, j, k = 2, 2, 1:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.525 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:40:07 (Elapsed time: 1091.89 seconds, Step time:17.06)
+
+ case62 - i, j, k = 2, 2, 2:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.85 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:40:25 (Elapsed time: 1109.94 seconds, Step time:18.05)
+
+ case63 - i, j, k = 2, 2, 3:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 2.175 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:40:43 (Elapsed time: 1127.78 seconds, Step time:17.84)
+
+ case64 - i, j, k = 2, 2, 4:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 2.5 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:41:01 (Elapsed time: 1145.79 seconds, Step time:18.01)
+
+ case65 - i, j, k = 2, 3, 0:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 1.2 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:41:19 (Elapsed time: 1163.84 seconds, Step time:18.04)
+
+ case66 - i, j, k = 2, 3, 1:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 1.525 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:41:37 (Elapsed time: 1181.98 seconds, Step time:18.14)
+
+ case67 - i, j, k = 2, 3, 2:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 1.85 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:41:55 (Elapsed time: 1199.95 seconds, Step time:17.97)
+
+ case68 - i, j, k = 2, 3, 3:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 2.175 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:42:14 (Elapsed time: 1218.86 seconds, Step time:18.91)
+
+ case69 - i, j, k = 2, 3, 4:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 2.5 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:42:31 (Elapsed time: 1236.03 seconds, Step time:17.17)
+
+ case70 - i, j, k = 2, 4, 0:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 1.2 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:42:49 (Elapsed time: 1253.91 seconds, Step time:17.88)
+
+ case71 - i, j, k = 2, 4, 1:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 1.525 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:43:07 (Elapsed time: 1271.79 seconds, Step time:17.88)
+
+ case72 - i, j, k = 2, 4, 2:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 1.85 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:43:24 (Elapsed time: 1288.86 seconds, Step time:17.07)
+
+ case73 - i, j, k = 2, 4, 3:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 2.175 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:43:43 (Elapsed time: 1307.88 seconds, Step time:19.02)
+
+ case74 - i, j, k = 2, 4, 4:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 2.5 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:44:02 (Elapsed time: 1326.97 seconds, Step time:19.09)
+
+ case75 - i, j, k = 3, 0, 0:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.2 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:44:21 (Elapsed time: 1345.98 seconds, Step time:19.01)
+
+ case76 - i, j, k = 3, 0, 1:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.525 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:44:40 (Elapsed time: 1365.02 seconds, Step time:19.03)
+
+ case77 - i, j, k = 3, 0, 2:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.85 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:44:59 (Elapsed time: 1383.81 seconds, Step time:18.79)
+
+ case78 - i, j, k = 3, 0, 3:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 2.175 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:45:18 (Elapsed time: 1402.84 seconds, Step time:19.03)
+
+ case79 - i, j, k = 3, 0, 4:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 2.5 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:45:37 (Elapsed time: 1421.94 seconds, Step time:19.10)
+
+ case80 - i, j, k = 3, 1, 0:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.2 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:45:56 (Elapsed time: 1441.01 seconds, Step time:19.08)
+
+ case81 - i, j, k = 3, 1, 1:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.525 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:46:17 (Elapsed time: 1461.78 seconds, Step time:20.77)
+
+ case82 - i, j, k = 3, 1, 2:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.85 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:46:34 (Elapsed time: 1478.91 seconds, Step time:17.13)
+
+ case83 - i, j, k = 3, 1, 3:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 2.175 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:46:52 (Elapsed time: 1496.90 seconds, Step time:17.98)
+
+ case84 - i, j, k = 3, 1, 4:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 2.5 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:47:10 (Elapsed time: 1514.95 seconds, Step time:18.05)
+
+ case85 - i, j, k = 3, 2, 0:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.2 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:47:27 (Elapsed time: 1531.78 seconds, Step time:16.84)
+
+ case86 - i, j, k = 3, 2, 1:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.525 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:47:44 (Elapsed time: 1548.89 seconds, Step time:17.11)
+
+ case87 - i, j, k = 3, 2, 2:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.85 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:48:01 (Elapsed time: 1565.84 seconds, Step time:16.95)
+
+ case88 - i, j, k = 3, 2, 3:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 2.175 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:48:18 (Elapsed time: 1583.14 seconds, Step time:17.31)
+
+ case89 - i, j, k = 3, 2, 4:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 2.5 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:48:35 (Elapsed time: 1599.88 seconds, Step time:16.74)
+
+ case90 - i, j, k = 3, 3, 0:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 1.2 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:48:52 (Elapsed time: 1616.93 seconds, Step time:17.05)
+
+ case91 - i, j, k = 3, 3, 1:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 1.525 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:49:10 (Elapsed time: 1634.78 seconds, Step time:17.85)
+
+ case92 - i, j, k = 3, 3, 2:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 1.85 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:49:27 (Elapsed time: 1651.85 seconds, Step time:17.07)
+
+ case93 - i, j, k = 3, 3, 3:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 2.175 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:49:45 (Elapsed time: 1669.86 seconds, Step time:18.01)
+
+ case94 - i, j, k = 3, 3, 4:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 2.5 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:50:02 (Elapsed time: 1686.80 seconds, Step time:16.94)
+
+ case95 - i, j, k = 3, 4, 0:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 1.2 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:50:20 (Elapsed time: 1704.86 seconds, Step time:18.05)
+
+ case96 - i, j, k = 3, 4, 1:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 1.525 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:50:37 (Elapsed time: 1721.82 seconds, Step time:16.97)
+
+ case97 - i, j, k = 3, 4, 2:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 1.85 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:50:54 (Elapsed time: 1738.87 seconds, Step time:17.04)
+
+ case98 - i, j, k = 3, 4, 3:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 2.175 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:51:11 (Elapsed time: 1755.94 seconds, Step time:17.07)
+
+ case99 - i, j, k = 3, 4, 4:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 2.5 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:51:29 (Elapsed time: 1773.79 seconds, Step time:17.84)
+
+ case100 - i, j, k = 4, 0, 0:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.2 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:51:46 (Elapsed time: 1790.88 seconds, Step time:17.10)
+
+ case101 - i, j, k = 4, 0, 1:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.525 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:52:03 (Elapsed time: 1807.82 seconds, Step time:16.94)
+
+ case102 - i, j, k = 4, 0, 2:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.85 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:52:21 (Elapsed time: 1825.94 seconds, Step time:18.12)
+
+ case103 - i, j, k = 4, 0, 3:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 2.175 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:52:38 (Elapsed time: 1842.87 seconds, Step time:16.93)
+
+ case104 - i, j, k = 4, 0, 4:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 2.5 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:52:55 (Elapsed time: 1860.03 seconds, Step time:17.16)
+
+ case105 - i, j, k = 4, 1, 0:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.2 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:53:13 (Elapsed time: 1877.83 seconds, Step time:17.80)
+
+ case106 - i, j, k = 4, 1, 1:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.525 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:53:30 (Elapsed time: 1894.90 seconds, Step time:17.07)
+
+ case107 - i, j, k = 4, 1, 2:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.85 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:53:47 (Elapsed time: 1912.28 seconds, Step time:17.38)
+
+ case108 - i, j, k = 4, 1, 3:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 2.175 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:54:06 (Elapsed time: 1930.89 seconds, Step time:18.61)
+
+ case109 - i, j, k = 4, 1, 4:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 2.5 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:54:23 (Elapsed time: 1947.83 seconds, Step time:16.94)
+
+ case110 - i, j, k = 4, 2, 0:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.2 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:54:40 (Elapsed time: 1964.78 seconds, Step time:16.95)
+
+ case111 - i, j, k = 4, 2, 1:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.525 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:55:00 (Elapsed time: 1984.88 seconds, Step time:20.11)
+
+ case112 - i, j, k = 4, 2, 2:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.85 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:55:20 (Elapsed time: 2004.88 seconds, Step time:19.99)
+
+ case113 - i, j, k = 4, 2, 3:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 2.175 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:55:37 (Elapsed time: 2021.95 seconds, Step time:17.08)
+
+ case114 - i, j, k = 4, 2, 4:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 2.5 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:55:54 (Elapsed time: 2038.85 seconds, Step time:16.90)
+
+ case115 - i, j, k = 4, 3, 0:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 1.2 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:56:11 (Elapsed time: 2055.93 seconds, Step time:17.08)
+
+ case116 - i, j, k = 4, 3, 1:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 1.525 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:56:28 (Elapsed time: 2072.83 seconds, Step time:16.90)
+
+ case117 - i, j, k = 4, 3, 2:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 1.85 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:56:45 (Elapsed time: 2089.80 seconds, Step time:16.97)
+
+ case118 - i, j, k = 4, 3, 3:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 2.175 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:57:02 (Elapsed time: 2106.82 seconds, Step time:17.02)
+
+ case119 - i, j, k = 4, 3, 4:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 2.5 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:57:19 (Elapsed time: 2123.93 seconds, Step time:17.11)
+
+ case120 - i, j, k = 4, 4, 0:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 1.2 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:57:36 (Elapsed time: 2140.83 seconds, Step time:16.90)
+
+ case121 - i, j, k = 4, 4, 1:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 1.525 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:57:53 (Elapsed time: 2157.88 seconds, Step time:17.05)
+
+ case122 - i, j, k = 4, 4, 2:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 1.85 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:58:10 (Elapsed time: 2174.80 seconds, Step time:16.92)
+
+ case123 - i, j, k = 4, 4, 3:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 2.175 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:58:27 (Elapsed time: 2191.88 seconds, Step time:17.08)
+
+ case124 - i, j, k = 4, 4, 4:
+Command: analisis.bat "-ne 12 -rx 2.5 -ry 2.5 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" true
+Analysis completed successfully
+2024-07-31 21:58:44 (Elapsed time: 2208.89 seconds, Step time:17.01)

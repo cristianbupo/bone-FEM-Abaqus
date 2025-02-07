@@ -1,0 +1,70 @@
+{
+  "runAbq": {
+    "default": false,
+    "help": "Run Abaqus if specified."
+  },
+  "showLoad": {
+    "default": false,
+    "help": "Show the graph of the load distribution if specified."
+  },
+  "renderRaw": {
+    "default": false,
+    "help": "Render the raw curves if specified."
+  },
+  "renderMesh": {
+    "default": false,
+    "help": "Render the mesh if specified."
+  },
+  "renderArea": {
+    "default": false,
+    "help": "Render the area if specified."
+  },
+  "renderLength": {
+    "default": false,
+    "help": "Render the length if specified."
+  },
+  "runFltk": {
+    "default": false,
+    "help": "Run gmsh with the generated script if specified."
+  },
+  "skipWrite": {
+    "default": false,
+    "help": "Skip writing the generated script if specified."
+  },
+  "writeVTK": {
+    "default": false,
+    "help": "Write the generated VTK file if specified."
+  },
+  "runMeshing": {
+    "default": false,
+    "help": "Mesh the model"
+  },
+  "pickleIn": {
+    "default": false,
+    "help": "Pickle out data"
+  },
+  "pickleOut": {
+    "default": false,
+    "help": "Pickle out data"
+  },
+  "deleteOutput": {
+    "default": false,
+    "help": "Delete the backup files"
+  },
+  "runAbaqus": {
+    "default": false,
+    "help": "Run Abaqus"
+  },
+  "inputPath": {
+    "default": "current",
+    "help": "The path to write the input files"
+  },
+  "outputPath": {
+    "default": "currentResults",
+    "help": "The path to write the output files"
+  },
+  "logPath": {
+    "default": "currentLog",
+    "help": "The path to write the log files"
+  }
+}

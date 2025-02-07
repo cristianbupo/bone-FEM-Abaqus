@@ -1,0 +1,27 @@
+Analysis initiated from SIMULIA established products
+Abaqus JOB analisis
+Abaqus 3DEXPERIENCE R2017x
+Abaqus License Manager checked out the following licenses:
+Abaqus/Standard checked out 6 tokens from Flexnet server DESKTOP-28I0C3S.
+<1018 out of 1024 licenses remain available>.
+Begin Compiling Abaqus/Standard User Subroutines
+7/29/2024 10:06:19 AM
+Intel(R) Visual Fortran Intel(R) 64 Compiler for applications running on Intel(R) 64, Version 17.0.2.187 Build 20170213
+Copyright (C) 1985-2017 Intel Corporation.  All rights reserved.
+
+End Compiling Abaqus/Standard User Subroutines
+Begin Linking Abaqus/Standard User Subroutines
+   Creating library standardU.lib and object standardU.exp
+End Linking Abaqus/Standard User Subroutines
+7/29/2024 10:06:19 AM
+Begin Analysis Input File Processor
+7/29/2024 10:06:19 AM
+Run pre.exe
+7/29/2024 10:06:22 AM
+Abaqus Error: Analysis Input File Processor exited with an error.
+Begin MFS->SFS and SIM cleanup
+7/29/2024 10:06:23 AM
+Run SMASimUtility.exe
+7/29/2024 10:06:23 AM
+End MFS->SFS and SIM cleanup
+Abaqus/Analysis exited with errors

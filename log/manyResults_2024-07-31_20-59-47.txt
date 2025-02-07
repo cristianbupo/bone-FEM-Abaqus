@@ -1,0 +1,419 @@
+2024-07-31 20:59:47 - Starting the loop
+
+
+ case0 - i, j, k = 0, 0, 0:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.2 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case0
+2024-07-31 20:59:51 (Elapsed time: 4.74 seconds, Step time:4.74)
+
+ case1 - i, j, k = 0, 0, 1:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.2 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case1
+2024-07-31 20:59:57 (Elapsed time: 10.10 seconds, Step time:5.36)
+
+ case2 - i, j, k = 0, 0, 2:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.2 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case2
+2024-07-31 21:00:02 (Elapsed time: 15.26 seconds, Step time:5.16)
+
+ case3 - i, j, k = 0, 0, 3:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.2 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case3
+2024-07-31 21:00:07 (Elapsed time: 20.64 seconds, Step time:5.38)
+
+ case4 - i, j, k = 0, 0, 4:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.2 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case4
+2024-07-31 21:00:12 (Elapsed time: 25.74 seconds, Step time:5.10)
+
+ case5 - i, j, k = 0, 1, 0:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.525 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case5
+2024-07-31 21:00:18 (Elapsed time: 31.58 seconds, Step time:5.84)
+
+ case6 - i, j, k = 0, 1, 1:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.525 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case6
+2024-07-31 21:00:23 (Elapsed time: 36.04 seconds, Step time:4.47)
+
+ case7 - i, j, k = 0, 1, 2:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.525 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case7
+2024-07-31 21:00:28 (Elapsed time: 41.37 seconds, Step time:5.33)
+
+ case8 - i, j, k = 0, 1, 3:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.525 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case8
+2024-07-31 21:00:34 (Elapsed time: 47.77 seconds, Step time:6.39)
+
+ case9 - i, j, k = 0, 1, 4:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.525 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case9
+2024-07-31 21:00:42 (Elapsed time: 55.03 seconds, Step time:7.27)
+
+ case10 - i, j, k = 0, 2, 0:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.85 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case10
+2024-07-31 21:00:48 (Elapsed time: 61.44 seconds, Step time:6.41)
+
+ case11 - i, j, k = 0, 2, 1:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.85 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case11
+2024-07-31 21:00:53 (Elapsed time: 66.60 seconds, Step time:5.16)
+
+ case12 - i, j, k = 0, 2, 2:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.85 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case12
+2024-07-31 21:00:58 (Elapsed time: 71.77 seconds, Step time:5.16)
+
+ case13 - i, j, k = 0, 2, 3:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.85 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case13
+2024-07-31 21:01:03 (Elapsed time: 76.39 seconds, Step time:4.63)
+
+ case14 - i, j, k = 0, 2, 4:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 1.85 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case14
+2024-07-31 21:01:07 (Elapsed time: 80.74 seconds, Step time:4.35)
+
+ case15 - i, j, k = 0, 3, 0:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 2.175 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case15
+2024-07-31 21:01:12 (Elapsed time: 85.87 seconds, Step time:5.13)
+
+ case16 - i, j, k = 0, 3, 1:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 2.175 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case16
+2024-07-31 21:01:18 (Elapsed time: 91.61 seconds, Step time:5.74)
+
+ case17 - i, j, k = 0, 3, 2:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 2.175 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case17
+2024-07-31 21:01:23 (Elapsed time: 96.94 seconds, Step time:5.33)
+
+ case18 - i, j, k = 0, 3, 3:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 2.175 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case18
+2024-07-31 21:01:28 (Elapsed time: 101.53 seconds, Step time:4.59)
+
+ case19 - i, j, k = 0, 3, 4:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 2.175 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case19
+2024-07-31 21:01:33 (Elapsed time: 106.52 seconds, Step time:5.00)
+
+ case20 - i, j, k = 0, 4, 0:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 2.5 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case20
+2024-07-31 21:01:38 (Elapsed time: 111.95 seconds, Step time:5.43)
+
+ case21 - i, j, k = 0, 4, 1:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 2.5 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case21
+2024-07-31 21:01:43 (Elapsed time: 116.83 seconds, Step time:4.88)
+
+ case22 - i, j, k = 0, 4, 2:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 2.5 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case22
+2024-07-31 21:01:48 (Elapsed time: 121.72 seconds, Step time:4.88)
+
+ case23 - i, j, k = 0, 4, 3:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 2.5 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case23
+2024-07-31 21:01:53 (Elapsed time: 126.21 seconds, Step time:4.49)
+
+ case24 - i, j, k = 0, 4, 4:
+Command: analisis.bat "-ne 12 -rx 1.2 -ry 2.5 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case24
+2024-07-31 21:01:57 (Elapsed time: 130.65 seconds, Step time:4.44)
+
+ case25 - i, j, k = 1, 0, 0:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.2 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case25
+2024-07-31 21:02:02 (Elapsed time: 135.19 seconds, Step time:4.55)
+
+ case26 - i, j, k = 1, 0, 1:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.2 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case26
+2024-07-31 21:02:06 (Elapsed time: 139.85 seconds, Step time:4.66)
+
+ case27 - i, j, k = 1, 0, 2:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.2 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case27
+2024-07-31 21:02:11 (Elapsed time: 144.53 seconds, Step time:4.68)
+
+ case28 - i, j, k = 1, 0, 3:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.2 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case28
+2024-07-31 21:02:15 (Elapsed time: 148.81 seconds, Step time:4.28)
+
+ case29 - i, j, k = 1, 0, 4:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.2 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case29
+2024-07-31 21:02:20 (Elapsed time: 153.75 seconds, Step time:4.94)
+
+ case30 - i, j, k = 1, 1, 0:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.525 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case30
+2024-07-31 21:02:26 (Elapsed time: 159.06 seconds, Step time:5.32)
+
+ case31 - i, j, k = 1, 1, 1:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.525 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case31
+2024-07-31 21:02:31 (Elapsed time: 164.00 seconds, Step time:4.93)
+
+ case32 - i, j, k = 1, 1, 2:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.525 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case32
+2024-07-31 21:02:35 (Elapsed time: 168.91 seconds, Step time:4.92)
+
+ case33 - i, j, k = 1, 1, 3:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.525 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case33
+2024-07-31 21:02:40 (Elapsed time: 173.71 seconds, Step time:4.80)
+
+ case34 - i, j, k = 1, 1, 4:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.525 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case34
+2024-07-31 21:02:45 (Elapsed time: 178.22 seconds, Step time:4.50)
+
+ case35 - i, j, k = 1, 2, 0:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.85 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case35
+2024-07-31 21:02:49 (Elapsed time: 182.56 seconds, Step time:4.34)
+
+ case36 - i, j, k = 1, 2, 1:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.85 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case36
+2024-07-31 21:02:55 (Elapsed time: 188.56 seconds, Step time:6.00)
+
+ case37 - i, j, k = 1, 2, 2:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.85 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case37
+2024-07-31 21:03:00 (Elapsed time: 193.49 seconds, Step time:4.93)
+
+ case38 - i, j, k = 1, 2, 3:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.85 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case38
+2024-07-31 21:03:05 (Elapsed time: 198.57 seconds, Step time:5.08)
+
+ case39 - i, j, k = 1, 2, 4:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 1.85 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case39
+2024-07-31 21:03:10 (Elapsed time: 202.99 seconds, Step time:4.42)
+
+ case40 - i, j, k = 1, 3, 0:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 2.175 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case40
+2024-07-31 21:03:14 (Elapsed time: 207.55 seconds, Step time:4.56)
+
+ case41 - i, j, k = 1, 3, 1:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 2.175 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case41
+2024-07-31 21:03:19 (Elapsed time: 212.33 seconds, Step time:4.78)
+
+ case42 - i, j, k = 1, 3, 2:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 2.175 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case42
+2024-07-31 21:03:25 (Elapsed time: 217.97 seconds, Step time:5.65)
+
+ case43 - i, j, k = 1, 3, 3:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 2.175 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case43
+Error: current\distribucion.vtp does not exist for case43
+2024-07-31 21:03:30 (Elapsed time: 223.46 seconds, Step time:5.49)
+
+ case44 - i, j, k = 1, 3, 4:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 2.175 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case44
+2024-07-31 21:03:36 (Elapsed time: 229.20 seconds, Step time:5.74)
+
+ case45 - i, j, k = 1, 4, 0:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 2.5 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case45
+2024-07-31 21:03:41 (Elapsed time: 234.84 seconds, Step time:5.65)
+
+ case46 - i, j, k = 1, 4, 1:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 2.5 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case46
+2024-07-31 21:03:47 (Elapsed time: 240.54 seconds, Step time:5.70)
+
+ case47 - i, j, k = 1, 4, 2:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 2.5 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case47
+2024-07-31 21:03:54 (Elapsed time: 247.19 seconds, Step time:6.65)
+
+ case48 - i, j, k = 1, 4, 3:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 2.5 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case48
+2024-07-31 21:04:01 (Elapsed time: 254.55 seconds, Step time:7.36)
+
+ case49 - i, j, k = 1, 4, 4:
+Command: analisis.bat "-ne 12 -rx 1.525 -ry 2.5 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case49
+Error: current\distribucion.vtp does not exist for case49
+2024-07-31 21:04:09 (Elapsed time: 262.49 seconds, Step time:7.94)
+
+ case50 - i, j, k = 2, 0, 0:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.2 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case50
+2024-07-31 21:04:17 (Elapsed time: 270.43 seconds, Step time:7.94)
+
+ case51 - i, j, k = 2, 0, 1:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.2 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case51
+2024-07-31 21:04:24 (Elapsed time: 277.01 seconds, Step time:6.58)
+
+ case52 - i, j, k = 2, 0, 2:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.2 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case52
+2024-07-31 21:04:30 (Elapsed time: 283.12 seconds, Step time:6.11)
+
+ case53 - i, j, k = 2, 0, 3:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.2 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case53
+2024-07-31 21:04:37 (Elapsed time: 290.84 seconds, Step time:7.72)
+
+ case54 - i, j, k = 2, 0, 4:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.2 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case54
+2024-07-31 21:04:46 (Elapsed time: 299.60 seconds, Step time:8.76)
+
+ case55 - i, j, k = 2, 1, 0:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.525 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case55
+2024-07-31 21:04:54 (Elapsed time: 307.52 seconds, Step time:7.92)
+
+ case56 - i, j, k = 2, 1, 1:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.525 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case56
+2024-07-31 21:05:00 (Elapsed time: 313.46 seconds, Step time:5.94)
+
+ case57 - i, j, k = 2, 1, 2:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.525 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case57
+2024-07-31 21:05:06 (Elapsed time: 319.42 seconds, Step time:5.96)
+
+ case58 - i, j, k = 2, 1, 3:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.525 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case58
+2024-07-31 21:05:12 (Elapsed time: 325.11 seconds, Step time:5.69)
+
+ case59 - i, j, k = 2, 1, 4:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.525 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case59
+2024-07-31 21:05:17 (Elapsed time: 330.50 seconds, Step time:5.39)
+
+ case60 - i, j, k = 2, 2, 0:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.85 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case60
+2024-07-31 21:05:22 (Elapsed time: 335.60 seconds, Step time:5.10)
+
+ case61 - i, j, k = 2, 2, 1:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.85 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case61
+2024-07-31 21:05:27 (Elapsed time: 340.57 seconds, Step time:4.98)
+
+ case62 - i, j, k = 2, 2, 2:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.85 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case62
+2024-07-31 21:05:31 (Elapsed time: 344.93 seconds, Step time:4.35)
+
+ case63 - i, j, k = 2, 2, 3:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.85 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case63
+2024-07-31 21:05:36 (Elapsed time: 349.26 seconds, Step time:4.34)
+
+ case64 - i, j, k = 2, 2, 4:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 1.85 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case64
+2024-07-31 21:05:40 (Elapsed time: 353.75 seconds, Step time:4.49)
+
+ case65 - i, j, k = 2, 3, 0:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 2.175 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case65
+2024-07-31 21:05:45 (Elapsed time: 358.38 seconds, Step time:4.63)
+
+ case66 - i, j, k = 2, 3, 1:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 2.175 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case66
+2024-07-31 21:05:49 (Elapsed time: 362.90 seconds, Step time:4.52)
+
+ case67 - i, j, k = 2, 3, 2:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 2.175 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case67
+2024-07-31 21:05:54 (Elapsed time: 367.30 seconds, Step time:4.40)
+
+ case68 - i, j, k = 2, 3, 3:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 2.175 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case68
+2024-07-31 21:06:00 (Elapsed time: 373.24 seconds, Step time:5.94)
+
+ case69 - i, j, k = 2, 3, 4:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 2.175 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case69
+2024-07-31 21:06:04 (Elapsed time: 377.78 seconds, Step time:4.54)
+
+ case70 - i, j, k = 2, 4, 0:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 2.5 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case70
+2024-07-31 21:06:09 (Elapsed time: 382.57 seconds, Step time:4.80)
+
+ case71 - i, j, k = 2, 4, 1:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 2.5 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case71
+2024-07-31 21:06:14 (Elapsed time: 387.35 seconds, Step time:4.77)
+
+ case72 - i, j, k = 2, 4, 2:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 2.5 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case72
+2024-07-31 21:06:22 (Elapsed time: 395.11 seconds, Step time:7.76)
+
+ case73 - i, j, k = 2, 4, 3:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 2.5 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case73
+2024-07-31 21:06:28 (Elapsed time: 401.68 seconds, Step time:6.57)
+
+ case74 - i, j, k = 2, 4, 4:
+Command: analisis.bat "-ne 12 -rx 1.85 -ry 2.5 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case74
+2024-07-31 21:06:33 (Elapsed time: 406.95 seconds, Step time:5.27)
+
+ case75 - i, j, k = 3, 0, 0:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 1.2 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case75
+2024-07-31 21:06:39 (Elapsed time: 412.53 seconds, Step time:5.58)
+
+ case76 - i, j, k = 3, 0, 1:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 1.2 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case76
+2024-07-31 21:06:46 (Elapsed time: 419.20 seconds, Step time:6.67)
+
+ case77 - i, j, k = 3, 0, 2:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 1.2 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case77
+2024-07-31 21:06:52 (Elapsed time: 425.30 seconds, Step time:6.10)
+
+ case78 - i, j, k = 3, 0, 3:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 1.2 -ha 10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case78
+2024-07-31 21:07:01 (Elapsed time: 434.20 seconds, Step time:8.91)
+
+ case79 - i, j, k = 3, 0, 4:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 1.2 -ha 20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case79
+2024-07-31 21:07:07 (Elapsed time: 440.58 seconds, Step time:6.37)
+
+ case80 - i, j, k = 3, 1, 0:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 1.525 -ha -20.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case80
+2024-07-31 21:07:12 (Elapsed time: 445.57 seconds, Step time:4.99)
+
+ case81 - i, j, k = 3, 1, 1:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 1.525 -ha -10.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case81
+2024-07-31 21:07:17 (Elapsed time: 450.38 seconds, Step time:4.81)
+
+ case82 - i, j, k = 3, 1, 2:
+Command: analisis.bat "-ne 12 -rx 2.175 -ry 1.525 -ha 0.0 -bw 2.4 -hh 4.5 -bh -1.0 -ca 15 --writeVTK -hl 0.0 -kl 6.85 -rl 0.81 -koi 0.0" false
+Error: current\analisis.vtu does not exist for case82
+2024-07-31 21:07:21 (Elapsed time: 454.65 seconds, Step time:4.28)

@@ -1,0 +1,9 @@
+{
+    "radius_x": {"limits": [0.8, 3.0], "default": 2.0, "short_name": "rx", "ignore": false},
+    "radius_y": {"limits": [0.8, 3.0], "default": 2.0, "short_name": "ry", "ignore": false},
+    "head_angle": {"limits": [-30.0, 30.0], "default": 15.0, "short_name": "ha", "ignore": false},
+    "bone_width": {"limits": [2.0, 8.0], "default": 5.0, "short_name": "bw", "ignore": false},
+    "head_height": {"limits": [2.0, 10.0], "default": 6.0, "short_name": "hh", "ignore": false},
+    "bone_height": {"limits": [-2, 1.0], "default": 0.0, "short_name": "bh", "ignore": false},
+    "curve_angle": {"limits": [-30.0, 30.0], "default": 15.0, "short_name": "ca", "ignore": false}
+}
