@@ -1,0 +1,72 @@
+{
+    // cSpell settings
+    "cSpell.enabled": false,
+    
+    "cSpell.customDictionaries": {
+        "custom-dictionary-workspace": {
+            "name": "custom-dictionary-workspace",
+            "path": "${workspaceFolder:mainThesisDocument}/.cspell/custom-dictionary-workspace.txt",
+            "addWords": true,
+            "scope": "workspace"
+        }
+    },
+    "cSpell.ignorePaths": [
+        "${workspaceFolder:mainThesisDocument}/thesisCristianBustamante.tex",
+        "${workspaceFolder:mainThesisDocument}/.vscode/settings.json",
+        "${workspaceFolder:mainThesisDocument}/**/*.py",  // Ignore all Python files
+        "${workspaceFolder:mainThesisDocument}/**/*.for"  // Ignore all Fortran files
+    ],
+    "cSpell.ignoreWords": [
+        "labelfont",
+        "textfont"
+    ],
+    
+    // Appearance settings
+
+    "editor.renderLineHighlight": "all",
+    "workbench.colorCustomizations": {
+        "editor.lineHighlightBackground": "#101010",
+        "editor.lineHighlightBorder": "#101010"
+    },
+
+    "highlight.regexes": {
+        "(\\\\begin\\{newtextcolor\\}\\{([^}]+)\\}[\\s\\S]*?\\\\end\\{newtextcolor\\})": [
+            {         
+                "color": "$2",
+            }
+        ],
+        "(\\\\begin\\{mytextcolor\\}\\{([^}]+)\\}[\\s\\S]*?\\\\end\\{mytextcolor\\})": [
+            {
+                "color": "$2"
+            }
+        ],
+        "(\\\\begin\\{sketch\\}[\\s\\S]*?\\\\end\\{sketch\\})": [
+            {
+                // "backgroundColor": "#313b69",
+                "borderWidth": "2px",
+                "borderColor": "#2e2e2e",
+                "borderStyle": "solid"
+            }
+        ],
+        "(%\\s*TODO.*)": [
+        {
+            "color": "#000000", // Black text for TODO comments
+            "backgroundColor": "#FFFF00", // Yellow background for TODO comments
+            "fontStyle": "bold"
+        }
+        ],
+    },   
+
+    // Chat Editor settings
+
+    "chat.editor.wordWrap": "off",
+
+    // General settings
+    
+    "files.associations": {
+        "*.tex": "latex"
+    },
+    "[latex]": {
+        "editor.wordWrap": "on"
+    },
+}
