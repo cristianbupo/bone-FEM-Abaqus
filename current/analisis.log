@@ -2,31 +2,50 @@ Analysis initiated from SIMULIA established products
 Abaqus JOB analisis
 Abaqus 3DEXPERIENCE R2017x
 Abaqus License Manager checked out the following licenses:
-Abaqus/Standard checked out 6 tokens from Flexnet server DESKTOP-28I0C3S.
+Abaqus/Standard checked out 6 tokens from Flexnet server cristian.
 <1018 out of 1024 licenses remain available>.
 Begin Compiling Abaqus/Standard User Subroutines
-8/9/2024 9:47:00 PM
+2/13/2025 9:36:28 AM
 Intel(R) Visual Fortran Intel(R) 64 Compiler for applications running on Intel(R) 64, Version 17.0.2.187 Build 20170213
 Copyright (C) 1985-2017 Intel Corporation.  All rights reserved.
 
 End Compiling Abaqus/Standard User Subroutines
 Begin Linking Abaqus/Standard User Subroutines
    Creating library standardU.lib and object standardU.exp
+libirc.lib(fast_mem_ops.obj) : warning LNK4210: .CRT section exists; there may be unhandled static initializers or terminators
 End Linking Abaqus/Standard User Subroutines
-8/9/2024 9:47:01 PM
+2/13/2025 9:37:04 AM
 Begin Analysis Input File Processor
-8/9/2024 9:47:01 PM
+2/13/2025 9:37:04 AM
 Run pre.exe
-8/9/2024 9:47:03 PM
+2/13/2025 9:37:16 AM
 End Analysis Input File Processor
 Begin Abaqus/Standard Analysis
-8/9/2024 9:47:03 PM
+2/13/2025 9:37:16 AM
 Run standard.exe
-8/9/2024 9:47:07 PM
-End Abaqus/Standard Analysis
+forrtl: severe (104): incorrect STATUS= specifier value for connected file, unit 14, file c:\Users\crist\git\bone-FEM-Abaqus\current\Dmat_log.txt
+Image              PC                Routine            Line        Source             
+libifcoremd.dll    00007FFF078D9CA3  Unknown               Unknown  Unknown
+libifcoremd.dll    00007FFF07907059  Unknown               Unknown  Unknown
+standardU.dll      00007FFF0AF58B60  Unknown               Unknown  Unknown
+standardU.dll      00007FFF0AF5185E  Unknown               Unknown  Unknown
+ABQSMAStaCore.dll  00007FFF0363DC0B  Unknown               Unknown  Unknown
+ABQSMAStaCore.dll  00007FFF03637F84  Unknown               Unknown  Unknown
+ABQSMAStaCore.dll  00007FFF03703B36  Unknown               Unknown  Unknown
+ABQSMAStaCore.dll  00007FFF036EBA98  Unknown               Unknown  Unknown
+ABQSMAStaCore.dll  00007FFF043BC06A  Unknown               Unknown  Unknown
+ABQSMAStaCore.dll  00007FFF04019252  Unknown               Unknown  Unknown
+ABQSMAAbuBasicUti  00007FFF0963D3E9  Unknown               Unknown  Unknown
+MSVCR110.dll       00007FFF1C533FEF  Unknown               Unknown  Unknown
+MSVCR110.dll       00007FFF1C534196  Unknown               Unknown  Unknown
+KERNEL32.DLL       00007FFF3C10E8D7  Unknown               Unknown  Unknown
+ntdll.dll          00007FFF3CE9FBCC  Unknown               Unknown  Unknown
+2/13/2025 9:37:52 AM
+Abaqus Error: Abaqus/Standard Analysis exited with an error - Please see the 
+message file for possible error messages if the file exists.
 Begin MFS->SFS and SIM cleanup
-8/9/2024 9:47:08 PM
+2/13/2025 9:37:52 AM
 Run SMASimUtility.exe
-8/9/2024 9:47:08 PM
+2/13/2025 9:37:54 AM
 End MFS->SFS and SIM cleanup
-Abaqus JOB analisis COMPLETED
+Abaqus/Analysis exited with errors

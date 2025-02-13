@@ -5,47 +5,45 @@
 ** PARTS
 **
 *INCLUDE, INPUT=nodos.inp 
+**
+*INCLUDE, input = nodos.inp
+**
+*MATERIAL, NAME=dummyMat
+*CONDUCTIVITY 
+1., 
+*DENSITY 
+1., 
+*SPECIFIC HEAT 
+1., 
+*USER ELEMENT,NODES=4,TYPE=U1,PROP=2,COORDINATES=2,VAR=16
+11,12
 *INCLUDE, INPUT=conectividades.inp 
 *INCLUDE, INPUT=cuerpo.inp 
+*UEL PROPERTY,ELSET=Hueso
+** DIM(1), TIPO(2), A(3), B(4), GAMMA(5), D(6) 
+0.0, 0.0, 500, 0.2, 0.0, 0.0
+*UEL PROPERTY,ELSET=Cartilago
+** DIM(1), TIPO(2), A(3), B(4), GAMMA(5), D(6) 
+0.0, 0.0, 6.0, 0.47, 0.0, 0.0
 *INCLUDE, INPUT=contorno.inp
-************************************************************************
-** 
-** MATERIALS
-** 
-************************************************************************
-*Solid Section, elset=Cartilago, material=Cartilago
-1.0
-*Material, name=Cartilago
-*Depvar
-8,
-*Elastic
-6, 0.47
-************************************************************************
-*Solid Section, elset=Hueso, material=Hueso
-1.0
-*Material, name=Hueso
-*Depvar
-8,
-*Elastic
-500, 0.2
-************************************************************************
 *RESTART, WRITE, FREQ=0
 ** STEP: Step-1
-*Step, name=Step-1
-*Static
+*Step, name=LoadStep, nlgeom=NO
+*HEAT TRANSFER, STEADY STATE
 ************************************************************************
 ** BOUNDARY CONDITIONS
-** Name: encastre Type: Displacement/Rotation
 *INCLUDE, INPUT=condicionesContorno.inp
 ************************************************************************
 ** LOADS
-** 
 ** Name: Load-1
 *INCLUDE, INPUT=distribucion.inp 
 ************************************************************************
 ** OUTPUT REQUESTS
-*NODE FILE, FREQ=1
-U
-*EL FILE, FREQ=1, POSITION=CENTROIDAL
-E, S, SINV
+**
+*NODE PRINT,FREQ=1 
+NT,  
+*NODE FILE,FREQ=1 
+NT,  
+*OUTPUT,FIELD,FREQ=1 
+NT, 
 *End Step

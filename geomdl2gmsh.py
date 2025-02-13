@@ -190,8 +190,8 @@ def container2gmsh(bone, boneConfig, curves):
     if not boneConfig.skipWrite:
         writeMeshFiles(bone, boneConfig)
 
-    if runFltk:
-        gmsh.fltk.run()
+#    if runFltk:
+#        gmsh.fltk.run()
 
 
 def writeMeshFiles(bone, boneConfig):
@@ -340,8 +340,8 @@ def setSurfaceColors():
 def addPhysicalGroups():
     gmsh.model.addPhysicalGroup(2, [1], -1, "Hueso")
     gmsh.model.addPhysicalGroup(2, [2, 3, 4, 5], -1, "Cartilago")
-    gmsh.model.addPhysicalGroup(1, [6, 7, 8], -1, "top")
-    gmsh.model.addPhysicalGroup(1, [1, 2], -1, "bottom")
+    gmsh.model.addPhysicalGroup(1, [6, 7, 8], -1, "contorno2")
+    gmsh.model.addPhysicalGroup(1, [1, 2], -1, "contorno1")
     gmsh.model.addPhysicalGroup(0, [2], -1, "pin")
 
 

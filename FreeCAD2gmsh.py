@@ -108,7 +108,7 @@ def write_nodes(nodes, coords, inputPath):
     numNode = len(nodes)
     nodosPath = os.path.join(inputPath, "nodos.inp")
     with open(nodosPath, "w") as f:
-        f.write("*NODE, NSET=N2\n")
+        f.write("*NODE,NSET=N2\n")
         for n in range(numNode):
             f.write(f"{nodes[n]}, {coords[3 * n]}, {coords[3 * n + 1]}\n")
 
@@ -116,7 +116,7 @@ def write_nodes(nodes, coords, inputPath):
 def write_connectivities(elemTypes, elemTags, elemNodeTags, inputPath):
     conectivitidadesVerPath = os.path.join(inputPath, "conectividades.inp")
     with open(conectivitidadesVerPath, "w") as h:
-        h.write("*ELEMENT, TYPE=CPE4, ELSET=UEL\n")
+        h.write("*ELEMENT,TYPE=U1,ELSET=UEL\n")
         for i, _ in enumerate(elemTypes):
             for elem, item in enumerate(elemTags[i]):
                 elemNum = int(item)
@@ -224,16 +224,16 @@ def writeBoundaries(physicalGroup, inputPath):
 
     with open(contornoPath, "w") as f, open(boundaryConditionsPath, "w") as g:
         g.write("*Boundary\n")
-        g.write("bottom, 2\n")
+        g.write("contorno1, 11, 12, 0.0\n")
         for dim, tag in physicalGroup:
             name = gmsh.model.getPhysicalName(dim, tag)
             nodeTags = gmsh.model.mesh.getNodesForPhysicalGroup(dim, tag)[0]
-            f.write("*Nset, nset="+name+"\n")
+            f.write("*NSET,NSET="+name+"\n")
             writeLines(nodeTags, f)
 
-            if name == "bottom":
-                pinTag = int(nodeTags[(len(nodeTags)+1) // 2])
-                g.write(f"{pinTag}, 1, 1\n")
+            # if name == "contorno1":
+                # pinTag = int(nodeTags[(len(nodeTags)+1) // 2])
+                # g.write(f"{pinTag}, 1, 1\n")
 
 
 def findLastPosition(A, B):
@@ -351,7 +351,7 @@ def writeLoads(bone, boneConfig, physicalGroup, all2DElements, load_index):
                     a = max(x_im1, h-r)
                     b = min(x_i, h+r)
                     pressure_i = (((b-h)**3-(a-h)**3)/(12*p)+k*(b-a))/elemLenghts[j]
-                    g.write(f"{pContourElements[j]}, P{pLoadFaces[j]}, {pressure_i}\n")
+                    g.write(f"{pContourElements[j]}, U{pLoadFaces[j]}, {pressure_i}\n")
                 load_magnitudes.InsertNextValue(pressure_i)
                 x_im1 = x_i
 
@@ -374,15 +374,26 @@ def writeParameters(bone, boneConfig, tags, all2DElements):
 
     nElems = len(all2DElements[1][0])
     numNode = len(tags)
-    parametrosPath = os.path.join(boneConfig.inputPath, "fortVars.for")
+    parametrosPath = os.path.join(boneConfig.inputPath, "conec.for")
 
     with open(parametrosPath, "w") as f:
         f.write(f"      integer, parameter :: NUMNODE={numNode}, NELEMS={nElems}, "
                 "dim=2, nnod=4\n"
                 "      real*8 nodes(NUMNODE, dim)\n"
+                "      parameter(axi=0,tipo_def=2)\n"
                 f"      real*8, parameter :: k_OI={k_OI}\n"
                 "      integer conectividades(NELEMS, nnod+1)\n"
                 "      integer grupoFisico(NELEMS, 2)\n"
+                "      integer, parameter :: filasContorno1=1, filasContorno2=1\n"
+                "      integer, parameter :: filasContorno3=1, filasContorno4=1\n"
+                "      integer contorno1(filasContorno1, 6), contorno2(filasContorno2, 6)\n"
+                "      real*8 resNod(NUMNODE, 2)\n"
+                "      real*8 resElem(NELEMS, 12)\n"
+                "      real*8 myprops(8)\n"
+                "      common resNod, resElem\n"
+                "      common myprops\n"
                 "      common nodes\n"
                 "      common conectividades\n"
-                "      common grupoFisico\n")
+                "      common grupoFisico\n"
+                "      common contorno1, contorno2\n"
+                "      common contorno3, contorno4\n")

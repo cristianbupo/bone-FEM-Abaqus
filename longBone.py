@@ -246,6 +246,10 @@ def copyFile(origin, destination):
 
 
 def clear_folder(folder):
+    if not os.path.exists(folder):
+        print(f'Folder {folder} does not exist.')
+        return
+
     for item in os.listdir(folder):
         item_path = os.path.join(folder, item)
         try:
@@ -256,20 +260,21 @@ def clear_folder(folder):
         except Exception as e:
             print(f'Failed to delete {item_path}. Reason: {e}')
 
-
 def main():
     bone, boneLimits, boneConfig = getBoneData()
     setattr(boneConfig, 'runFltk', True)
     # setattr(boneConfig, 'writeVTK', True)
     setattr(boneConfig, 'deleteOutput', True)
     setattr(bone.load_vars, 'load_center', 0.0)
-    setattr(bone.mesh_vars, 'number_elements', 6)
+    setattr(bone.mesh_vars, 'number_elements', 1)
     setattr(boneConfig, 'runAbq', True)
     setattr(bone.load_vars, 'number_loads', 1)
 
+    print("Running the script...")
     if boneConfig.deleteOutput:
         clear_folder(boneConfig.outputPath)
 
+    print("Copying the necessary files...")
     inputPath = boneConfig.inputPath
     # clear_folder(inputPath)
 
@@ -287,10 +292,12 @@ def main():
         dest_path = os.path.join(inputPath, dest)
         shutil.copy(src_path, dest_path)
 
+    print("Files copied successfully!")
+    print("Running the script...")
     for i in range(1):
         print(f"Running Salome {i}")
         meshing(bone, boneLimits, boneConfig)
-        runAbaqus(boneConfig)
+        # runAbaqus(boneConfig)
         print("\n\n")
 
 
@@ -298,4 +305,5 @@ def main():
 
 
 if __name__ == '__main__':
+    print("Starting the script...")
     main()

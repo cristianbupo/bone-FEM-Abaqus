@@ -60,7 +60,7 @@
     "help": "The path to write the input files"
   },
   "outputPath": {
-    "default": "currentResults",
+    "default": "current",
     "help": "The path to write the output files"
   },
   "logPath": {
