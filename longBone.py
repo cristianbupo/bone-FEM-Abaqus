@@ -211,7 +211,7 @@ def oldRunAbaqus(bone, boneConfig):
 
 def runAbaqus(boneConfig):
     os.chdir(boneConfig.inputPath)
-    command = "abaqus job=analisis.inp user=user.for ask_delete=OFF cpus=2"
+    command = "abaqus.bat job=analisis.inp user=user.for ask_delete=OFF cpus=2"
     process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
     # Print stdout in real-time
@@ -267,11 +267,10 @@ def main():
     # setattr(boneConfig, 'writeVTK', True)
     setattr(boneConfig, 'deleteOutput', True)
     setattr(bone.load_vars, 'load_center', 0.0)
-    setattr(bone.mesh_vars, 'number_elements', 20)
+    setattr(bone.mesh_vars, 'number_elements', 10)
     setattr(boneConfig, 'runAbq', True)
     setattr(bone.load_vars, 'number_loads', 1)
 
-    print("Running the script...")
     if boneConfig.deleteOutput:
         clear_folder(boneConfig.outputPath)
 
@@ -284,7 +283,7 @@ def main():
         "master/abaqus_v6.env": "abaqus_v6.env",
         "master/analisis.inp": "analisis.inp",
         "master/debug.bat": "debug.bat",
-        "master/general2DElastic.for": "general2DElastic.for",
+        "master/general2DElastic.for": "user.for",
         "master/run.bat": "run.bat"
     }
 
@@ -292,12 +291,18 @@ def main():
     for src, dest in files_to_copy.items():
         src_path = os.path.join(os.getcwd(), src)
         dest_path = os.path.join(inputPath, dest)
+        dest_dir = os.path.dirname(dest_path)
+
+        # Ensure the destination directory exists
+        if not os.path.exists(dest_dir):
+            os.makedirs(dest_dir, exist_ok=True)
+            
         shutil.copy(src_path, dest_path)
 
     print("Files copied successfully!")
     print("Running the script...")
     for i in range(1):
-        print(f"Running Salome {i}")
+        print(f"Running Abaqus {i}")
         modifySketch(bone, boneLimits, boneConfig)
         # runAbaqus(boneConfig)
         print("\n\n")

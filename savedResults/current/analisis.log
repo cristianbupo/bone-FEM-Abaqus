@@ -1,0 +1,105 @@
+Analysis initiated from SIMULIA established products
+Abaqus JOB analisis
+Abaqus 3DEXPERIENCE R2017x
+Abaqus License Manager checked out the following licenses:
+Abaqus/Standard checked out 5 tokens from Flexnet server cristian.
+<1019 out of 1024 licenses remain available>.
+Begin Compiling Abaqus/Standard User Subroutines
+2/14/2025 10:20:41 AM
+Intel(R) Visual Fortran Intel(R) 64 Compiler for applications running on Intel(R) 64, Version 17.0.2.187 Build 20170213
+Copyright (C) 1985-2017 Intel Corporation.  All rights reserved.
+
+End Compiling Abaqus/Standard User Subroutines
+Begin Linking Abaqus/Standard User Subroutines
+   Creating library standardU.lib and object standardU.exp
+standardU_static.lib(SMAStsStdU_IF.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(SMAStsStdU_IF.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(contactperm.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(contactperm.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(creep.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(creep.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(dflow.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(dflow.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(dflux.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(dflux.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(disp.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(disp.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(dload.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(dload.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(film.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(film.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(flow.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(flow.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(fric.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(fric.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(fric_coef.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(fric_coef.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(gapcon.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(gapcon.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(gapelectr.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(gapelectr.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(hardini.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(hardini.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(hetval.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(hetval.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(mpc.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(mpc.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(orient.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(orient.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(rsurfu.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(rsurfu.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(sdvini.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(sdvini.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(sigini.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(sigini.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(stdu_callallutils.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(stdu_callallutils.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(uamp.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(uamp.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(uanisohyper_inv.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(uanisohyper_inv.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(uanisohyper_strain.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(uanisohyper_strain.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(ucohesiveoffset.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(ucohesiveoffset.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(ucorr.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(ucorr.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(ucosimulation.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(ucosimulation.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(ucrack.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(ucrack.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(ucreepnetwork.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(ucreepnetwork.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(udecurrent.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(udecurrent.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(udempotential.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(udempotential.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(udmgini.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(udmgini.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(udsecurrent.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(udsecurrent.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(uelmat.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(uelmat.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(uepactivationfacet.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(uepactivationfacet.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(uepactivationsetup.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(uepactivationsetup.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(uepactivationvol.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(uepactivationvol.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(uexpan.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(uexpan.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(ufield.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(ufield.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(ufluid.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(ufluid.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(ufluidconnectorloss.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(ufluidconnectorloss.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(ufluidconnectorvalve.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(ufluidconnectorvalve.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(ufluidleakoff.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(ufluidleakoff.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(ufluidpipefriction.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(ufluidpipefriction.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(ugens.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(ugens.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(uhard.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(uhard.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(uhypel.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(uhypel.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(uhyper.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(uhyper.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(uinter.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(uinter.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(umasfl.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(umasfl.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(umat.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(umat.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(umat_sst.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(umat_sst.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(umatht.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(umatht.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(umdflux.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(umdflux.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(umdfluxsetup.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(umdfluxsetup.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(umeshmotion.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(umeshmotion.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(umotion.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(umotion.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(umullins.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(umullins.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(uporep.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(uporep.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(upress.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(upress.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(upsd.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(upsd.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(usdfld.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(usdfld.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(usuperelashardmod.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(usuperelashardmod.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(usuperelasplastmod.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(usuperelasplastmod.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(utemp.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(utemp.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(utracload.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(utracload.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(utrs.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(utrs.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(utrsnetwork.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(utrsnetwork.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(uvarm.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(uvarm.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(uwave.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(uwave.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(uxfemnonlocalweight.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(uxfemnonlocalweight.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(voidri.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(voidri.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+standardU_static.lib(SMAStsUsubs_IF.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'standardU_static.lib(SMAStsUsubs_IF.obj)' or at 'C:\Users\crist\AppData\Local\Temp\crist_analisis_4544\vc110.pdb'; linking object as if no debug info
+End Linking Abaqus/Standard User Subroutines
+2/14/2025 10:20:41 AM
+Begin Analysis Input File Processor
+2/14/2025 10:20:41 AM
+Run pre.exe
+2/14/2025 10:20:45 AM
+End Analysis Input File Processor
+Begin Abaqus/Standard Analysis
+2/14/2025 10:20:45 AM
+Run standard.exe
+2/14/2025 10:41:35 AM
+End Abaqus/Standard Analysis
+Begin MFS->SFS and SIM cleanup
+2/14/2025 10:41:37 AM
+Run SMASimUtility.exe
+2/14/2025 10:41:37 AM
+End MFS->SFS and SIM cleanup
+Abaqus JOB analisis COMPLETED
