@@ -1,1 +1,0 @@
-abaqus job=loadTest.inp user=userMaster.for ask_delete=OFF cpus=2

@@ -247,7 +247,17 @@ def findLastPosition(A, B):
     return -1  # return -1 if no match found
 
 
-def writeLoads(bone, boneConfig, newEntities, load_index):
+def writeLoads(bone, boneConfig, physicalName, load_index):
+
+    physicalGroups = gmsh.model.getPhysicalGroups()
+    newEntities = []
+    for dim, tag in physicalGroups:
+        name = gmsh.model.getPhysicalName(dim, tag)
+        if name == physicalName:
+            entities = gmsh.model.getEntitiesForPhysicalGroup(dim, tag)
+            for entity in entities:
+                newEntities.append((dim, entity))
+
     inputPath = boneConfig.inputPath
 
     h = - bone.load_vars.load_center  # Negative sign to match right as positive

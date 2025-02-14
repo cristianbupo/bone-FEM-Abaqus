@@ -9,6 +9,7 @@ import os
 import gmsh
 import subprocess
 from datetime import datetime
+from sketchUtils import setConstraintValue
 
 
 class myConfigObject:
@@ -56,7 +57,7 @@ def getBoneData():
     return bone, boneLimits, boneConfig
 
 
-def meshing(bone, boneLimits, boneConfig):
+def modifySketch(bone, boneLimits, boneConfig):
     Gui.setupWithoutGUI()  # Initialize FreeCAD without GUI
     fileName = 'CADs/longBone.FCStd'
     doc = App.openDocument(fileName)
@@ -67,7 +68,7 @@ def meshing(bone, boneLimits, boneConfig):
     for key, value in bone.geom_vars:
         min_value = getattr(boneLimits.geom_vars, key).min_value
         max_value = getattr(boneLimits.geom_vars, key).max_value
-        sw.setConstraintValue(sketch, key, value, min_value, max_value)
+        setConstraintValue(sketch, key, value, min_value, max_value)
         current_value = sketch.getDatum(key)
 
         if current_value != value:
@@ -90,7 +91,7 @@ def myFunction(bone, boneLimits, boneConfig, sketch):
     for key, value in bone.geom_vars:
         min_value = getattr(boneLimits.geom_vars, key).min_value
         max_value = getattr(boneLimits.geom_vars, key).max_value
-        sw.setConstraintValue(sketch, key, value, min_value, max_value)
+        setConstraintValue(sketch, key, value, min_value, max_value)
         current_value = sketch.getDatum(key)
 
         if current_value != value:
@@ -262,11 +263,11 @@ def clear_folder(folder):
 
 def main():
     bone, boneLimits, boneConfig = getBoneData()
-    setattr(boneConfig, 'runFltk', True)
+    # setattr(boneConfig, 'runFltk', True)
     # setattr(boneConfig, 'writeVTK', True)
     setattr(boneConfig, 'deleteOutput', True)
     setattr(bone.load_vars, 'load_center', 0.0)
-    setattr(bone.mesh_vars, 'number_elements', 1)
+    setattr(bone.mesh_vars, 'number_elements', 20)
     setattr(boneConfig, 'runAbq', True)
     setattr(bone.load_vars, 'number_loads', 1)
 
@@ -280,10 +281,11 @@ def main():
 
     # Define the source files and their destination filenames
     files_to_copy = {
-        "analisisMaster.bat": "analisis.bat",
-        "analisisMaster.inp": "analisis.inp",
-        "runAbaqusMaster.bat": "runAbaqus.bat",
-        "userMaster.for": "user.for"
+        "master/abaqus_v6.env": "abaqus_v6.env",
+        "master/analisis.inp": "analisis.inp",
+        "master/debug.bat": "debug.bat",
+        "master/general2DElastic.for": "general2DElastic.for",
+        "master/run.bat": "run.bat"
     }
 
     # Copy each file to the inputPath with the new name
@@ -296,7 +298,7 @@ def main():
     print("Running the script...")
     for i in range(1):
         print(f"Running Salome {i}")
-        meshing(bone, boneLimits, boneConfig)
+        modifySketch(bone, boneLimits, boneConfig)
         # runAbaqus(boneConfig)
         print("\n\n")
 

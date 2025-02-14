@@ -77,41 +77,44 @@ C----- DEBUG OUTPUT SECTION ------------------------------------------
       filename(lenjobdir+1:lenjobdir+1)='\'
       filename(lenjobdir+2:lenjobdir+lenjobname+1)=jobname(1:lenjobname)
       filename(lenjobdir+lenjobname+2:lenjobdir+lenjobname+6)='.txt'
+
+      if (.false.) THEN
 C     1) Open a debug file
-      OPEN(UNIT=debugUnit, FILE=filename, ACTION='WRITE', STATUS='REPLACE')
+      OPEN(UNIT=debugUnit, FILE=filename, ACTION='WRITE', STATUS='UNKNOWN')
 C     Write debug information including Step and Increment
       WRITE(debugUnit,*) 'Step: ', KSTEP, 'Increment: ', KINC
       WRITE(debugUnit,*) 'UEL subroutine executed at this increment.'
 
 C     2) Write a header
-      write(debugUnit,*) '====================================================='
-      write(debugUnit,*) ' ELEMENT MATRIX (AMATRX) AND RHS DEBUG OUTPUT'
-      write(debugUnit,*) ' Element number = ', jelem
-      write(debugUnit,*) ' ndofel = ', ndofel
-      write(debugUnit,*) '====================================================='
+      WRITE(debugUnit,*) '====================================================='
+      WRITE(debugUnit,*) ' ELEMENT MATRIX (AMATRX) AND RHS DEBUG OUTPUT'
+      WRITE(debugUnit,*) ' Element number = ', jelem
+      WRITE(debugUnit,*) ' ndofel = ', ndofel
+      WRITE(debugUnit,*) '====================================================='
 
 C     3) Write the stiffness matrix
-      write(debugUnit,*) 'AMATRX:'
+      WRITE(debugUnit,*) 'AMATRX:'
       do i = 1, NDOFEL 
-         write(debugUnit,'(100(1x, E14.6))') (AMATRX((i),(j)), j=1, NDOFEL)
+      WRITE(debugUnit,'(100(1x, E14.6))') (AMATRX((i),(j)), j=1, NDOFEL)
       enddo
 
 C     4) Write the RHS vector
-      write(debugUnit,*)
-      write(debugUnit,*) 'RHS ='
+      WRITE(debugUnit,*) 'RHS ='
+
       do i=1, MLVARX
-         write(debugUnit,'(I6, 2x, E14.6)') (i), RHS((i),1)
+      WRITE(debugUnit,'(I6, 2x, E14.6)') (i), RHS((i),1)
       enddo
 
 C	  5) Write the U vector
-	  write(debugUnit,*)
-	  write(debugUnit,*) 'U ='
-	  do i=1, NDOFEL
-		 write(debugUnit,'(I6, 2x, E14.6)') (i), U((i))
-	  enddo
+      WRITE(debugUnit,*)
+      WRITE(debugUnit,*) 'U ='
+      do i=1, NDOFEL
+      WRITE(debugUnit,'(I6, 2x, E14.6)') (i), U((i))
+      enddo
 
 C     6) Close the file
       close(debugUnit)
+      END IF
 C----- END DEBUG SECTION ---------------------------------------------
 
       return
@@ -717,16 +720,18 @@ C----- DEBUG OUTPUT SECTION ------------------------------------------
       filename(lenjobdir+2:lenjobdir+8+1)='Dmat_log'
       filename(lenjobdir+8+2:lenjobdir+8+6)='.txt'
 C     
-      open(unit=logUnit, FILE=filename, ACTION='WRITE', STATUS='REPLACE')
+      IF (.FALSE.) THEN
+      open(unit=logUnit, FILE=filename, ACTION='WRITE', STATUS='UNKNOWN')
       
       ! Write the Dmat matrix to the log file
-      write(logUnit,*) 'Dmat matrix:'
+      WRITE(logUnit,*) 'Dmat matrix:'
       do i = 1, size(Dmat, 1)
-      write(logUnit,'(100(1x, E14.6))') (Dmat(i, j), j = 1, size(Dmat, 2))
+      WRITE(logUnit,'(100(1x, E14.6))') (Dmat(i, j), j = 1, size(Dmat, 2))
       enddo
 
       ! Close the log file
       close(logUnit)
+      END IF
 C----- END DEBUG SECTION ---------------------------------------------
 
 	return 
@@ -878,8 +883,6 @@ C
       real*8     I1,I2,I3,r,def_crec(4),dx
       real*8     zita,t,sigma_zz,Et(10),nut(10),Def2D(3),deforma
       real*8     Esf_Hid,Esf_VM
-C      real*8   u1(nnod),u2(nnod),u3(nnod),u4(nnod),u5(nnod)
-C      real*8   u6(nnod),u7(nnod),u8(nnod),u9(nnod),u10(nnod)
       real*8     OI, kOI
 
       real*8   def3D(6)
@@ -898,42 +901,24 @@ C
       DEFORMACIONES= 0.d0
       n            = 1
       def2D        = 0.d0
-C
-C
 C     Definicion del tensor de constantes elasticas
       Dmat   = 0.d0
       Esf_Hid= 0.D0
       Esf_VM = 0.D0
-C
 C     
+
+
       do jelem=1,NELEMS
+
+      print *, ''
+      print *, 'Elemento: ', jelem
+
         Dmat2 = 0.d0
         do J=1,nnod
-C          DESP(2*(J-1)+1) = resNod(conectividades(jelem,J+1),1) 
-C          DESP(2*(J-1)+2) = resNod(conectividades(jelem,J+1),2) 
           x(1,J)       = nodes(conectividades(jelem,J+1),1)
           x(2,J)       = nodes(conectividades(jelem,J+1),2)
+          print *, 'Coordenadas: ', x(1,J), x(2,J)
         enddo
-C       
-C       Variables
-C        do J=1,nnod  
-C          u1(J)  = results(conectividades(jelem,J+1),2)
-C          u2(J)  = results(conectividades(jelem,J+1),3)
-C          u3(J)  = results(conectividades(jelem,J+1),4)  
-C          u4(J)  = results(conectividades(jelem,J+1),5) 
-C          u5(J)  = results(conectividades(jelem,J+1),6)
-C          u6(J)  = results(conectividades(jelem,J+1),7)
-C          u7(J)  = results(conectividades(jelem,J+1),8)
-C          u8(J)  = results(conectividades(jelem,J+1),9)
-C          u9(J)  = results(conectividades(jelem,J+1),10)
-C          u10(J) = results(conectividades(jelem,J+1),11)
-C        enddo
-C
-C      n = 1
-C      b = 0.d0
-C      a = 0.d0
-C      n=n+1
-C
 C           Funcion de forma
       call f_forma2D(0.d0,0.d0,x,shp,xjac)
 C           Se obtienen las matrices de calculo
@@ -945,22 +930,13 @@ C           Calculo de los esfuerzos
       do J=1,nnod
            DESP(2*(J-1)+1) = resNod(conectividades(jelem,J+1),1) 
            DESP(2*(J-1)+2) = resNod(conectividades(jelem,J+1),2) 
-C            x(1,J)       = nodes(conectividades(jelem,J+1),1)
-C            x(2,J)       = nodes(conectividades(jelem,J+1),2)
+           print *, 'Desplazamientos: ', DESP(2*(J-1)+1), DESP(2*(J-1)+2)
       enddo
 C
-      !call deformacion(shp,a,b,zita,U,ndofel,de,x,jelem,
-      !t,def2D,def3D)
       DEFORMACIONES = MATMUL(Be(1:3, :),DESP) !-def2D
 C
       ESFUERZOS = 0.d0
       ESFUERZOS = MATMUL(Dmat2,DEFORMACIONES) !-def2D)   
-C
-C           Calculo de las deformaciones
-      
-C     def_elx(jelem)=DEFORMACIONES(1)
-C     def_ely(jelem)=DEFORMACIONES(2)
-
 C           Centro y radio del esfuerzo (circulo de Mohr)
       radio  = sqrt(0.25d0*(ESFUERZOS(1) - ESFUERZOS(2))**2)
       centro = 0.5d0*(ESFUERZOS(1) + ESFUERZOS(2))
@@ -968,7 +944,6 @@ C
       EsMax = centro+radio
       EsMin = centro-radio
 C
-      
       if(tipo_def.eq.2)then
             E      = myprops(3)
             nu     = myprops(4) 
@@ -978,7 +953,7 @@ C           Esfuerzos equivalentes de Von Mises
       else if(tipo_def.eq.1)then
             sigma_zz = 0.d0
       endif
-
+C
       Esf_VM = sqrt(((EsMax-EsMin)**2+(EsMin-sigma_zz)**2
      1      +(sigma_zz-EsMax)**2)/2.d0)
              
@@ -988,7 +963,7 @@ C
 C     
       kOI = 0.5d0
       OI =  thao_oct + kOI * Esf_Hid
-
+C
       resElem(jelem, 1) = DEFORMACIONES(1) !E11
       resElem(jelem, 2) = DEFORMACIONES(2) !E22
       resElem(jelem, 3) = 0.0 !E33 (Not implemented)
@@ -1001,6 +976,11 @@ C
       resElem(jelem, 10) = Esf_Hid !S_Hyd
       resElem(jelem, 11) = thao_oct !S_Oct
       resElem(jelem, 12) = OI !OI
+
+
+      print *, 'Desplazamientos: ', DESP
+      print *, 'Deformaciones: ', DEFORMACIONES
+      print *, 'Esfuerzos: ', ESFUERZOS
 C
       enddo
 C
@@ -1095,14 +1075,6 @@ C
                   j = j + 1
                   locID = JRRAY(1,6)
             END IF
-
-            IF (KEY .EQ. 1911) THEN
-
-            END IF
-
-            IF (KEY .EQ. 2001) THEN
-
-            END IF
 C
 C RECORD 101 CONTAINS VALUES FOR U
 C           
@@ -1110,8 +1082,6 @@ C
                   k = k+1
                   resNod(k, 1) = ARRAY(4)
                   resNod(k, 2) = ARRAY(5)
-
-C                  WRITE(16,'(2(E20.13,1X))') ARRAY(4), ARRAY(5)
             END IF
 C
 C RECORD 21 CONTAINS VALUES FOR E
@@ -1121,7 +1091,6 @@ C
                   resElem(j, 2) = ARRAY(4)
                   resElem(j, 3) = ARRAY(5)
                   resElem(j, 4) = ARRAY(6)
-C                  WRITE(16,'(4(E20.13,1X))') ARRAY(3), ARRAY(4), 0.0d0, ARRAY(5)
             END IF
 C
 C RECORD 11 CONTAINS VALUES FOR S
@@ -1139,39 +1108,26 @@ C
                   resElem(j, 9) = ARRAY(3)
             END IF
 C
-C
 C RECORD 201 CONTAINS ...
 C
             IF (KEY.EQ.201) THEN
                   k = k+1
+                  print *, 'I''m saving displacement info!!!!!!!!!!!!!!'
                   resNod(k, 1) = ARRAY(4)
                   resNod(k, 2) = ARRAY(5)
+                  print *, '' 
+                  print *, 'Displacement: ', ARRAY(4), ARRAY(5)
+                  print *, 'Displacement: ', resNod(k, 1), resNod(k, 2)
             END IF
 C
       END DO
 C
  110  CONTINUE
 
-      resElem(1,1)=0.0
 C     Cálculo de los esfuerzos y las deformaciones
       call outsigma()
-C     
-C     Calculo de indice osteogénico
 C
-C      do i=1,NELEMS
-
-C      S11 = resElem(i, 5)
-C      S22 = resElem(i, 6)
-C      S33 = resElem(i, 7)
-C      S12 = resElem(i, 8)
-C
-C      resElem(i, 10) = - (S11 + S22 + S33) / 3.d0
-C      resElem(i, 11) = sqrt((S11-S22)**2+(S22-S33)**2+(S33-S11)**2 + 6*S12**2)/3.d0
-C      resElem(i, 12) = resElem(i, 11) + k_OI * resElem(i, 10)
-
-C      end do
-C
-      open(UNIT=16,file=filename,action='write',status='replace')
+      open(UNIT=16,file=filename,action='write',status='UNKNOWN')
       write(16,'(a73)') '<VTKFile type="UnstructuredGrid" version="1,0" byte_order="LittleEndian">'
       write(16,'(a18)') '<UnstructuredGrid>'
       write(16,'(a23,i0,a17,i0,a2)') '<Piece NumberOfPoints="', NUMNODE, 
@@ -1284,6 +1240,8 @@ C
       write(16,'(a8)') '</Piece>'
       write(16,'(a19)') '</UnstructuredGrid>'
       write(16,'(a10)') '</VTKFile>'
+      close(16)
+
       RETURN
       END
 C-------------------------------------------------------------------------------------------
@@ -1311,8 +1269,8 @@ C       Llamada al archivo de grupos físicos
             filename=' '
             filename(1:lenjobdir)=jobdir(1:lenjobdir)
             filename(lenjobdir+1:lenjobdir+19)='/gruposFisicos.txt'
-            open(UNIT=14,file=filename(1:lenjobdir+19), status='old')
 C
+            open(UNIT=14,file=filename(1:lenjobdir+19), status='old')
             if (Searstr (14,'Element Tag, Physical Group Tag')) then
             READ(14,*)((grupoFisico(i,j),j=1,2),i=1,NELEMS)
             else
@@ -1328,7 +1286,7 @@ C
         filename(lenjobdir+1:lenjobdir+19)='/conectividades.inp'
 C
         open(UNIT=15,file=filename(1:lenjobdir+19), status='old')
-          if (Searstr (15,'*ELEMENT,TYPE=U1,ELSET=UEL')) then
+          if (Searstr (15,'*ELEMENT,TYPE=U1')) then
             READ(15,*)((conectividades(i,j),j=1,nnod + 1),i=1,NELEMS)
           else
             stop '###..Error en lectura'
@@ -1340,15 +1298,14 @@ C       Llamada al archivo de nodos
         filename=' '
 	  filename(1:lenjobdir)=jobdir(1:lenjobdir)
         filename(lenjobdir+1:lenjobdir+10)='/nodos.inp'
-	  open(UNIT=16,file=filename(1:lenjobdir+10), status='old')
 C
+	  open(UNIT=16,file=filename(1:lenjobdir+10), status='old')
 	    if (Searstr (16,'*NODE,NSET=N2')) then
   	      READ(16,*) (k,(nodes(i,j),j=1,dim),i=1,NUMNODE)
 	    else
 	      stop '###..Error en lectura'
 	    end if
 	  close(16)
-C
 C       Se lee el archivo de entrada inp del analisis
 	  call GETOUTDIR(JOBDIR,LENJOBDIR)	
         filename=' '
@@ -1357,7 +1314,7 @@ C       Se lee el archivo de entrada inp del analisis
 C
         open(UNIT=15,file=filename(1:lenjobdir+14), status='old')
         if (Searstr (15,'*NSET,NSET=contorno1')) then
-         READ(15,*)((contorno1(i,j),j=1,6),i=1,filasContorno1)
+         READ(15,*)((contorno1(i,j),j=1,6),i=1,filascontorno1)
         else
         stop '###..Error en lectura'
         end if
@@ -1371,7 +1328,7 @@ C       Se lee el archivo de entrada inp del analisis
 C
         open(UNIT=15,file=filename(1:lenjobdir+14), status='old')
         if (Searstr (15,'*NSET,NSET=contorno2')) then
-         READ(15,*)((contorno2(i,j),j=1,6),i=1,filasContorno2)
+         READ(15,*)((contorno2(i,j),j=1,6),i=1,filascontorno2)
         else
         stop '###..Error en lectura'
         end if

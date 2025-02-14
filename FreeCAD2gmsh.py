@@ -116,7 +116,7 @@ def write_nodes(nodes, coords, inputPath):
 def write_connectivities(elemTypes, elemTags, elemNodeTags, inputPath):
     conectivitidadesVerPath = os.path.join(inputPath, "conectividades.inp")
     with open(conectivitidadesVerPath, "w") as h:
-        h.write("*ELEMENT,TYPE=U1,ELSET=UEL\n")
+        h.write("*ELEMENT,TYPE=U1\n")
         for i, _ in enumerate(elemTypes):
             for elem, item in enumerate(elemTags[i]):
                 elemNum = int(item)
@@ -218,22 +218,27 @@ def writeBody(physicalGroups, writingPath):
                         g.write(f'{element_tag}, {tag}\n')
 
 
-def writeBoundaries(physicalGroup, inputPath):
+def writeBoundaries(physicalGroups, inputPath):
+    lines = []
     contornoPath = os.path.join(inputPath, "contorno.inp")
     boundaryConditionsPath = os.path.join(inputPath, "condicionesContorno.inp")
 
     with open(contornoPath, "w") as f, open(boundaryConditionsPath, "w") as g:
         g.write("*Boundary\n")
         g.write("contorno1, 11, 12, 0.0\n")
-        for dim, tag in physicalGroup:
+        for dim, tag in physicalGroups:
             name = gmsh.model.getPhysicalName(dim, tag)
             nodeTags = gmsh.model.mesh.getNodesForPhysicalGroup(dim, tag)[0]
             f.write("*NSET,NSET="+name+"\n")
             writeLines(nodeTags, f)
 
+            lines.append(len(nodeTags))
+
             # if name == "contorno1":
                 # pinTag = int(nodeTags[(len(nodeTags)+1) // 2])
                 # g.write(f"{pinTag}, 1, 1\n")
+    
+    return lines
 
 
 def findLastPosition(A, B):
@@ -247,7 +252,15 @@ def findLastPosition(A, B):
     return -1  # return -1 if no match found
 
 
-def writeLoads(bone, boneConfig, physicalGroup, all2DElements, load_index):
+def writeLoads(bone, boneConfig, physicalName, all2DElements, load_index):
+
+    physicalGroups = gmsh.model.getPhysicalGroups()
+    physicalGroup = []
+    for dim, tag in physicalGroups:
+        name = gmsh.model.getPhysicalName(dim, tag)
+        if name == physicalName:
+            physicalGroup.append((dim, tag))
+
     inputPath = boneConfig.inputPath
 
     h = bone.load_vars.load_center
@@ -369,7 +382,7 @@ def writeLoads(bone, boneConfig, physicalGroup, all2DElements, load_index):
             writer.Write()
 
 
-def writeParameters(bone, boneConfig, tags, all2DElements):
+def writeParameters(bone, boneConfig, tags, all2DElements, lines):
     k_OI = bone.load_vars.k_OI
 
     nElems = len(all2DElements[1][0])
@@ -384,9 +397,9 @@ def writeParameters(bone, boneConfig, tags, all2DElements):
                 f"      real*8, parameter :: k_OI={k_OI}\n"
                 "      integer conectividades(NELEMS, nnod+1)\n"
                 "      integer grupoFisico(NELEMS, 2)\n"
-                "      integer, parameter :: filasContorno1=1, filasContorno2=1\n"
-                "      integer, parameter :: filasContorno3=1, filasContorno4=1\n"
-                "      integer contorno1(filasContorno1, 6), contorno2(filasContorno2, 6)\n"
+                f"      parameter(filasContorno1={(lines[0] + 5) // 6})\n"
+                f"      parameter(filasContorno2={(lines[1] + 5) // 6})\n"
+                "      integer contorno1(filasContorno1,6),contorno2(filasContorno2,6)\n"
                 "      real*8 resNod(NUMNODE, 2)\n"
                 "      real*8 resElem(NELEMS, 12)\n"
                 "      real*8 myprops(8)\n"
@@ -396,4 +409,4 @@ def writeParameters(bone, boneConfig, tags, all2DElements):
                 "      common conectividades\n"
                 "      common grupoFisico\n"
                 "      common contorno1, contorno2\n"
-                "      common contorno3, contorno4\n")
+                )

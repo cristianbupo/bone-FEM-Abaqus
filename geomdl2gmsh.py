@@ -190,8 +190,8 @@ def container2gmsh(bone, boneConfig, curves):
     if not boneConfig.skipWrite:
         writeMeshFiles(bone, boneConfig)
 
-#    if runFltk:
-#        gmsh.fltk.run()
+    if runFltk:
+        gmsh.fltk.run()
 
 
 def writeMeshFiles(bone, boneConfig):
@@ -218,20 +218,20 @@ def writeMeshFiles(bone, boneConfig):
     physicalGroups_2D = gmsh.model.getPhysicalGroups(2)
 
     f2g.writeBody(physicalGroups_2D, inputPath)
-    f2g.writeBoundaries(physicalGroups_1D, inputPath)
+    lines = f2g.writeBoundaries(physicalGroups_1D, inputPath)
     all2DElements = gmsh.model.mesh.getElements(2)
 
     if number_loads == 1:
         bone.load_vars.load_center = 0.0
-        f2g.writeLoads(bone, boneConfig, [(1,3)], all2DElements, '')
+        f2g.writeLoads(bone, boneConfig, "contorno2", all2DElements, '')
     else:
         for i in range(0, number_loads):
             bone.load_vars.load_center = ((sigma - rl) * (2 * i - number_loads + 1)
                                         / (2 * number_loads - 2))
 
-            f2g.writeLoads(bone, boneConfig, [(1,3)], all2DElements, str(i))
+            f2g.writeLoads(bone, boneConfig, "contorno2", all2DElements, str(i))
 
-    f2g. writeParameters(bone, boneConfig, tags, all2DElements)
+    f2g. writeParameters(bone, boneConfig, tags, all2DElements, lines)
 
 
 def getUniqueControlPoints(curves):
@@ -340,8 +340,8 @@ def setSurfaceColors():
 def addPhysicalGroups():
     gmsh.model.addPhysicalGroup(2, [1], -1, "Hueso")
     gmsh.model.addPhysicalGroup(2, [2, 3, 4, 5], -1, "Cartilago")
-    gmsh.model.addPhysicalGroup(1, [6, 7, 8], -1, "contorno2")
     gmsh.model.addPhysicalGroup(1, [1, 2], -1, "contorno1")
+    gmsh.model.addPhysicalGroup(1, [6, 7, 8], -1, "contorno2")
     gmsh.model.addPhysicalGroup(0, [2], -1, "pin")
 
 

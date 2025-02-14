@@ -1,0 +1,1 @@
+abaqus job=analisis.inp user=general2DElastic.for ask_delete=OFF cpus=2
