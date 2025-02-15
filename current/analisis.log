@@ -95,3 +95,11 @@ End Analysis Input File Processor
 Begin Abaqus/Standard Analysis
 2/14/2025 10:20:45 AM
 Run standard.exe
+2/14/2025 10:41:35 AM
+End Abaqus/Standard Analysis
+Begin MFS->SFS and SIM cleanup
+2/14/2025 10:41:37 AM
+Run SMASimUtility.exe
+2/14/2025 10:41:37 AM
+End MFS->SFS and SIM cleanup
+Abaqus JOB analisis COMPLETED

@@ -1,8 +1,0 @@
-C:\Users\crist\github-repos\bone-FEM\FreeCAD2gmsh.py:87: unused attribute 'delta' (60% confidence)
-C:\Users\crist\github-repos\bone-FEM\FreeCAD2gmsh.py:88: unused attribute 'knotvector' (60% confidence)
-C:\Users\crist\github-repos\bone-FEM\geomdl2gmsh.py:90: unused attribute 'sample_size' (60% confidence)
-C:\Users\crist\github-repos\bone-FEM\geomdl2gmsh.py:315: unused attribute 'vis' (60% confidence)
-C:\Users\crist\github-repos\bone-FEM\geomdl2gmsh.py:318: unused attribute 'vis' (60% confidence)
-C:\Users\crist\github-repos\bone-FEM\geomdl2gmsh.py:326: unused attribute 'vis' (60% confidence)
-C:\Users\crist\github-repos\bone-FEM\geomdl2gmsh.py:329: unused attribute 'vis' (60% confidence)
-C:\Users\crist\github-repos\bone-FEM\geomdl2gmsh.py:341: unused attribute 'vis' (60% confidence)
