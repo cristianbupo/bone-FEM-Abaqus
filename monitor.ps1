@@ -3,7 +3,7 @@ param (
 )
 
 # Extract the actual file name from the full path
-$actualFileName = [System.IO.Path]::GetFileName($fileName)
+# $actualFileName = [System.IO.Path]::GetFileName($fileName)
 
 # Define a method to set the console title
 Add-Type -TypeDefinition @"
@@ -17,7 +17,7 @@ public class ConsoleTitle {
 "@
 
 # Set the console title to include the file name
-[ConsoleTitle]::SetConsoleTitle("$actualfileName")
+[ConsoleTitle]::SetConsoleTitle("$fileName")
 
 # Wait for the specified file to be deleted and monitor the log file in the same window
 Write-Output "Monitoring $fileName..."
