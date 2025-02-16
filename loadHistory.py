@@ -45,10 +45,10 @@ for i in range(0, N):
     if os.path.exists(mesh_dir):
         shutil.copy(mesh_dir, f"currentLoadHistory\\malla{i}.vtu")
 
-    dist_dir = "current\\distribucion.vtp"
+    dist_dir = "current\\carga.vtp"
     if os.path.exists(dist_dir):
-        shutil.copy(dist_dir, f"currentLoadHistory\\distribucion{i}.vtp")
+        shutil.copy(dist_dir, f"currentLoadHistory\\carga{i}.vtp")
 
-    dist_dir_2 = "current\\distribucion2.inp"
+    dist_dir_2 = "current\\carga2.inp"
     if os.path.exists(dist_dir_2):
-        shutil.copy(dist_dir_2, f"currentLoadHistory\\distribucion{i}.inp")
+        shutil.copy(dist_dir_2, f"currentLoadHistory\\carga{i}.inp")

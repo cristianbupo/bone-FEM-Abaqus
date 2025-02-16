@@ -214,7 +214,7 @@ C
 
       resElem(i, 10) = - (S11 + S22 + S33) / 3.d0
       resElem(i, 11) = sqrt((S11-S22)**2+(S22-S33)**2+(S33-S11)**2 + 6*S12**2)/3.d0
-      resElem(i, 12) = resElem(i, 11) + k_OI * resElem(i, 10)
+      resElem(i, 12) = resElem(i, 11) + kOI * resElem(i, 10)
 
       end do
 

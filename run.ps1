@@ -38,12 +38,6 @@ try {
     exit 1
 }
 
-# Wait for analisis.lck to be deleted
-Write-Output "Waiting for Abaqus to finish..."
 Set-Location ..
+exit
 
-while (Test-Path "current\analisis.lck") {
-    Start-Sleep -Seconds 1
-}
-
-Write-Output "Abaqus finished."

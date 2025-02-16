@@ -136,7 +136,7 @@ def myFunction(bone, boneLimits, boneConfig, sketch):
         bone.load_vars.load_center,
         bone.load_vars.load_amplitude,
         bone.load_vars.load_radius,
-        bone.load_vars.k_OI,
+        bone.load_vars.kOI,
         curvesMesh,
         inputPath='current',
         numberElements=bone.mesh_vars.number_elements,
@@ -192,7 +192,7 @@ def oldRunAbaqus(bone, boneConfig):
         f'{"--pickleOut" if boneConfig.pickleOut else ""} '
         f'{"--deleteBackUp" if boneConfig.deleteOutput else ""} '
         f'-hl {boneL.load_center} -kl {boneL.load_amplitude} -rl {boneL.load_radius} '
-        f'-koi {boneL.k_OI}" {str(boneConfig.runAbq).lower()}'
+        f'-koi {boneL.kOI}" {str(boneConfig.runAbq).lower()}'
     )
 
     # Remove extra spaces
@@ -232,7 +232,7 @@ def runAbaqus(boneConfig):
 def saveResults(dir_name, index):
     copyFile("current\\analisis.vtu", f"{dir_name}\\analisis{index}.vtu")
     copyFile("current\\malla.vtu", f"{dir_name}\\malla{index}.vtu")
-    copyFile("current\\distribucion.vtp", f"{dir_name}\\distribucion{index}.vtp")
+    copyFile("current\\carga.vtp", f"{dir_name}\\carga{index}.vtp")
 
 
 def copyFile(origin, destination):
@@ -267,7 +267,7 @@ def main():
     # setattr(boneConfig, 'writeVTK', True)
     setattr(boneConfig, 'deleteOutput', True)
     setattr(bone.load_vars, 'load_center', 0.0)
-    setattr(bone.mesh_vars, 'number_elements', 10)
+    setattr(bone.mesh_vars, 'number_elements', 6)
     setattr(boneConfig, 'runAbq', True)
     setattr(bone.load_vars, 'number_loads', 1)
 

@@ -33,7 +33,7 @@
 *INCLUDE, INPUT=condicionesContorno.inp
 ** LOADS
 ** Name: Load-1
-*INCLUDE, INPUT=distribucion.inp 
+*INCLUDE, INPUT=carga.inp 
 ** OUTPUT REQUESTS
 **
 *NODE PRINT,FREQ=1 

@@ -30,7 +30,7 @@ class args:
         self.load_center = hl
         self.load_amplitude = kl
         self.load_radius = rl
-        self.k_OI = koi
+        self.kOI = koi
 
         # Analysis parameters
         self.runAbq = runAbq
@@ -68,7 +68,7 @@ class args:
             f'{"--pickleOut" if self.pickleOut else ""} '
             f'{"--deleteBackUp" if self.deleteBackUp else ""} '
             f'-hl {self.load_center} -kl {self.load_amplitude} -rl {self.load_radius} '
-            f'-koi {self.k_OI}" {str(self.runAbq).lower()}'
+            f'-koi {self.kOI}" {str(self.runAbq).lower()}'
         )
 
         return run_command(command)
@@ -77,7 +77,7 @@ class args:
 def exportResults(originFolder, destinationFolder, fileID):
     analysis_dir = os.path.join(originFolder, "analisis.vtu")
     mesh_dir = os.path.join(originFolder, "malla.vtu")
-    dist_dir = os.path.join(originFolder, "distribucion.vtp")
+    dist_dir = os.path.join(originFolder, "carga.vtp")
 
     if os.path.exists(analysis_dir):
         shutil.copy(analysis_dir, os.path.join(destinationFolder,
@@ -89,7 +89,7 @@ def exportResults(originFolder, destinationFolder, fileID):
 
     if os.path.exists(dist_dir):
         shutil.copy(dist_dir, os.path.join(destinationFolder,
-                                           f"distribucion{fileID}.vtu"))
+                                           f"carga{fileID}.vtu"))
 
 
 def run_command(command):
@@ -138,7 +138,7 @@ def parametricAnalysisKoi():
             string = f"\n case{i}:\n"
 
             params = args()
-            params.k_OI = koi_val
+            params.kOI = koi_val
             params.runAbq = True
             command = params.run()
             string += f"Command: {command}\n"
@@ -154,11 +154,11 @@ def parametricAnalysisKoi():
             if os.path.exists("current\\malla.vtu"):
                 shutil.copy("current\\malla.vtu", f"{dir_name}\\malla{i}.vtu")
 
-            distribution_dir = "current\\distribucion.vtp"
+            distribution_dir = "current\\carga.vtp"
             if os.path.exists(distribution_dir):
-                shutil.copy(distribution_dir, f"{dir_name}\\distribucion{i}.vtp")
+                shutil.copy(distribution_dir, f"{dir_name}\\carga{i}.vtp")
             else:
-                string += (f"Error: current\\distribucion.vtp"
+                string += (f"Error: current\\carga.vtp"
                            f" does not exist for case{i}\n")
 
             # Calculate the elapsed time
@@ -238,12 +238,12 @@ def parametricAnalysisVariable():
                         shutil.copy("current\\malla.vtu",
                                     f"{dir_name}\\malla{index}.vtu")
 
-                    distribution_dir = "current\\distribucion.vtp"
+                    distribution_dir = "current\\carga.vtp"
                     if os.path.exists(distribution_dir):
                         shutil.copy(distribution_dir,
-                                    f"{dir_name}\\distribucion{index}.vtp")
+                                    f"{dir_name}\\carga{index}.vtp")
                     else:
-                        string += (f"Error: current\\distribucion.vtp"
+                        string += (f"Error: current\\carga.vtp"
                                    f" does not exist for case{index}\n")
 
                     # Calculate the elapsed time

@@ -37,7 +37,7 @@ C
      3 JDLTYP(MDLOAD,*),ADLMAG(MDLOAD,*),DDLMAG(MDLOAD,*),
      4 PREDEF(2,NPREDF,NNODE),LFLAGS(*),JPROPS(*)
 C
-	real*8    x(dim,nnod),de(8)
+	real*8    x(dim,nnod)!,de(8)
       integer   k1,k2
 C
       integer debugUnit
@@ -48,13 +48,13 @@ C
       debugUnit = 15  ! or any unused Fortran unit number
 C
 C     Se llaman las propiedades del modelo (parametros)
-	call INPUT(props,de,NPROPS)
+C      call INPUT(props,de,NPROPS)
 C
 C     Inicializacion  
       DO 6 K1=1,NDOFEL                      
-		RHS(K1,NRHS)=0.0
+		   RHS(K1,NRHS)=0.0
       DO 4 K2=1,NDOFEL
-		AMATRX(K2,K1)=0.0
+		   AMATRX(K2,K1)=0.0
     4 CONTINUE                                      
     6 CONTINUE   
 C
@@ -120,30 +120,6 @@ C----- END DEBUG SECTION ---------------------------------------------
       return
       end
 C---------------------------------------------------------------------------------
-C-------------------------------------------------------------INPUT---------------
-C															
-C     Funcion de entrada INPUT
-C      
-C     Obtiene los parametros del modelo
-C     A definir
-C									
-C----------------------------------------------------------------------------------
-C
-      subroutine INPUT(propr,de,NPROPS)
-C
-	include 'conec.for'
-C
-      real*8 propr(*),de(8)
-C
-C     Almacenamos las propiedades enteras y reales en el vector de 
-C
-	do i=1,8
-	  de(i) = propr(i)
-        myprops(i) = propr(i)
-	enddo
-C
-      return
-      end
 C------------------------------------------------------------------------- BGAUSS2 -------
 C
 C     Funcion bgauss(sg,wg)
@@ -256,39 +232,39 @@ C
       integer i
       real*8 chi,eta,xjac,shp(3,nnod),x(2,nnod),d2shp(3,nnod)
       real*8 dxchi,dxeta,dychi,dyeta,dchix,dchiy,detax,detay
-	real*8 dNchi(nnod),dNeta(nnod)
-	real*8 d2Nchi_eta(nnod)
-	real*8 d2xchi_eta,d2ychi_eta,dxjacchi,dxjaceta,dxjacx,dxjacy
-	real*8 d2eta_xx,d2chi_xx,d2chi_yy,d2eta_yy,d2eta_xy,d2chi_xy
+      real*8 dNchi(nnod),dNeta(nnod)
+      real*8 d2Nchi_eta(nnod)
+      real*8 d2xchi_eta,d2ychi_eta,dxjacchi,dxjaceta,dxjacx,dxjacy
+      real*8 d2eta_xx,d2chi_xx,d2chi_yy,d2eta_yy,d2eta_xy,d2chi_xy
 C
-       dxchi=0.d0
-       dxeta=0.d0
-       dychi=0.d0
-       dyeta=0.d0
-       dchix=0.d0
-       dchiy=0.d0
-       detax=0.d0
-       detay=0.d0
+      dxchi=0.d0
+      dxeta=0.d0
+      dychi=0.d0
+      dyeta=0.d0
+      dchix=0.d0
+      dchiy=0.d0
+      detax=0.d0
+      detay=0.d0
 C
-       shp=0.d0
+      shp=0.d0
 C
 c     Primera fila de la matriz shp - Funciones de forma en los 8 nodos
-       shp(1,1) = 0.25*(1.0 - chi)*(1.0 - eta)
-       shp(1,2) = 0.25*(1.0 + chi)*(1.0 - eta)
-       shp(1,3) = 0.25*(1.0 + chi)*(1.0 + eta)
-       shp(1,4) = 0.25*(1.0 - chi)*(1.0 + eta)
+      shp(1,1) = 0.25*(1.0 - chi)*(1.0 - eta)
+      shp(1,2) = 0.25*(1.0 + chi)*(1.0 - eta)
+      shp(1,3) = 0.25*(1.0 + chi)*(1.0 + eta)
+      shp(1,4) = 0.25*(1.0 - chi)*(1.0 + eta)
 C
 C     Primeras derivadas de las funciones de forma con respecto a chi
-       dNchi(1) = -0.25*(1.0 - eta)
-	 dNchi(2) =  0.25*(1.0 - eta)
-	 dNchi(3) =  0.25*(1.0 + eta)
-	 dNchi(4) = -0.25*(1.0 + eta)
+      dNchi(1) = -0.25*(1.0 - eta)
+      dNchi(2) =  0.25*(1.0 - eta)
+      dNchi(3) =  0.25*(1.0 + eta)
+      dNchi(4) = -0.25*(1.0 + eta)
 C
 C     Primeras derivadas de las funciones de forma con respecto a eta
-       dNeta(1) = -0.25*(1.0 - chi)
-	 dNeta(2) = -0.25*(1.0 + chi)
-	 dNeta(3) =  0.25*(1.0 + chi)
-	 dNeta(4) =  0.25*(1.0 - chi)
+      dNeta(1) = -0.25*(1.0 - chi)
+      dNeta(2) = -0.25*(1.0 + chi)
+      dNeta(3) =  0.25*(1.0 + chi)
+      dNeta(4) =  0.25*(1.0 - chi)
 C
 
 C     Segundas derivadas de las funciones de forma con respecto a chi y eta
@@ -347,27 +323,27 @@ C
 C     Calculo de las segundas derivadas, la primera fila indica las segundas derivadas de
 C     las funciones de forma con respecto a x, la segunda con respecto a y, y la tercera, los terminos cruzados
       do i =1,nnod     
-	  d2shp(1,i)=2.d0*d2Nchi_eta(i)*detax*dchix+dNchi(i)*d2chi_xx+
+	   d2shp(1,i)=2.d0*d2Nchi_eta(i)*detax*dchix+dNchi(i)*d2chi_xx+
 	1             dNeta(i)*d2eta_xx
-	  d2shp(2,i)=2.d0*d2Nchi_eta(i)*detay*dchiy+dNchi(i)*d2chi_yy+
+	   d2shp(2,i)=2.d0*d2Nchi_eta(i)*detay*dchiy+dNchi(i)*d2chi_yy+
 	1             dNeta(i)*d2eta_yy
-        d2shp(3,i)=d2Nchi_eta(i)*(detay*dchix+detax*dchiy)+
+      d2shp(3,i)=d2Nchi_eta(i)*(detay*dchix+detax*dchiy)+
 	1             dNchi(i)*d2chi_xy+dNeta(i)*d2eta_xy
 	enddo
 C
-c     Calculo de las derivadas de las funciones de forma con respecto a x
+C     Calculo de las derivadas de las funciones de forma con respecto a x
 C
-       shp(2,1) = - 0.25*((1.0-eta)*dchix + (1.0-chi)*detax)
-       shp(2,2) =   0.25*((1.0-eta)*dchix - (1.0+chi)*detax)
-       shp(2,3) =   0.25*((1.0+eta)*dchix + (1.0+chi)*detax)
-       shp(2,4) = - 0.25*((1.0+eta)*dchix - (1.0-chi)*detax)
+      shp(2,1) = - 0.25*((1.0-eta)*dchix + (1.0-chi)*detax)
+      shp(2,2) =   0.25*((1.0-eta)*dchix - (1.0+chi)*detax)
+      shp(2,3) =   0.25*((1.0+eta)*dchix + (1.0+chi)*detax)
+      shp(2,4) = - 0.25*((1.0+eta)*dchix - (1.0-chi)*detax)
 
-c     Calculo de las derivadas de las funciones de forma con respecto a y
-
-       shp(3,1) = - 0.25*((1.0-eta)*dchiy + (1.0-chi)*detay)
-       shp(3,2) =   0.25*((1.0-eta)*dchiy - (1.0+chi)*detay)
-       shp(3,3) =   0.25*((1.0+eta)*dchiy + (1.0+chi)*detay)
-       shp(3,4) = - 0.25*((1.0+eta)*dchiy - (1.0-chi)*detay)
+C     Calculo de las derivadas de las funciones de forma con respecto a y
+C
+      shp(3,1) = - 0.25*((1.0-eta)*dchiy + (1.0-chi)*detay)
+      shp(3,2) =   0.25*((1.0-eta)*dchiy - (1.0+chi)*detay)
+      shp(3,3) =   0.25*((1.0+eta)*dchiy + (1.0+chi)*detay)
+      shp(3,4) = - 0.25*((1.0+eta)*dchiy - (1.0-chi)*detay)
 C
       return
       end
@@ -391,8 +367,8 @@ C     Entradas
       integer nst,ndofel,nrhs,nsvars,jelem
       integer KDLOAD,MDLOAD,NDLOAD,JDLTYP(MDLOAD,*)
       real*8  ADLMAG(MDLOAD,*)
-      real*8  x(dim,nnod),du(ndofel,*),u(ndofel),v(ndofel),de(8)
-	real*8  dtime,time(2),svars(nsvars)
+      real*8  x(dim,nnod),du(ndofel,*),u(ndofel),v(ndofel)!,de(8)
+	   real*8  dtime,time(2),svars(nsvars)
 C
 C     Salidas
       real*8  p(ndofel,nrhs),m_k(ndofel,ndofel)
@@ -402,19 +378,20 @@ C
 C     Generales
       integer k1,k2,k3,cc,ff,fil,col,tipo,colg,filg,colp,filp
       real*8  du1(nnod),du2(nnod)
-	real*8  u1(nnod),u2(nnod)
+   	real*8  u1(nnod),u2(nnod)
 C     real*8  du1(nnod),du2(nnod),du3(nnod),du4(nnod),du5(nnod)
-C	real*8  u1(nnod),u2(nnod),u3(nnod),u4(nnod),u5(nnod)
-	real*8  paux(ndofel),Kelast(dim*nnod,dim*nnod)
-	real*8  masa_el(dim*nnod,dim*nnod),vector_carga(dim*nnod)
-	real*8  Def(dim*nnod)
+C	   real*8  u1(nnod),u2(nnod),u3(nnod),u4(nnod),u5(nnod)
+	   real*8  paux(ndofel),Kelast(dim*nnod,dim*nnod)
+      real*8  masa_el(dim*nnod,dim*nnod),vector_carga(dim*nnod)
+      real*8  Def(dim*nnod)
+      logical :: found
 C
 C     Variables de la carga distribuida
-      integer n1, n2
+      integer n1, n2, i
       real*8 mag
       real*8  x1(dim),x2(dim)
       real*8  f, fx, fy
-C      real*8  len, angulo, 
+C     real*8  len, angulo, 
 C     Inicializacion del tiempo
       if (dtime.eq.0.0) then
         dtime=1.e-15
@@ -422,17 +399,17 @@ C     Inicializacion del tiempo
 C
 C     Inicializacion de los vectores solucion
       do i=1,nnod
-	  du1(i) = du(2*(i-1)+1,1)
-	  du2(i) = du(2*(i-1)+2,1)
-C	  du3(i) = du(5*(i-1)+3,1)
-C	  du4(i) = du(5*(i-1)+4,1)
-C	  du5(i) = du(5*(i-1)+5,1)
-	  u1(i)  = u(2*(i-1)+1)
-	  u2(i)  = u(2*(i-1)+2)
-C	  u3(i)  = u(5*(i-1)+3)
-C	  u4(i)  = u(5*(i-1)+4)
-C	  u5(i)  = u(5*(i-1)+5)
-	enddo
+      du1(i) = du(2*(i-1)+1,1)
+      du2(i) = du(2*(i-1)+2,1)
+C	    du3(i) = du(5*(i-1)+3,1)
+C	    du4(i) = du(5*(i-1)+4,1)
+C	    du5(i) = du(5*(i-1)+5,1)
+      u1(i)  = u(2*(i-1)+1)
+      u2(i)  = u(2*(i-1)+2)
+C	    u3(i)  = u(5*(i-1)+3)
+C	    u4(i)  = u(5*(i-1)+4)
+C	    u5(i)  = u(5*(i-1)+5)
+      enddo
 C
 C     Inicializacion de matrices y variables
       m_k   =   0.d0
@@ -442,83 +419,100 @@ C     Ensamblar la matriz de rigidez elastica en la matriz tangente global
 C     Llamado de la matriz de rigidez para la expansion
       call matriz_rigidez_el(u,ndofel,de,x,jelem,time(2),Kelast)
       do k1=1,nnod
-        do k2=1,nnod
-           fil=2*(k1-1)+1
-           col=2*(k2-1)+1
-           ff =dim*(k1-1)+1
-           cc =dim*(k2-1)+1
-	     do i=1,dim
-	       do j=1,dim
-	         colg = col+(j-1)
-		   filg = fil+(i-1)
-	         colp = cc +(j-1)
-		   filp = ff +(i-1) 
+         do k2=1,nnod
+            fil=2*(k1-1)+1
+            col=2*(k2-1)+1
+            ff =dim*(k1-1)+1
+            cc =dim*(k2-1)+1
+         do i=1,dim
+            do j=1,dim
+               colg = col+(j-1)
+            filg = fil+(i-1)
+               colp = cc +(j-1)
+            filp = ff +(i-1) 
                m_k(filg,colg) = m_k(filg,colg)+Kelast(filp,colp)
-	       enddo
-	     enddo
-        enddo
+            enddo
+         enddo
+         enddo
       enddo   
 C
 C     RHS:
-	paux=matmul(m_k,u)
+	   paux=matmul(m_k,u)
 C
 C     Ensamble del vector residuo
       do k1=1,ndofel
-	  p(k1,1)= - paux(k1)
+	      p(k1,1)= - paux(k1)
       enddo
 C
 C     Insercion de carga distribuida
-
-      DO KDLOAD = 1, NDLOAD
-            n1 = JDLTYP(KDLOAD,1) ! Cara de la carga distribuida
-            mag = ADLMAG(KDLOAD,1) ! Magnitud de la carga distribuida
-
-            n2 = mod(n1, nnod)+1
-
-            x1 = x(:,n1)
-            x2 = x(:,n2)
-
-C            len = sqrt((x2(1)-x1(1))**2 + (x2(2)-x1(2))**2)
-C            angulo = atan2(x2(2)-x1(2), x2(1)-x1(1))
-            f = mag/2 ! *len
-            fx = -f*(x2(2)-x1(2)) !/len
-            fy = f*(x2(1)-x1(1)) !/len
-
-            p(2*(n1-1)+1, 1) = p(2*(n1-1)+1, 1) + fx
-            p(2*(n1-1)+2, 1) = p(2*(n1-1)+2, 1) + fy
-            p(2*(n2-1)+1, 1) = p(2*(n2-1)+1, 1) + fx
-            p(2*(n2-1)+2, 1) = p(2*(n2-1)+2, 1) + fy
-
+      found = .false.
+      do i = 1, listNElementLoads(1)
+         if (jelem == elementFaces(i, 1)) then
+            found = .true.
+            exit
+         endif
       enddo
+
+C     TODO: Use a similar approach to KDLOAD, NDLOAD and ADLMAG to load elements
+C     DO KDLOAD = 1, NDLOAD
+C         n1 = JDLTYP(KDLOAD,1) ! Cara de la carga distribuida
+C         mag = ADLMAG(KDLOAD,1) ! Magnitud de la carga distribuida
+C     ENDDO
+
+      if (found) then ! Works just for 1 load per element
+         n1 = elementFaces(i, 2) ! Cara de la carga distribuida
+         mag = elementLoads(i) ! Magnitud de la carga distribuida
+
+         n2 = mod(n1, nnod)+1
+
+         x1 = x(:,n1)
+         x2 = x(:,n2)
+
+C         len = sqrt((x2(1)-x1(1))**2 + (x2(2)-x1(2))**2)
+C         angulo = atan2(x2(2)-x1(2), x2(1)-x1(1))
+         f = mag/2 ! *len
+         fx = -f*(x2(2)-x1(2)) !/len
+         fy = f*(x2(1)-x1(1)) !/len
+
+         p(2*(n1-1)+1, 1) = p(2*(n1-1)+1, 1) + fx
+         p(2*(n1-1)+2, 1) = p(2*(n1-1)+2, 1) + fy
+         p(2*(n2-1)+1, 1) = p(2*(n2-1)+1, 1) + fx
+         p(2*(n2-1)+2, 1) = p(2*(n2-1)+2, 1) + fy
+
+         print *, p(2*(n1-1)+1, 1), p(2*(n1-1)+2, 1)
+         print *, p(2*(n2-1)+1, 1), p(2*(n2-1)+2, 1)
+         print *, ' '
+      endif
 C
 C     Insercion del vector de deformacion
-	call vector_deformacion(u,ndofel,de,x,jelem,time(2),Def)
+	   call vector_deformacion(u,ndofel,de,x,jelem,time(2),Def)
+C
       do k1=1,nnod
-	  fil=2*(k1-1)+1 !CUIDADO
-	  ff =dim*(k1-1)+1
-	  do i=1,dim
-	    filg = fil+(i-1)
-	    filp = ff +(i-1) 
-C	    p(fil,1)=p(fil,1)+Def(ff)
-          p(filg,1)=p(filg,1)+Def(filp)
-	  enddo
-	enddo
+         fil=2*(k1-1)+1 !2 es el número de grados de libertad por nodo
+         ff =dim*(k1-1)+1
+         do i=1,dim
+            filg = fil+(i-1)
+            filp = ff +(i-1) 
+C	       p(fil,1)=p(fil,1)+Def(ff)
+            p(filg,1)=p(filg,1)+Def(filp)
+         enddo
+      enddo
 C
       return
       end
 C------------------------------------------------------------------------------------------
-C---------------------------------------------------------------MATRIZ_DIFUSION_SCH________
+C----------------------------------------------------------------matriz_rigidez_el---------
 C
 C	 Funcion matriz_rigidez_el: matriz de rigidez elastica
 c
 C------------------------------------------------------------------------------------------
 	subroutine matriz_rigidez_el(u,ndofel,de,x,jelem,t,Cmat)
 C
-	include 'conec.for'
+	   include 'conec.for'
 C
 C     Variables de entrada
       integer  ndofel,jelem
-	real*8   u(ndofel),x(dim,nnod),t,de(8)
+      real*8   u(ndofel),x(dim,nnod),t!,de(8)
 C
 C     variables de salida
       real*8   Cmat(dim*nnod,dim*nnod)
@@ -526,59 +520,60 @@ C
 C     Variables de la subrutina
 C     Generales
       integer  i,j,k
-	real*8   wg(2),sg(2),matriz(dim*nnod,dim*nnod)
+      real*8   wg(2),sg(2),matriz(dim*nnod,dim*nnod)
 C	real*8   u1(nnod),u2(nnod),u3(nnod),u4(nnod),u5(nnod)
-	real*8   u1(nnod),u2(nnod)
-	real*8   chi,eta,dx,xjac
-	real*8   Dmat(3*(dim-1)+axi,3*(dim-1)+axi)
+      real*8   u1(nnod),u2(nnod)
+      real*8   chi,eta,dx,xjac
+      real*8   Dmat(3*(dim-1)+axi,3*(dim-1)+axi)
 C
 C     En 2D
       real*8   shp2D(3,nnod),Nmat2D(1,nnod)
-	real*8   Bmat2D(2,nnod),Nmatel2D(2,2*nnod),Bmatel2D(4,dim*nnod)
-	real*8   Bmatplano2D(3,2*nnod),r,r0,Bmataxi2D(4,2*nnod)
+      real*8   Bmat2D(2,nnod),Nmatel2D(2,2*nnod),Bmatel2D(4,dim*nnod)
+      real*8   Bmatplano2D(3,2*nnod),r,r0,Bmataxi2D(4,2*nnod)
 C
 C     Inicializacion de variables
-	xjac	     =   0.d0
-	chi	     =   0.d0
-	eta        =   0.d0
-	zita       =   0.d0
-	dx	     =   0.d0
-	Nmat2D     =   0.d0
-	Bmat2D     =   0.d0
-	Nmatel2D   =   0.d0
-	Bmatel2D   =   0.d0
-	Bmatplano2D=   0.d0
-	Bmataxi2D  =   0.d0
-	Cmat 	     =   0.d0
-	Dmat       =   0.d0
-	matriz     =   0.d0
-	r0         =   de(5)
+      xjac	     =   0.d0
+      chi	     =   0.d0
+      eta        =   0.d0
+      zita       =   0.d0
+      dx	     =   0.d0
+      Nmat2D     =   0.d0
+      Bmat2D     =   0.d0
+      Nmatel2D   =   0.d0
+      Bmatel2D   =   0.d0
+      Bmatplano2D=   0.d0
+      Bmataxi2D  =   0.d0
+      Cmat 	     =   0.d0
+      Dmat       =   0.d0
+      matriz     =   0.d0
+      r0         =   0.d0
+C	    r0         =   de(5)
 C
 C     Extraccion de los valores de u y v
       do i=1,nnod
-	  u1(i)  = u(2*(i-1)+1)
-	  u2(i)  = u(2*(i-1)+2)
-C	  u3(i)  = u(5*(i-1)+3)
-C	  u4(i)  = u(5*(i-1)+4)
-C	  u5(i)  = u(5*(i-1)+5)
-	enddo
+         u1(i)  = u(2*(i-1)+1)
+         u2(i)  = u(2*(i-1)+2)
+C	       u3(i)  = u(5*(i-1)+3)
+C	       u4(i)  = u(5*(i-1)+4)
+C	       u5(i)  = u(5*(i-1)+5)
+	   enddo
 C
 C	Calculo de los puntos de Gauss
-	call bgauss(sg,wg)
+	   call bgauss(sg,wg)
 C
 C	Bucle para cada punto de Gauss
       if(dim.eq.2)then
-	  do i = 1,2
-  	    chi = sg(i)
-	    do j = 1,2
-	      eta = sg(j)
+	      do i = 1,2
+  	         chi = sg(i)
+	      do j = 1,2
+	         eta = sg(j)
 C
 C           Inicializacion de la matriz de constantes elasticas
             call matriz_constantes_el(chi,eta,zita,u,ndofel,de,x,
 	1           jelem,t,Dmat)
 C
 C	      Se calculan las funciones de forma
-	      call f_forma2D(chi,eta,x,shp2D,xjac)
+	         call f_forma2D(chi,eta,x,shp2D,xjac)
 C
 C           Se obtienen las matrices de calculo
             call Matrices_de_calculo2D(shp2D,Nmat2D,Bmat2D,Nmatel2D,
@@ -589,9 +584,9 @@ C           Se calcula el diferencial de la integral
 C
 C           Tipo de analisis
             if(axi.eq.0)then ! Caso plano: esfuerzo o deformacion plana
-	         Bmatplano2D = Bmatel2D(1:3,:)
+	            Bmatplano2D = Bmatel2D(1:3,:)
 C              Se calculan las matriz elemental correspondiente a reaccion
-	          matriz = matmul(transpose(Bmatplano2D),
+	            matriz = matmul(transpose(Bmatplano2D),
 	1                   matmul(Dmat(1:3,1:3),Bmatplano2D))
 	         r = 1
             elseif(axi.eq.1)then
@@ -624,12 +619,12 @@ C-------------------------------------------------------------------------------
 	subroutine matriz_constantes_el(chi,eta,zita,u,ndofel,de,x,
      1 jelem,t,Dmat)
 C
-	include 'conec.for'
+	   include 'conec.for'
 C
 C     Variables de entrada
       integer  ndofel,jelem
       real*8   chi,eta,zita
-	real*8   u(ndofel),x(dim,nnod),t,de(8)
+	   real*8   u(ndofel),x(dim,nnod),t!,de(8)
 C
 C     variables de salida
       real*8   Dmat(3*(dim-1)+axi,3*(dim-1)+axi)
@@ -638,9 +633,9 @@ C     Variables de la subrutina
 C     Generales
       integer  i,j,k
 C	real*8   u1(nnod),u2(nnod),u3(nnod),u4(nnod),u5(nnod)
-	real*8   u1(nnod),u2(nnod)
-	real*8   E,nu,d11,d22,d33,d12
-	real*8   Dmatb(3*(dim-1)+axi,3*(dim-1)+axi)
+      real*8   u1(nnod),u2(nnod)
+      real*8   E,nu,d11,d22,d33,d12
+      real*8   Dmatb(3*(dim-1)+axi,3*(dim-1)+axi)
 
       character*276         filename
       character(256)        JOBDIR
@@ -652,64 +647,69 @@ C	real*8   u1(nnod),u2(nnod),u3(nnod),u4(nnod),u5(nnod)
 C
 C     Definicion del tensor de constantes elasticas
       Dmat   = 0.d0
-      E      = myprops(3)
-	nu     = myprops(4) 
+      E      = propiedades(grupoFisico(jelem,2),1)
+   	nu     = propiedades(grupoFisico(jelem,2),2)
+C
+C      print *, 'jelem = ', jelem
+C      print *, 'grupo = ', grupoFisico(jelem,2)
+C      print *, 'E = ', propiedades(grupoFisico(jelem,2),1)
+C      print *, 'nu = ', propiedades(grupoFisico(jelem,2),2)
 C
       if(dim.eq.2)then
 C       Analisis bidimensional
-        if(axi.eq.0)then ! Analisis plano
-          if(tipo_def.eq.1)then ! Esfuerzo plano
+         if(axi.eq.0)then ! Analisis plano
+            if(tipo_def.eq.1)then ! Esfuerzo plano
 C            Constantes
-	         d11 = E/(1.d0-nu**2)
-		   d22 = d11
-		   d12 = nu*d11
-		   d33 = 0.5d0*E/(1.d0+nu)   
+               d11 = E/(1.d0-nu**2)
+               d22 = d11
+               d12 = nu*d11
+               d33 = 0.5d0*E/(1.d0+nu)   
 C
 C            Definicion de la matriz de constantes
-             Dmat(1,1) = d11
-	       Dmat(2,2) = d22
-	       Dmat(1,2) = d12
-	       Dmat(2,1) = Dmat(1,2)
-             Dmat(3,3) = d33
+               Dmat(1,1) = d11
+               Dmat(2,2) = d22
+               Dmat(1,2) = d12
+               Dmat(2,1) = Dmat(1,2)
+               Dmat(3,3) = d33
 
 
 C 
-	    elseif(tipo_def.eq.2)then ! Deformacion plana
+	         elseif(tipo_def.eq.2)then ! Deformacion plana
 C            Constantes
-	         d11 = E*(1.d0-nu)/((1.d0-2.d0*nu)*(1.d0+nu))
-		   d22 = d11
-		   d12 = d11*nu/(1.d0-nu)
-		   d33 = 0.5d0*E/(1.d0+nu)   
+               d11 = E*(1.d0-nu)/((1.d0-2.d0*nu)*(1.d0+nu))
+               d22 = d11
+               d12 = d11*nu/(1.d0-nu)
+               d33 = 0.5d0*E/(1.d0+nu)   
 C
 C            Definicion de la matriz de constantes
-             Dmat(1,1) = d11
-	       Dmat(2,2) = d22
-	       Dmat(1,2) = d12
-	       Dmat(2,1) = Dmat(1,2)
-             Dmat(3,3) = d33
+               Dmat(1,1) = d11
+               Dmat(2,2) = d22
+               Dmat(1,2) = d12
+               Dmat(2,1) = Dmat(1,2)
+               Dmat(3,3) = d33
 C 
-          endif
+            endif
 C
 C       Axisimetrico
-        elseif(axi.eq.1)then ! Analisis axisimetrico
+         elseif(axi.eq.1)then ! Analisis axisimetrico
 C         Constantes
-          d11 = E*(1.d0-nu)/((1.d0-2.d0*nu)*(1.d0+nu))
-   	    d22 = d11
-		d12 = d11*nu/(1.d0-nu)
-		d33 = 0.5d0*E/(1.d0+nu)   
+            d11 = E*(1.d0-nu)/((1.d0-2.d0*nu)*(1.d0+nu))
+            d22 = d11
+            d12 = d11*nu/(1.d0-nu)
+            d33 = 0.5d0*E/(1.d0+nu)   
 C         Definicion de la matriz de constantes
-          Dmat(1,1) = d11
-          Dmat(2,2) = d22
-          Dmat(1,2) = d12
-          Dmat(2,1) = Dmat(1,2)
-          Dmat(3,3) = d33
-          Dmat(1,4) = d12
-	    Dmat(2,4) = d12
-	    Dmat(4,1) = Dmat(1,4)
-	    Dmat(4,2) = Dmat(2,4)
-	    Dmat(4,4) = d11
-	  endif
-	endif
+            Dmat(1,1) = d11
+            Dmat(2,2) = d22
+            Dmat(1,2) = d12
+            Dmat(2,1) = Dmat(1,2)
+            Dmat(3,3) = d33
+            Dmat(1,4) = d12
+            Dmat(2,4) = d12
+            Dmat(4,1) = Dmat(1,4)
+            Dmat(4,2) = Dmat(2,4)
+            Dmat(4,4) = d11
+	      endif
+	   endif
 
 C----- DEBUG OUTPUT SECTION ------------------------------------------
       call GETOUTDIR(JOBDIR,LENJOBDIR)
@@ -744,11 +744,11 @@ c
 C------------------------------------------------------------------------------------------
 	subroutine vector_deformacion(u,ndofel,de,x,jelem,t,Cmat)
 C
-	include 'conec.for'
+	   include 'conec.for'
 C
 C     Variables de entrada
       integer  ndofel,jelem
-	real*8   u(ndofel),x(dim,nnod),t,de(8)
+	   real*8   u(ndofel),x(dim,nnod),t!,de(8)
 C
 C     variables de salida
       real*8   Cmat(dim*nnod)
@@ -756,34 +756,35 @@ C
 C     Variables de la subrutina
 C     Generales
       integer  i,j,k
-	real*8   wg(2),sg(2),vector(dim*nnod)
-C	real*8   u1(nnod),u2(nnod),u3(nnod),u4(nnod),u5(nnod)
-	real*8   u1(nnod),u2(nnod)
-	real*8   chi,eta,dx,xjac
-	real*8   Dmat(3*(dim-1)+axi,3*(dim-1)+axi)
+	   real*8   wg(2),sg(2),vector(dim*nnod)
+C	    real*8   u1(nnod),u2(nnod),u3(nnod),u4(nnod),u5(nnod)
+      real*8   u1(nnod),u2(nnod)
+      real*8   chi,eta,dx,xjac
+      real*8   Dmat(3*(dim-1)+axi,3*(dim-1)+axi)
 C
 C     En 2D
       real*8   shp2D(3,nnod),Nmat2D(1,nnod)
-	real*8   Bmat2D(2,nnod),Nmatel2D(2,2*nnod),Bmatel2D(4,2*nnod)
-	real*8   Bmatplano2D(3,2*nnod),r,r0,Bmataxi2D(4,2*nnod)
-	real*8   Def2D(4)
+      real*8   Bmat2D(2,nnod),Nmatel2D(2,2*nnod),Bmatel2D(4,2*nnod)
+      real*8   Bmatplano2D(3,2*nnod),r,r0,Bmataxi2D(4,2*nnod)
+      real*8   Def2D(4)
 C
 C     Inicializacion de variables
-	xjac	     =   0.d0
-	chi	     =   0.d0
-	eta        =   0.d0
-	zita       =   0.d0
-	dxchi      =   0.d0
-	Nmat2D     =   0.d0
-	Bmat2D     =   0.d0
-	Nmatel2D   =   0.d0
-	Bmatel2D   =   0.d0
-	Bmatplano2D=   0.d0
-	Bmataxi2D  =   0.d0
-	Cmat 	     =   0.d0
-	Dmat       =   0.d0
-	vector     =   0.d0
-	r0         =   de(5)
+      xjac	     =   0.d0
+      chi	     =   0.d0
+      eta        =   0.d0
+      zita       =   0.d0
+      dxchi      =   0.d0
+      Nmat2D     =   0.d0
+      Bmat2D     =   0.d0
+      Nmatel2D   =   0.d0
+      Bmatel2D   =   0.d0
+      Bmatplano2D=   0.d0
+      Bmataxi2D  =   0.d0
+      Cmat 	     =   0.d0
+      Dmat       =   0.d0
+      vector     =   0.d0
+      r0         =   0.d0
+C	    r0         =   de(5)
 C
 C     Extraccion de los valores de u y v
       do i=1,nnod
@@ -882,8 +883,7 @@ C
       real*8     Nm(1,nnod),Ne(2,2*nnod),Bm(2,nnod),Be(4,2*nnod)
       real*8     I1,I2,I3,r,def_crec(4),dx
       real*8     zita,t,sigma_zz,Et(10),nut(10),Def2D(3),deforma
-      real*8     Esf_Hid,Esf_VM
-      real*8     OI, kOI
+      real*8     Esf_Hid,Esf_VM,OI
 
       real*8   def3D(6)
       real*8   dv,EsMax,EsMin,theta,thetadf
@@ -910,14 +910,14 @@ C
 
       do jelem=1,NELEMS
 
-      print *, ''
-      print *, 'Elemento: ', jelem
+C      print *, ''
+C      print *, 'Elemento: ', jelem
 
         Dmat2 = 0.d0
         do J=1,nnod
           x(1,J)       = nodes(conectividades(jelem,J+1),1)
           x(2,J)       = nodes(conectividades(jelem,J+1),2)
-          print *, 'Coordenadas: ', x(1,J), x(2,J)
+C          print *, 'Coordenadas: ', x(1,J), x(2,J)
         enddo
 C           Funcion de forma
       call f_forma2D(0.d0,0.d0,x,shp,xjac)
@@ -930,7 +930,7 @@ C           Calculo de los esfuerzos
       do J=1,nnod
            DESP(2*(J-1)+1) = resNod(conectividades(jelem,J+1),1) 
            DESP(2*(J-1)+2) = resNod(conectividades(jelem,J+1),2) 
-           print *, 'Desplazamientos: ', DESP(2*(J-1)+1), DESP(2*(J-1)+2)
+C           print *, 'Desplazamientos: ', DESP(2*(J-1)+1), DESP(2*(J-1)+2)
       enddo
 C
       DEFORMACIONES = MATMUL(Be(1:3, :),DESP) !-def2D
@@ -945,8 +945,8 @@ C
       EsMin = centro-radio
 C
       if(tipo_def.eq.2)then
-            E      = myprops(3)
-            nu     = myprops(4) 
+            E      = propiedades(grupoFisico(jelem,2),1)
+            nu     = propiedades(grupoFisico(jelem,2),2)
             sigma_zz = (nu*E/((1.d0+nu)*(1.d0-2.d0*nu)))
      1      *(DEFORMACIONES(1)+DEFORMACIONES(2))
 C           Esfuerzos equivalentes de Von Mises
@@ -961,7 +961,6 @@ C
 C
       thao_oct=Esf_VM*sqrt(2.d0)/3.d0
 C     
-      kOI = 0.5d0
       OI =  thao_oct + kOI * Esf_Hid
 C
       resElem(jelem, 1) = DEFORMACIONES(1) !E11
@@ -978,9 +977,9 @@ C
       resElem(jelem, 12) = OI !OI
 
 
-      print *, 'Desplazamientos: ', DESP
-      print *, 'Deformaciones: ', DEFORMACIONES
-      print *, 'Esfuerzos: ', ESFUERZOS
+C      print *, 'Desplazamientos: ', DESP
+C      print *, 'Deformaciones: ', DEFORMACIONES
+C      print *, 'Esfuerzos: ', ESFUERZOS
 C
       enddo
 C
@@ -995,14 +994,14 @@ C-------------------------------------------------------------------------------
 	subroutine deformacion(chi,eta,zita,u,ndofel,de,x,jelem,
 	1t,def2D)
 C
-	include 'conec.for'
+      include 'conec.for'
 C
 C     Variables de entrada
       integer  ndofel,jelem
       real*8   chi,eta,zita
-	real*8   u(ndofel),x(dim,nnod),t,de(8)
+      real*8   u(ndofel),x(dim,nnod),t!,de(8)
 C
-C     variables de salida
+C     Variables de salida
       real*8   def2D(4)
 C
 C     Variables de la subrutina
@@ -1016,8 +1015,8 @@ C     Definicion del tensor de constantes elasticas
 C
 C     Para el caso 2D
 C      if(dim.eq.2)then
-C        Def2D(2)=0.3d0
-C	endif
+C         Def2D(2)=0.3d0
+C	    endif
 C
 	return 
 	end
@@ -1112,12 +1111,8 @@ C RECORD 201 CONTAINS ...
 C
             IF (KEY.EQ.201) THEN
                   k = k+1
-                  print *, 'I''m saving displacement info!!!!!!!!!!!!!!'
                   resNod(k, 1) = ARRAY(4)
                   resNod(k, 2) = ARRAY(5)
-                  print *, '' 
-                  print *, 'Displacement: ', ARRAY(4), ARRAY(5)
-                  print *, 'Displacement: ', resNod(k, 1), resNod(k, 2)
             END IF
 C
       END DO
@@ -1259,42 +1254,46 @@ C
       include 'conec.for'
 C
       logical            :: Searstr
+      character(2)       :: faceString ! String to store the face of the element
+      character(2)       :: faceString2 ! String to store the face of the element
       character(256)        JOBDIR
 	character*276         filename
 	integer               i,j,k
 C
       if (LOP.eq.0) then
+      
 C       Llamada al archivo de grupos físicos
-            call GETOUTDIR(JOBDIR,LENJOBDIR)
-            filename=' '
-            filename(1:lenjobdir)=jobdir(1:lenjobdir)
-            filename(lenjobdir+1:lenjobdir+19)='/gruposFisicos.txt'
-C
-            open(UNIT=14,file=filename(1:lenjobdir+19), status='old')
-            if (Searstr (14,'Element Tag, Physical Group Tag')) then
-            READ(14,*)((grupoFisico(i,j),j=1,2),i=1,NELEMS)
-            else
-            stop '###..Error en lectura'
-            end if
-            close(14)
-C
-C       Llamada al archivo de conectividades 
- 	  call GETOUTDIR(JOBDIR,LENJOBDIR)	
+        call GETOUTDIR(JOBDIR,LENJOBDIR)
         filename=' '
         filename(1:lenjobdir)=jobdir(1:lenjobdir)
+        filename(lenjobdir+1:lenjobdir+19)='/gruposFisicos.txt'
 C
+      open(UNIT=14,file=filename(1:lenjobdir+19), status='old')
+        if (Searstr (14,'Element Tag, Physical Group Tag')) then
+        READ(14,*)((grupoFisico(i,j),j=1,2),i=1,NELEMS)
+        else
+        stop '###..Error en lectura'
+        end if
+        close(14)
+C
+C-------------------------------------
+C       Llamada al archivo conectividades.inp
+
+        filename=' '
+        filename(1:lenjobdir)=jobdir(1:lenjobdir)
         filename(lenjobdir+1:lenjobdir+19)='/conectividades.inp'
 C
         open(UNIT=15,file=filename(1:lenjobdir+19), status='old')
-          if (Searstr (15,'*ELEMENT,TYPE=U1')) then
+          if (Searstr (15,'*ELEMENT,TYPE=U1,ELSET=UEL')) then
             READ(15,*)((conectividades(i,j),j=1,nnod + 1),i=1,NELEMS)
           else
             stop '###..Error en lectura'
           end if
         close(15)
 C
-C       Llamada al archivo de nodos
-        call GETOUTDIR(JOBDIR,LENJOBDIR)
+C-------------------------------------
+C       Llamada al archivo nodos.inp
+
         filename=' '
 	  filename(1:lenjobdir)=jobdir(1:lenjobdir)
         filename(lenjobdir+1:lenjobdir+10)='/nodos.inp'
@@ -1306,8 +1305,9 @@ C
 	      stop '###..Error en lectura'
 	    end if
 	  close(16)
-C       Se lee el archivo de entrada inp del analisis
-	  call GETOUTDIR(JOBDIR,LENJOBDIR)	
+C-------------------------------------
+C       Llamada al archivo contorno.inp
+
         filename=' '
         filename(1:lenjobdir)=jobdir(1:lenjobdir)
         filename(lenjobdir+1:lenjobdir+14)='/contorno.inp'
@@ -1320,8 +1320,7 @@ C
         end if
         close(15)
 C
-C       Se lee el archivo de entrada inp del analisis
-	  call GETOUTDIR(JOBDIR,LENJOBDIR)	
+
         filename=' '
         filename(1:lenjobdir)=jobdir(1:lenjobdir)
         filename(lenjobdir+1:lenjobdir+14)='/contorno.inp'
@@ -1331,6 +1330,32 @@ C
          READ(15,*)((contorno2(i,j),j=1,6),i=1,filascontorno2)
         else
         stop '###..Error en lectura'
+        
+        end if
+        close(15)
+C-------------------------------------
+C       Llamada al archivo carga.inp
+
+        filename=' '
+        filename(1:lenjobdir)=jobdir(1:lenjobdir)
+        filename(lenjobdir+1:lenjobdir+11)='/carga.inp'
+C
+        open(UNIT=15,file=filename(1:lenjobdir+14), status='old')
+        if (Searstr (15,'*DLOAD')) then
+        do i=1,listNElementLoads(1)
+         read(15, '(I, A, I, F)') elementFaces(i, 1), faceString,
+     1       elementFaces(i, 2), elementLoads(i)
+C         read(faceString(2:2), '(I1)') elementFaces(i, 2)
+         print *, 'Elemento: ', elementFaces(i, 1)
+         print *, 'Letra: ', faceString
+         print *, 'Cara: ',  elementFaces(i, 2)
+         print *, 'Carga: ', elementLoads(i)
+         print *, ''
+
+        enddo
+        else
+        stop '###..Error en lectura'
+        
         end if
         close(15)
       endif

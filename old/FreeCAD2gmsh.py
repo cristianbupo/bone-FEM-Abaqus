@@ -334,7 +334,7 @@ def writeLoads(bone, boneConfig, physicalName, load_index):
 
 
 def writeParameters(bone, boneConfig, tags, all2DElements):
-    k_OI = bone.load_vars.k_OI
+    kOI = bone.load_vars.kOI
 
     nElems = len(all2DElements[1][0])
     numNode = len(tags)
@@ -344,7 +344,7 @@ def writeParameters(bone, boneConfig, tags, all2DElements):
         f.write(f"      integer, parameter :: NUMNODE={numNode}, NELEMS={nElems}, "
                 "dim=2, nnod=4\n"
                 "      real*8 nodes(NUMNODE, dim)\n"
-                f"      real*8, parameter :: k_OI={k_OI}\n"
+                f"      real*8, parameter :: kOI={kOI}\n"
                 "      integer conectividades(NELEMS, nnod+1)\n"
                 "      integer grupoFisico(NELEMS, 2)\n"
                 "      common nodes\n"

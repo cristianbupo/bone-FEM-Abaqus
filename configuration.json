@@ -66,5 +66,9 @@
   "logPath": {
     "default": "currentLog",
     "help": "The path to write the log files"
+  },
+  "masterPath": {
+    "default": "master",
+    "help": "The path where the master files are stored"
   }
 }

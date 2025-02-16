@@ -16895,15 +16895,15 @@
     </Proxy>
     <Proxy group="sources" type="XMLPolyDataReader" id="11577" servers="1">
       <Property name="FileName" id="11577.FileName" number_of_elements="5">
-        <Element index="0" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\distribucion0.vtp"/>
-        <Element index="1" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\distribucion1.vtp"/>
-        <Element index="2" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\distribucion2.vtp"/>
-        <Element index="3" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\distribucion3.vtp"/>
-        <Element index="4" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\distribucion4.vtp"/>
+        <Element index="0" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\carga0.vtp"/>
+        <Element index="1" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\carga1.vtp"/>
+        <Element index="2" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\carga2.vtp"/>
+        <Element index="3" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\carga3.vtp"/>
+        <Element index="4" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\carga4.vtp"/>
         <Domain name="files" id="11577.FileName.files"/>
       </Property>
       <Property name="FileNameInfo" id="11577.FileNameInfo" number_of_elements="1">
-        <Element index="0" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\distribucion0.vtp"/>
+        <Element index="0" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\carga0.vtp"/>
       </Property>
       <Property name="TimestepValues" id="11577.TimestepValues" number_of_elements="5">
         <Element index="0" value="0"/>
@@ -17940,7 +17940,7 @@
       <Item id="11235" name="Contour1" logname="Contour1"/>
       <Item id="11892" name="Glyph1" logname="Glyph1"/>
       <Item id="10711" name="Threshold1" logname="Threshold1"/>
-      <Item id="11577" name="distribucion0.vtp*" logname="distribucion0.vtp*"/>
+      <Item id="11577" name="carga0.vtp*" logname="carga0.vtp*"/>
       <Item id="10457" name="result0.vtu*" logname="result0.vtu*"/>
     </ProxyCollection>
     <ProxyCollection name="timekeeper">

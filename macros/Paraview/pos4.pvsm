@@ -49741,15 +49741,15 @@
     </Proxy>
     <Proxy group="sources" type="XMLPolyDataReader" id="33382" servers="1">
       <Property name="FileName" id="33382.FileName" number_of_elements="5">
-        <Element index="0" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\distribucion0.vtp"/>
-        <Element index="1" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\distribucion1.vtp"/>
-        <Element index="2" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\distribucion2.vtp"/>
-        <Element index="3" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\distribucion3.vtp"/>
-        <Element index="4" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\distribucion4.vtp"/>
+        <Element index="0" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\carga0.vtp"/>
+        <Element index="1" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\carga1.vtp"/>
+        <Element index="2" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\carga2.vtp"/>
+        <Element index="3" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\carga3.vtp"/>
+        <Element index="4" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\carga4.vtp"/>
         <Domain name="files" id="33382.FileName.files"/>
       </Property>
       <Property name="FileNameInfo" id="33382.FileNameInfo" number_of_elements="1">
-        <Element index="0" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\distribucion0.vtp"/>
+        <Element index="0" value="C:\Users\crist\github-repos\bone-FEM\currentLoadHistory - Copy (0.25)\carga0.vtp"/>
       </Property>
       <Property name="TimestepValues" id="33382.TimestepValues" number_of_elements="5">
         <Element index="0" value="0"/>
@@ -52704,7 +52704,7 @@
       <Item id="38451" name="Contour S_Oct" logname="Contour1"/>
       <Item id="33696" name="Load distribution" logname="Glyph1"/>
       <Item id="32629" name="Show cartilage" logname="Threshold1"/>
-      <Item id="33382" name="distribucion0.vtp*" logname="distribucion0.vtp*"/>
+      <Item id="33382" name="carga0.vtp*" logname="carga0.vtp*"/>
       <Item id="32377" name="result0.vtu*" logname="result0.vtu*"/>
     </ProxyCollection>
     <ProxyCollection name="timekeeper">

@@ -133,7 +133,7 @@ def process_gmsh(args, sketch):
         args.load_center,
         args.load_amplitude,
         args.load_radius,
-        args.k_OI,
+        args.kOI,
         curvesMesh,
         inputPath='current',
         numberElements=args.number_elements,

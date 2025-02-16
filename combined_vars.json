@@ -53,7 +53,7 @@
             "default": 0.81,
             "short_name": "rl"
         },
-        "k_OI": {
+        "kOI": {
             "min_value": 0.0,
             "max_value": 4.0,
             "default": 0.5,

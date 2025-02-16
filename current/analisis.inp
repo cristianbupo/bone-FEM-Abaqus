@@ -16,13 +16,12 @@
 *USER ELEMENT,NODES=4,TYPE=U1,PROP=2,COORDINATES=2,VAR=16
 11,12
 *INCLUDE, INPUT=conectividades.inp 
-*INCLUDE, INPUT=cuerpo.inp 
+*INCLUDE, INPUT=cuerpo.inp
+** Dummy material properties
 *UEL PROPERTY,ELSET=Hueso
-** DIM(1), TIPO(2), A(3), B(4), GAMMA(5), D(6) 
-0.0, 0.0, 500.0, 0.2, 0.0, 0.0
+0.0, 0.0, 0.0, 0.0, 0.0, 0.0
 *UEL PROPERTY,ELSET=Cartilago
-** DIM(1), TIPO(2), A(3), B(4), GAMMA(5), D(6) 
-0.0, 0.0, 6.0, 0.47, 0.0, 0.0
+0.0, 0.0, 0.0, 0.0, 0.0, 0.0
 *INCLUDE, INPUT=contorno.inp
 *RESTART, WRITE, FREQ=0
 ** STEP: Step-1
@@ -33,7 +32,7 @@
 *INCLUDE, INPUT=condicionesContorno.inp
 ** LOADS
 ** Name: Load-1
-*INCLUDE, INPUT=distribucion.inp 
+*INCLUDE, INPUT=carga.inp 
 ** OUTPUT REQUESTS
 **
 *NODE PRINT,FREQ=1 

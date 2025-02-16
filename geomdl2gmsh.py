@@ -221,17 +221,20 @@ def writeMeshFiles(bone, boneConfig):
     lines = f2g.writeBoundaries(physicalGroups_1D, inputPath)
     all2DElements = gmsh.model.mesh.getElements(2)
 
+    listNElementLoads =[]
     if number_loads == 1:
         bone.load_vars.load_center = 0.0
-        f2g.writeLoads(bone, boneConfig, "contorno2", all2DElements, '')
+        nElementLoads  = f2g.writeLoads(bone, boneConfig, "contorno2", all2DElements, '')
+        listNElementLoads.append(nElementLoads)
     else:
         for i in range(0, number_loads):
             bone.load_vars.load_center = ((sigma - rl) * (2 * i - number_loads + 1)
                                         / (2 * number_loads - 2))
 
-            f2g.writeLoads(bone, boneConfig, "contorno2", all2DElements, str(i))
+            nElementLoads = f2g.writeLoads(bone, boneConfig, "contorno2", all2DElements, str(i))
+            listNElementLoads.append(nElementLoads)
 
-    f2g. writeParameters(bone, boneConfig, tags, all2DElements, lines)
+    f2g.writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLoads)
 
 
 def getUniqueControlPoints(curves):

@@ -2,5 +2,5 @@
     "load_center": {"min_value": -100000.0, "default": 0.0, "short_name": "hl"},
     "load_amplitude": {"min_value": 0.0, "default": 6.85, "short_name": "kl"},
     "load_radius": {"min_value": 0.0, "default": 0.81, "short_name": "rl"},
-    "k_OI": {"min_value": 0.0, "max_value":4.0, "default": 0.5, "short_name": "koi"}
+    "kOI": {"min_value": 0.0, "max_value":4.0, "default": 0.5, "short_name": "koi"}
 }

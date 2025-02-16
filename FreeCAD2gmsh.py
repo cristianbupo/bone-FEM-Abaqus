@@ -116,7 +116,7 @@ def write_nodes(nodes, coords, inputPath):
 def write_connectivities(elemTypes, elemTags, elemNodeTags, inputPath):
     conectivitidadesVerPath = os.path.join(inputPath, "conectividades.inp")
     with open(conectivitidadesVerPath, "w") as h:
-        h.write("*ELEMENT,TYPE=U1\n")
+        h.write("*ELEMENT,TYPE=U1,ELSET=UEL\n")
         for i, _ in enumerate(elemTypes):
             for elem, item in enumerate(elemTags[i]):
                 elemNum = int(item)
@@ -331,19 +331,20 @@ def writeLoads(bone, boneConfig, physicalName, all2DElements, load_index):
         normals.SetName("Load Orientation")
         load_magnitudes.SetName("Load Magnitude")
 
-        n = len(pElemTags)
+        nElementLoads = 0
+        npElementTags = len(pElemTags)
         p = -r**2/(4*k)
-        elemLenghts = np.zeros(n)
-        distributionPath = os.path.join(inputPath, f"distribucion{load_index}.inp")
+        elemLenghts = np.zeros(npElementTags)
+        distributionPath = os.path.join(inputPath, f"carga{load_index}.inp")
         with open(distributionPath, "w") as g:
-            for i in range(n):
+            for i in range(npElementTags):
                 lenght = math.sqrt(
                     (pNodCoords[2*i][0] - pNodCoords[2*i+1][0])**2 +
                     (pNodCoords[2*i][1] - pNodCoords[2*i+1][1])**2
                 )
                 elemLenghts[i] = lenght
 
-            for i in range(n):
+            for i in range(npElementTags):
                 midpoint = [(pNodCoords[2*i][0] + pNodCoords[2*i+1][0])/2,
                             (pNodCoords[2*i][1] + pNodCoords[2*i+1][1])/2, 0]
                 midpoints.InsertNextPoint(midpoint)
@@ -353,11 +354,11 @@ def writeLoads(bone, boneConfig, physicalName, all2DElements, load_index):
                           0]
                 normals.InsertNextTuple(normal)
 
-            g.write("*DLOAD \n")
+            g.write("*DLOAD\n")
             L = np.sum(elemLenghts)
 
             x_im1 = -L/2
-            for j in range(n):
+            for j in range(npElementTags):
                 pressure_i = 0.0
                 x_i = x_im1 + elemLenghts[j]
                 if (h-r < x_i < h+r) or (h-r < x_im1 < h+r):
@@ -365,6 +366,7 @@ def writeLoads(bone, boneConfig, physicalName, all2DElements, load_index):
                     b = min(x_i, h+r)
                     pressure_i = (((b-h)**3-(a-h)**3)/(12*p)+k*(b-a))/elemLenghts[j]
                     g.write(f"{pContourElements[j]}, U{pLoadFaces[j]}, {pressure_i}\n")
+                    nElementLoads += 1
                 load_magnitudes.InsertNextValue(pressure_i)
                 x_im1 = x_i
 
@@ -381,32 +383,31 @@ def writeLoads(bone, boneConfig, physicalName, all2DElements, load_index):
             writer.SetInputData(polydata)
             writer.Write()
 
+            return nElementLoads
 
-def writeParameters(bone, boneConfig, tags, all2DElements, lines):
-    k_OI = bone.load_vars.k_OI
 
+def writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLoads):
+    kOI = bone.load_vars.kOI
+
+    nLoads = bone.load_vars.number_loads
     nElems = len(all2DElements[1][0])
     numNode = len(tags)
+    formatedNList = f"(/{' ,'.join(map(str, listNElementLoads))}/)"
+    fillPath = os.path.join(boneConfig.masterPath, "conec.for")
     parametrosPath = os.path.join(boneConfig.inputPath, "conec.for")
 
+    with open(fillPath, 'r') as file:
+        f_longbone_content = file.read()
+
+    modified_content = f_longbone_content.format(
+        nLoads=nLoads,
+        listNElementLoads=formatedNList,
+        numNode=numNode,
+        nElems=nElems,
+        kOI=kOI,
+        filasContorno1=(lines[0] + 5) // 6,
+        filasContorno2=(lines[1] + 5) // 6
+    )
+
     with open(parametrosPath, "w") as f:
-        f.write(f"      integer, parameter :: NUMNODE={numNode}, NELEMS={nElems}, "
-                "dim=2, nnod=4\n"
-                "      real*8 nodes(NUMNODE, dim)\n"
-                "      parameter(axi=0,tipo_def=2)\n"
-                f"      real*8, parameter :: k_OI={k_OI}\n"
-                "      integer conectividades(NELEMS, nnod+1)\n"
-                "      integer grupoFisico(NELEMS, 2)\n"
-                f"      parameter(filasContorno1={(lines[0] + 5) // 6})\n"
-                f"      parameter(filasContorno2={(lines[1] + 5) // 6})\n"
-                "      integer contorno1(filasContorno1,6),contorno2(filasContorno2,6)\n"
-                "      real*8 resNod(NUMNODE, 2)\n"
-                "      real*8 resElem(NELEMS, 12)\n"
-                "      real*8 myprops(8)\n"
-                "      common resNod, resElem\n"
-                "      common myprops\n"
-                "      common nodes\n"
-                "      common conectividades\n"
-                "      common grupoFisico\n"
-                "      common contorno1, contorno2\n"
-                )
+        f.write(modified_content)
