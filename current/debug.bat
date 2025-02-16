@@ -1,1 +1,0 @@
-abaqus debug -standard -j analisis -user user.for

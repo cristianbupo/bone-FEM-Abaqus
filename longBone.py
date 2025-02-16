@@ -280,9 +280,9 @@ def main():
 
     # Define the source files and their destination filenames
     files_to_copy = {
-        "master/abaqus_v6.env": "abaqus_v6.env",
+        # "master/abaqus_v6.env": "abaqus_v6.env",
         "master/analisis.inp": "analisis.inp",
-        "master/debug.bat": "debug.bat",
+        # "master/debug.bat": "debug.bat",
         "master/general2DElastic.for": "user.for",
         "master/run.bat": "run.bat"
     }

@@ -1,1 +1,0 @@
-abaqus debug -standard -j analisis.inp  -user general2DElastic.for

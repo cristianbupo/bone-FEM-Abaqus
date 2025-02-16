@@ -1,1 +1,1 @@
-abaqus job=analisis user=user.for ask_delete=OFF cpus=2
+abaqus job=analisis user=user.for ask_delete=OFF cpus=1

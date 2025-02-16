@@ -378,7 +378,7 @@ def writeLoads(bone, boneConfig, physicalName, all2DElements, load_index):
 
             # Write vtkPolyData to a file
             writer = vtk.vtkXMLPolyDataWriter()
-            file_path = os.path.join(inputPath, f"distribution{load_index}.vtp")
+            file_path = os.path.join(inputPath, f"carga{load_index}.vtp")
             writer.SetFileName(file_path)
             writer.SetInputData(polydata)
             writer.Write()

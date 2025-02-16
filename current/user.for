@@ -478,10 +478,6 @@ C         angulo = atan2(x2(2)-x1(2), x2(1)-x1(1))
          p(2*(n1-1)+2, 1) = p(2*(n1-1)+2, 1) + fy
          p(2*(n2-1)+1, 1) = p(2*(n2-1)+1, 1) + fx
          p(2*(n2-1)+2, 1) = p(2*(n2-1)+2, 1) + fy
-
-         print *, p(2*(n1-1)+1, 1), p(2*(n1-1)+2, 1)
-         print *, p(2*(n2-1)+1, 1), p(2*(n2-1)+2, 1)
-         print *, ' '
       endif
 C
 C     Insercion del vector de deformacion
@@ -649,11 +645,6 @@ C     Definicion del tensor de constantes elasticas
       Dmat   = 0.d0
       E      = propiedades(grupoFisico(jelem,2),1)
    	nu     = propiedades(grupoFisico(jelem,2),2)
-C
-C      print *, 'jelem = ', jelem
-C      print *, 'grupo = ', grupoFisico(jelem,2)
-C      print *, 'E = ', propiedades(grupoFisico(jelem,2),1)
-C      print *, 'nu = ', propiedades(grupoFisico(jelem,2),2)
 C
       if(dim.eq.2)then
 C       Analisis bidimensional
@@ -906,18 +897,11 @@ C     Definicion del tensor de constantes elasticas
       Esf_Hid= 0.D0
       Esf_VM = 0.D0
 C     
-
-
       do jelem=1,NELEMS
-
-C      print *, ''
-C      print *, 'Elemento: ', jelem
-
         Dmat2 = 0.d0
         do J=1,nnod
           x(1,J)       = nodes(conectividades(jelem,J+1),1)
           x(2,J)       = nodes(conectividades(jelem,J+1),2)
-C          print *, 'Coordenadas: ', x(1,J), x(2,J)
         enddo
 C           Funcion de forma
       call f_forma2D(0.d0,0.d0,x,shp,xjac)
@@ -930,7 +914,6 @@ C           Calculo de los esfuerzos
       do J=1,nnod
            DESP(2*(J-1)+1) = resNod(conectividades(jelem,J+1),1) 
            DESP(2*(J-1)+2) = resNod(conectividades(jelem,J+1),2) 
-C           print *, 'Desplazamientos: ', DESP(2*(J-1)+1), DESP(2*(J-1)+2)
       enddo
 C
       DEFORMACIONES = MATMUL(Be(1:3, :),DESP) !-def2D
@@ -945,13 +928,13 @@ C
       EsMin = centro-radio
 C
       if(tipo_def.eq.2)then
-            E      = propiedades(grupoFisico(jelem,2),1)
-            nu     = propiedades(grupoFisico(jelem,2),2)
-            sigma_zz = (nu*E/((1.d0+nu)*(1.d0-2.d0*nu)))
-     1      *(DEFORMACIONES(1)+DEFORMACIONES(2))
+         E      = propiedades(grupoFisico(jelem,2),1)
+         nu     = propiedades(grupoFisico(jelem,2),2)
+         sigma_zz = (nu*E/((1.d0+nu)*(1.d0-2.d0*nu)))
+     1            *(DEFORMACIONES(1)+DEFORMACIONES(2))
 C           Esfuerzos equivalentes de Von Mises
       else if(tipo_def.eq.1)then
-            sigma_zz = 0.d0
+         sigma_zz = 0.d0
       endif
 C
       Esf_VM = sqrt(((EsMax-EsMin)**2+(EsMin-sigma_zz)**2
@@ -975,11 +958,6 @@ C
       resElem(jelem, 10) = Esf_Hid !S_Hyd
       resElem(jelem, 11) = thao_oct !S_Oct
       resElem(jelem, 12) = OI !OI
-
-
-C      print *, 'Desplazamientos: ', DESP
-C      print *, 'Deformaciones: ', DEFORMACIONES
-C      print *, 'Esfuerzos: ', ESFUERZOS
 C
       enddo
 C
@@ -1346,12 +1324,6 @@ C
          read(15, '(I, A, I, F)') elementFaces(i, 1), faceString,
      1       elementFaces(i, 2), elementLoads(i)
 C         read(faceString(2:2), '(I1)') elementFaces(i, 2)
-         print *, 'Elemento: ', elementFaces(i, 1)
-         print *, 'Letra: ', faceString
-         print *, 'Cara: ',  elementFaces(i, 2)
-         print *, 'Carga: ', elementLoads(i)
-         print *, ''
-
         enddo
         else
         stop '###..Error en lectura'

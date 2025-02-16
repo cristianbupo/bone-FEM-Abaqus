@@ -1,6 +1,6 @@
 1
 
-   Abaqus 3DEXPERIENCE R2017x                                  Date 15-Feb-2025   Time 19:02:02
+   Abaqus 3DEXPERIENCE R2017x                                  Date 16-Feb-2025   Time 11:53:55
    For use by Supplied by Team-SolidSQUAD under license from Dassault Systemes or its subsidiary.
 
                                                                                  
@@ -96,21 +96,14 @@
        ELAPSED SYSTEM TIME (SEC)    =   0.0000    
        ELAPSED TOTAL CPU TIME (SEC) =   0.0000    
        ELAPSED WALLCLOCK TIME (SEC) =          0
- 
-
- ***WARNING: THE SYSTEM MATRIX HAS 13 NEGATIVE EIGENVALUES.
-
-     NEGATIVE EIGENVALUES MEAN THAT THE SYSTEM MATRIX IS NOT 
-     POSITIVE DEFINITE:
-     FOR EXAMPLE, A BIFURCATION (BUCKLING) LOAD MAY HAVE BEEN EXCEEDED.
 
                CONVERGENCE CHECKS FOR EQUILIBRIUM ITERATION     1
 
 
- AVERAGE HEAT FLUX                  0.416       TIME AVG. HEAT FLUX   0.416    
- LARGEST RESIDUAL HEAT FLUX         8.837E-14   AT NODE        393   DOF 11
- LARGEST INCREMENT OF TEMP.         -36.4       AT NODE         65   DOF 12
- LARGEST CORRECTION TO TEMP.        -36.4       AT NODE         65   DOF 12
+ AVERAGE HEAT FLUX                  0.133       TIME AVG. HEAT FLUX   0.133    
+ LARGEST RESIDUAL HEAT FLUX         4.263E-14   AT NODE        541   DOF 12
+ LARGEST INCREMENT OF TEMP.         -1.26       AT NODE         65   DOF 12
+ LARGEST CORRECTION TO TEMP.        -1.26       AT NODE         65   DOF 12
           THE HEAT FLUX EQUILIBRIUM RESPONSE WAS LINEAR IN THIS INCREMENT
 
  ITERATION SUMMARY FOR THE INCREMENT:   1 TOTAL ITERATIONS, OF WHICH
@@ -135,9 +128,9 @@
                        0  ADDITIONAL RESIDUAL EVALUATIONS FOR LINE SEARCHES
                        0  ADDITIONAL OPERATOR EVALUATIONS FOR LINE SEARCHES
                        1  WARNING MESSAGES DURING USER INPUT PROCESSING
-                       1  WARNING MESSAGES DURING ANALYSIS
+                       0  WARNING MESSAGES DURING ANALYSIS
                        0  ANALYSIS WARNINGS ARE NUMERICAL PROBLEM MESSAGES
-                       1  ANALYSIS WARNINGS ARE NEGATIVE EIGENVALUE MESSAGES
+                       0  ANALYSIS WARNINGS ARE NEGATIVE EIGENVALUE MESSAGES
                        0  ERROR MESSAGES
 
 

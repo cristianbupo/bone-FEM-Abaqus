@@ -1,7 +1,9 @@
       integer, parameter :: NUMNODE=566, NELEMS=528, dim=2, nnod=4
       integer, parameter :: listNElementLoads(1)=(/6/)
-      real*8, parameter :: propiedades(2,2) = reshape((/500.0, 0.2, 6.0, 0.47/), (/2, 2/))
-      integer, parameter :: axi=0, tipo_def=2
+      integer, parameter :: order2(2) = (/ 2, 1 /)
+      real*8, parameter :: propiedades(2,2) = reshape((/500.0, 0.2, 6.0, 0.47/),
+     1 (/2, 2/),  order=order2)
+      integer, parameter :: axi=0, tipo_def=2 
       integer, parameter :: filasContorno1=5
       integer, parameter :: filasContorno2=5
 
