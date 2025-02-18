@@ -3,6 +3,7 @@ import numpy as np
 from geomdl import  operations, multi
 import gmsh
 import FreeCAD2gmsh as f2g
+import xml.etree.ElementTree as ET
 
 
 def createTransfiniteSurface(edges, meshSize, direction="Left", ignorePoint=0):
@@ -222,19 +223,98 @@ def writeMeshFiles(bone, boneConfig):
     all2DElements = gmsh.model.mesh.getElements(2)
 
     listNElementLoads =[]
+
+    # Create carga and resultado folder
+    if not os.path.exists(os.path.join(inputPath, "carga")):
+        os.makedirs(os.path.join(inputPath, "carga"))
+
+    if not os.path.exists(os.path.join(inputPath, "resultado")):
+        os.makedirs(os.path.join(inputPath, "resultado"))
+
+    # Create carga and resultado PDV and VTM files
+    srcPattern = os.path.join(inputPath, 'carga', 'carga*.vtp')
+    destFile = os.path.join(inputPath, 'carga.vtm')
+    createVTMbefore(srcPattern, destFile, number_loads, 1, shift=1)
+
+    srcPattern = os.path.join(inputPath, 'carga', 'carga*.vtp')
+    destFile = os.path.join(inputPath, 'carga.pvd')
+    createPVDbefore(srcPattern, destFile, number_loads, 1, shift=1)
+
+    srcPattern = os.path.join(inputPath, 'resultado', 'analisis*.vtu')
+    destFile = os.path.join(inputPath, 'resultado.pvd')
+    createPVDbefore(srcPattern, destFile, number_loads, 1, shift=1)
+    
+        
     if number_loads == 1:
         bone.load_vars.load_center = 0.0
-        nElementLoads  = f2g.writeLoads(bone, boneConfig, "contorno2", all2DElements, '')
+        nElementLoads  = f2g.writeLoads(bone, boneConfig, "contorno2", all2DElements, i)
         listNElementLoads.append(nElementLoads)
     else:
         for i in range(0, number_loads):
             bone.load_vars.load_center = ((sigma - rl) * (2 * i - number_loads + 1)
                                         / (2 * number_loads - 2))
 
-            nElementLoads = f2g.writeLoads(bone, boneConfig, "contorno2", all2DElements, str(i))
+            nElementLoads = f2g.writeLoads(bone, boneConfig, "contorno2", all2DElements, i)
             listNElementLoads.append(nElementLoads)
 
     f2g.writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLoads)
+    f2g.writeSteps(boneConfig, number_loads)
+
+def createPVDbefore(srcPattern, destFile, numCombinations, numDigits, shift=0):
+    # Ensure the destination directory exists
+    destDir = os.path.dirname(destFile)
+    os.makedirs(destDir, exist_ok=True)
+
+    vtpFiles = []
+    # Find all .vtp files matching the source pattern
+    for i in range(numCombinations):
+        vtpFile = srcPattern.replace('*', f"{i+shift:0{numDigits}d}")
+        print(vtpFile)
+        vtpFiles.append(vtpFile)
+
+    # Create the root element
+    vtkFile = ET.Element('VTKFile', type='Collection', version='1.0')
+
+    collection = ET.SubElement(vtkFile, 'Collection')
+
+    # Add DataSet entries
+    for index, vtpFile in enumerate(vtpFiles):
+        # Make the file path relative to the destination directory
+        relativeInputPath = os.path.relpath(vtpFile, destDir)
+        ET.SubElement(collection, 'DataSet', timestep=str(index), file=relativeInputPath)
+
+    # Write the XML to the destination file
+    tree = ET.ElementTree(vtkFile)
+    tree.write(destFile, encoding='utf-8', xml_declaration=True)
+
+
+def createVTMbefore(srcPattern, destFile, numCombinations, numDigits, shift = 0):
+    # Ensure the destination directory exists
+    destDir = os.path.dirname(destFile)
+    os.makedirs(destDir, exist_ok=True)
+
+    vtpFiles = []
+    # Find all .vtp files matching the source pattern
+    for i in range(numCombinations):
+        vtpFile = srcPattern.replace('*', f"{i+shift:0{numDigits}d}")
+        vtpFiles.append(vtpFile)
+
+    # Create the root element
+    vtkFile = ET.Element('VTKFile', type='vtkMultiBlockDataSet', version='1.0',
+                         byte_order='LittleEndian', header_type='UInt32',
+                         compressor='vtkZLibDataCompressor')
+
+    vtkMultiBlockDataSet = ET.SubElement(vtkFile, 'vtkMultiBlockDataSet')
+
+    # Add DataSet entries
+    for index, vtpFile in enumerate(vtpFiles):
+        # Make the file path relative to the destination directory
+        relativeInputPath = os.path.relpath(vtpFile, destDir)
+        ET.SubElement(vtkMultiBlockDataSet, 'DataSet', index=str(index + 1), file=relativeInputPath)
+
+    # Write the XML to the destination file
+    tree = ET.ElementTree(vtkFile)
+    tree.write(destFile, encoding='utf-8', xml_declaration=True)
 
 
 def getUniqueControlPoints(curves):

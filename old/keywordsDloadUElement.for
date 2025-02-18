@@ -261,41 +261,41 @@ C
 	real*8 d2xchi_eta,d2ychi_eta,dxjacchi,dxjaceta,dxjacx,dxjacy
 	real*8 d2eta_xx,d2chi_xx,d2chi_yy,d2eta_yy,d2eta_xy,d2chi_xy
 C
-       dxchi=0.d0
-       dxeta=0.d0
-       dychi=0.d0
-       dyeta=0.d0
-       dchix=0.d0
-       dchiy=0.d0
-       detax=0.d0
-       detay=0.d0
+      dxchi=0.d0
+      dxeta=0.d0
+      dychi=0.d0
+      dyeta=0.d0
+      dchix=0.d0
+      dchiy=0.d0
+      detax=0.d0
+      detay=0.d0
 C
-       shp=0.d0
+      shp=0.d0
 C
 c     Primera fila de la matriz shp - Funciones de forma en los 8 nodos
-       shp(1,1) = 0.25*(1.0 - chi)*(1.0 - eta)
-       shp(1,2) = 0.25*(1.0 + chi)*(1.0 - eta)
-       shp(1,3) = 0.25*(1.0 + chi)*(1.0 + eta)
-       shp(1,4) = 0.25*(1.0 - chi)*(1.0 + eta)
+      shp(1,1) = 0.25*(1.0 - chi)*(1.0 - eta)
+      shp(1,2) = 0.25*(1.0 + chi)*(1.0 - eta)
+      shp(1,3) = 0.25*(1.0 + chi)*(1.0 + eta)
+      shp(1,4) = 0.25*(1.0 - chi)*(1.0 + eta)
 C
 C     Primeras derivadas de las funciones de forma con respecto a chi
-       dNchi(1) = -0.25*(1.0 - eta)
-	 dNchi(2) =  0.25*(1.0 - eta)
-	 dNchi(3) =  0.25*(1.0 + eta)
-	 dNchi(4) = -0.25*(1.0 + eta)
+      dNchi(1) = -0.25*(1.0 - eta)
+      dNchi(2) =  0.25*(1.0 - eta)
+      dNchi(3) =  0.25*(1.0 + eta)
+      dNchi(4) = -0.25*(1.0 + eta)
 C
 C     Primeras derivadas de las funciones de forma con respecto a eta
-       dNeta(1) = -0.25*(1.0 - chi)
-	 dNeta(2) = -0.25*(1.0 + chi)
-	 dNeta(3) =  0.25*(1.0 + chi)
-	 dNeta(4) =  0.25*(1.0 - chi)
+      dNeta(1) = -0.25*(1.0 - chi)
+      dNeta(2) = -0.25*(1.0 + chi)
+      dNeta(3) =  0.25*(1.0 + chi)
+      dNeta(4) =  0.25*(1.0 - chi)
 C
 
 C     Segundas derivadas de las funciones de forma con respecto a chi y eta
-       d2Nchi_eta(1) =  0.25
-	 d2Nchi_eta(2) = -0.25
-	 d2Nchi_eta(3) =  0.25
-	 d2Nchi_eta(4) = -0.25
+      d2Nchi_eta(1) =  0.25
+      d2Nchi_eta(2) = -0.25
+      d2Nchi_eta(3) =  0.25
+      d2Nchi_eta(4) = -0.25
 C
 c     Calculo de la matriz jacobiana
       dxchi=0.25*((x(1,2)-x(1,1))*(1.0-eta)+(x(1,3)-x(1,4))*(1.0+eta))
@@ -312,10 +312,10 @@ C
       xjac = dxchi*dyeta - dxeta*dychi
 C
 c     Calculo de la matriz inversa de la matriz jacobiana
-       dchix =   dyeta/xjac
-       dchiy = - dxeta/xjac
-       detax = - dychi/xjac
-       detay =   dxchi/xjac
+      dchix =   dyeta/xjac
+      dchiy = - dxeta/xjac
+      detax = - dychi/xjac
+      detay =   dxchi/xjac
 C
 C     Calculo de las derivadas del jacobiano con respecto a chi
       dxjacchi = dxchi*d2ychi_eta - d2xchi_eta*dychi

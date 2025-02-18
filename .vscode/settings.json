@@ -25,8 +25,8 @@
 
     "editor.renderLineHighlight": "all",
     "workbench.colorCustomizations": {
-        "editor.lineHighlightBackground": "#101010",
-        "editor.lineHighlightBorder": "#101010"
+        // "editor.lineHighlightBackground": "#101010",
+        // "editor.lineHighlightBorder": "#101010"
     },
 
     "highlight.regexes": {

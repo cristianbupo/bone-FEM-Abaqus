@@ -267,9 +267,10 @@ def main():
     # setattr(boneConfig, 'writeVTK', True)
     setattr(boneConfig, 'deleteOutput', True)
     setattr(bone.load_vars, 'load_center', 0.0)
-    setattr(bone.mesh_vars, 'number_elements', 6)
+    setattr(bone.mesh_vars, 'number_elements', 20)
     setattr(boneConfig, 'runAbq', True)
-    setattr(bone.load_vars, 'number_loads', 1)
+    setattr(bone.load_vars, 'number_loads', 6)
+    setattr(bone.geom_vars, 'head_angle', 20.0)
 
     if boneConfig.deleteOutput:
         clear_folder(boneConfig.outputPath)

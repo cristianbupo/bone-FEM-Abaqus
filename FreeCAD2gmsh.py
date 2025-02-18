@@ -4,6 +4,7 @@ import numpy as np
 from math import ceil
 import vtk
 import os
+import sketchUtils as su
 from geomdl import NURBS, multi
 
 points = []
@@ -241,6 +242,112 @@ def writeBoundaries(physicalGroups, inputPath):
     return lines
 
 
+def characteristicLengths(loadCurve):
+    knots = loadCurve.knotvector
+    Nknots = len(knots)
+    midKnotIndex = Nknots//2
+    
+    if knots[midKnotIndex] != 0.5:
+        if knots[midKnotIndex + 1] == 0.5:
+            knots[midKnotIndex] = 0.5
+        elif knots[midKnotIndex - 1] == 0.5:
+            knots[midKnotIndex] = 0.5
+
+
+    loadKnots = knots[midKnotIndex-3 : midKnotIndex+4]
+
+    maxLength = su.findLenght(loadCurve, loadKnots[0], loadKnots[6])
+    midLength = su.findLenght(loadCurve, loadKnots[1], loadKnots[5])
+    minLength = su.findLenght(loadCurve, loadKnots[2], loadKnots[4])
+
+    return maxLength, midLength, minLength
+
+
+def linear_interpolate(x, x0, y0, x1, y1):
+    return y0 + (y1 - y0) * (x - x0) / (x1 - x0)
+
+def calculateLoadParameters(bone, loadCurve):
+    NLoads = bone['load_vars']['number_loads']['val']
+    head_angle = bone['geom_vars']['head_angle']['val']
+    total_force = bone['load_vars']['total_force']['val']
+    
+    maxLength, midLength, minLength = characteristicLengths(loadCurve)
+
+    if NLoads == 6:
+        concaveExt = (minLength + 2*midLength)/3
+        convexExt = (2*midLength + maxLength)/3
+
+        concaveR = (maxLength - midLength)/3
+        convexR = (maxLength - midLength)/3
+
+        if head_angle <= -15:
+            load_ext = concaveExt
+            r = concaveR
+        elif -15 < head_angle <= 15:
+            load_ext = linear_interpolate(head_angle, -15, concaveExt, 15, convexExt)
+            r = linear_interpolate(head_angle, -15, concaveR, 15, convexR)
+        elif 15 < head_angle:
+            load_ext = convexExt
+            r = convexR
+
+    else: # if NLoads == 5:
+        concave_length = minLength + 1 * (midLength - minLength) / 5
+        convex_length = midLength + 3 * (maxLength - midLength) / 5
+
+        load_ext = 0
+
+        if head_angle <= -15:
+            load_ext = concave_length
+        elif -15 < head_angle <= 0:
+            load_ext = linear_interpolate(head_angle, -15, concave_length, 0, minLength)
+        elif  0 < head_angle <= 15:
+            load_ext = linear_interpolate(head_angle, 0, minLength, 15, convex_length)
+        elif 15 < head_angle:
+            load_ext = convex_length * 1
+
+        concave_radius = load_ext / 2
+        convex_radius = load_ext / 4
+
+        if head_angle <= -15:
+            r = concave_radius
+        elif -15 < head_angle <= 15:
+            r = linear_interpolate(head_angle, -15, concave_radius, 15, convex_radius)
+        elif 15 < head_angle:
+            r = convex_radius
+
+    k = (3 * total_force)/(4 * r)        
+
+    return load_ext, r, k
+
+
+def loadVectors(bone, load_ext, r, k_max):
+    NLoads = bone['load_vars']['number_loads']['val']
+    h_vector = []
+    k_vector = []
+    r_vector = []
+    
+    if NLoads == 6:
+        k_vector = [0.5, 1.0, 0.5, 0.5, 1.0, 0.5]
+        k_vector = [k * k_max for k in k_vector]
+        
+        load_ext_2 = load_ext/2
+        h_vector = [load_ext_2+r, load_ext_2, load_ext_2-r,
+                    -load_ext_2+r, -load_ext_2, -load_ext_2-r]
+        for loadIndex in range(NLoads):
+            r_vector.append(r)
+
+    else: # if NLoads == 5:
+        k_vector = [0.5, 0.75, 1.0, 0.75, 0.5]
+        k_vector = [k * k_max for k in k_vector]
+        
+        for loadIndex in range(NLoads):
+            h_vector.append((load_ext - r)*(2 * loadIndex - NLoads + 1)/(2*NLoads - 2))
+            r_vector.append(r)  
+
+
+    return h_vector, k_vector, r_vector
+
+
 def findLastPosition(A, B):
     # A and B are arrays, B is a 2-element array
     n = len(A)
@@ -252,7 +359,7 @@ def findLastPosition(A, B):
     return -1  # return -1 if no match found
 
 
-def writeLoads(bone, boneConfig, physicalName, all2DElements, load_index):
+def writeLoads(bone, boneConfig, physicalName, all2DElements, loadIndex):
 
     physicalGroups = gmsh.model.getPhysicalGroups()
     physicalGroup = []
@@ -335,8 +442,15 @@ def writeLoads(bone, boneConfig, physicalName, all2DElements, load_index):
         npElementTags = len(pElemTags)
         p = -r**2/(4*k)
         elemLenghts = np.zeros(npElementTags)
-        distributionPath = os.path.join(inputPath, f"carga{load_index}.inp")
-        with open(distributionPath, "w") as g:
+        distributionPath = os.path.join(inputPath, f"carga.inp")
+
+        # Check if the file exists and open in the appropriate mode
+        if os.path.exists(distributionPath):
+            mode = "a"  # Append mode
+        else:
+            mode = "w"  # Write mode
+
+        with open(distributionPath, mode) as g:
             for i in range(npElementTags):
                 lenght = math.sqrt(
                     (pNodCoords[2*i][0] - pNodCoords[2*i+1][0])**2 +
@@ -354,6 +468,7 @@ def writeLoads(bone, boneConfig, physicalName, all2DElements, load_index):
                           0]
                 normals.InsertNextTuple(normal)
 
+            g.write(f"*Step, name=LoadStep{loadIndex+1}\n")
             g.write("*DLOAD\n")
             L = np.sum(elemLenghts)
 
@@ -365,10 +480,12 @@ def writeLoads(bone, boneConfig, physicalName, all2DElements, load_index):
                     a = max(x_im1, h-r)
                     b = min(x_i, h+r)
                     pressure_i = (((b-h)**3-(a-h)**3)/(12*p)+k*(b-a))/elemLenghts[j]
-                    g.write(f"{pContourElements[j]}, U{pLoadFaces[j]}, {pressure_i}\n")
+                    g.write(f"{pContourElements[j]}, {pLoadFaces[j]}, {pressure_i}\n")
                     nElementLoads += 1
                 load_magnitudes.InsertNextValue(pressure_i)
                 x_im1 = x_i
+
+            g.write("*End Step\n")
 
             # Writing the vtp for the load distribution
             polydata = vtk.vtkPolyData()
@@ -378,7 +495,7 @@ def writeLoads(bone, boneConfig, physicalName, all2DElements, load_index):
 
             # Write vtkPolyData to a file
             writer = vtk.vtkXMLPolyDataWriter()
-            file_path = os.path.join(inputPath, f"carga{load_index}.vtp")
+            file_path = os.path.join(inputPath, f"carga/carga{loadIndex+1}.vtp")
             writer.SetFileName(file_path)
             writer.SetInputData(polydata)
             writer.Write()
@@ -397,11 +514,12 @@ def writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLo
     parametrosPath = os.path.join(boneConfig.inputPath, "conec.for")
 
     with open(fillPath, 'r') as file:
-        f_longbone_content = file.read()
+        f_longBone_content = file.read()
 
-    modified_content = f_longbone_content.format(
+    modified_content = f_longBone_content.format(
         nLoads=nLoads,
         listNElementLoads=formatedNList,
+        maxNElementLoads=max(listNElementLoads),
         numNode=numNode,
         nElems=nElems,
         kOI=kOI,
@@ -411,3 +529,16 @@ def writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLo
 
     with open(parametrosPath, "w") as f:
         f.write(modified_content)
+
+
+def writeSteps(boneConfig, nLoads):
+    pasoPath = os.path.join(boneConfig.masterPath, "paso.inp")
+    pasosPath = os.path.join(boneConfig.inputPath, "pasos.inp")
+
+    with open(pasoPath, "r") as f:
+        paso_content = f.read()
+
+    with open(pasosPath, "w") as g:
+        for i in range(nLoads):
+            formatted_content = paso_content.format(loadIndex=i+1)
+            g.write(formatted_content)

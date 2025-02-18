@@ -1,0 +1,14 @@
+** ----------------------------------------------------------------
+** STEP: Step-{loadIndex}
+*Step, name=carga{loadIndex}, nlgeom=NO
+*HEAT TRANSFER, STEADY STATE
+** BOUNDARY CONDITIONS
+*INCLUDE, INPUT=condicionesContorno.inp
+** OUTPUT REQUESTS
+*NODE PRINT,FREQ=1 
+NT,  
+*NODE FILE,FREQ=1 
+NT,  
+*OUTPUT,FIELD,FREQ=1 
+NT, 
+*End Step

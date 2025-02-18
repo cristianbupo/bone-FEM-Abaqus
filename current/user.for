@@ -66,7 +66,7 @@ C
 C
 C     Funcion que regresa RHS y AMATRX
 C    
-      call ENSAMBLE(de,x,du,u,v,nst,ndofel,MDLOAD,NDLOAD,JDLTYP,ADLMAG,
+      call ENSAMBLE(de,x,du,u,v,nst,ndofel,KSTEP,
      1 nrhs,dtime,svars,nsvars,jelem,time,RHS,AMATRX)
 C
 C----- DEBUG OUTPUT SECTION ------------------------------------------
@@ -288,10 +288,10 @@ C
       xjac = dxchi*dyeta - dxeta*dychi
 C
 c     Calculo de la matriz inversa de la matriz jacobiana
-       dchix =   dyeta/xjac
-       dchiy = - dxeta/xjac
-       detax = - dychi/xjac
-       detay =   dxchi/xjac
+      dchix =   dyeta/xjac
+      dchiy = - dxeta/xjac
+      detax = - dychi/xjac
+      detay =   dxchi/xjac
 C
 C     Calculo de las derivadas del jacobiano con respecto a chi
       dxjacchi = dxchi*d2ychi_eta - d2xchi_eta*dychi
@@ -358,15 +358,13 @@ C
 C-------------------------------------------------------------------------------*/
 C-------------------------------------------------------------------------------*/
 C
-      subroutine ENSAMBLE(de,x,du,u,v,nst,ndofel,MDLOAD,NDLOAD,JDLTYP,ADLMAG,
+      subroutine ENSAMBLE(de,x,du,u,v,nst,ndofel,KSTEP,
      1 nrhs,dtime,svars,nsvars,jelem,time,p,m_k)
 C
       include 'conec.for'
 C
 C     Entradas
       integer nst,ndofel,nrhs,nsvars,jelem
-      integer KDLOAD,MDLOAD,NDLOAD,JDLTYP(MDLOAD,*)
-      real*8  ADLMAG(MDLOAD,*)
       real*8  x(dim,nnod),du(ndofel,*),u(ndofel),v(ndofel)!,de(8)
 	   real*8  dtime,time(2),svars(nsvars)
 C
@@ -395,7 +393,7 @@ C     real*8  len, angulo,
 C     Inicializacion del tiempo
       if (dtime.eq.0.0) then
         dtime=1.e-15
-      endif
+      end if
 C
 C     Inicializacion de los vectores solucion
       do i=1,nnod
@@ -446,11 +444,11 @@ C     Ensamble del vector residuo
 C
 C     Insercion de carga distribuida
       found = .false.
-      do i = 1, listNElementLoads(1)
+      do i = 1, listNElementLoads(KSTEP)
          if (jelem == elementFaces(i, 1)) then
             found = .true.
             exit
-         endif
+         end if
       enddo
 
 C     TODO: Use a similar approach to KDLOAD, NDLOAD and ADLMAG to load elements
@@ -478,7 +476,7 @@ C         angulo = atan2(x2(2)-x1(2), x2(1)-x1(1))
          p(2*(n1-1)+2, 1) = p(2*(n1-1)+2, 1) + fy
          p(2*(n2-1)+1, 1) = p(2*(n2-1)+1, 1) + fx
          p(2*(n2-1)+2, 1) = p(2*(n2-1)+2, 1) + fy
-      endif
+      end if
 C
 C     Insercion del vector de deformacion
 	   call vector_deformacion(u,ndofel,de,x,jelem,time(2),Def)
@@ -596,13 +594,13 @@ C
 C              Se calculan las matriz elemental correspondiente a reaccion
 	          matriz = matmul(transpose(Bmataxi2D),
 	1                   matmul(Dmat(1:4,1:4),Bmataxi2D))
-            endif
+            end if
 C
 C           Se llevan a cabo las operaciones de sumatoria
 	      Cmat= Cmat + matriz * r * dx
 	    enddo
 	  enddo
-	endif
+	end if
 C
 	return 
 	end
@@ -679,7 +677,7 @@ C            Definicion de la matriz de constantes
                Dmat(2,1) = Dmat(1,2)
                Dmat(3,3) = d33
 C 
-            endif
+            end if
 C
 C       Axisimetrico
          elseif(axi.eq.1)then ! Analisis axisimetrico
@@ -699,8 +697,8 @@ C         Definicion de la matriz de constantes
             Dmat(4,1) = Dmat(1,4)
             Dmat(4,2) = Dmat(2,4)
             Dmat(4,4) = d11
-	      endif
-	   endif
+	      end if
+	   end if
 
 C----- DEBUG OUTPUT SECTION ------------------------------------------
       call GETOUTDIR(JOBDIR,LENJOBDIR)
@@ -831,13 +829,13 @@ C
 C              Se calculan las matriz elemental correspondiente a reaccion
 	          vector = matmul(transpose(Bmataxi2D),
 	1                   matmul(Dmat(1:4,1:4),Def2D))
-            endif
+            end if
 C
 C           Se llevan a cabo las operaciones de sumatoria
 	      Cmat= Cmat + vector * r * dx
 	    enddo
 	  enddo
-	endif
+	end if
 C
 	return 
 	end
@@ -935,7 +933,7 @@ C
 C           Esfuerzos equivalentes de Von Mises
       else if(tipo_def.eq.1)then
          sigma_zz = 0.d0
-      endif
+      end if
 C
       Esf_VM = sqrt(((EsMax-EsMin)**2+(EsMin-sigma_zz)**2
      1      +(sigma_zz-EsMax)**2)/2.d0)
@@ -994,7 +992,7 @@ C
 C     Para el caso 2D
 C      if(dim.eq.2)then
 C         Def2D(2)=0.3d0
-C	    endif
+C	    end if
 C
 	return 
 	end
@@ -1026,14 +1024,18 @@ C
       character*276         filename
       character(256)        JOBDIR
       character(256)        JOBNAME
+      character(21)         loadString
 C
       call GETOUTDIR(JOBDIR,LENJOBDIR)
       call GETJOBNAME(JOBNAME,LENJOBNAME)
+      write(loadString, '(I1)') KSTEP
+
       filename=' '
       filename(1:lenjobdir)=jobdir(1:lenjobdir)
-      filename(lenjobdir+1:lenjobdir+1)='\'
-      filename(lenjobdir+2:lenjobdir+lenjobname+1)=jobname(1:lenjobname)
-      filename(lenjobdir+lenjobname+2:lenjobdir+lenjobname+6)='.vtu'
+      filename(lenjobdir+1:lenjobdir+11)='\resultado\'
+      filename(lenjobdir+12:lenjobdir+lenjobname+11)=jobname(1:lenjobname)
+      filename(lenjobdir+lenjobname+12:lenjobdir+lenjobname+12)=loadString
+      filename(lenjobdir+lenjobname+13:lenjobdir+lenjobname+16)='.vtu'
 C
 C FIND CURRENT INCREMENT.
 C
@@ -1042,56 +1044,56 @@ C
       CALL POSFIL(KSTEP,KINC,ARRAY,JRCD)
 C
       DO K1=1,999999
-            CALL DBFILE(0,ARRAY,JRCD)
-            IF (JRCD .NE. 0) GO TO 110
-            KEY=JRRAY(1,2)
+         CALL DBFILE(0,ARRAY,JRCD)
+         IF (JRCD .NE. 0) GO TO 110
+         KEY=JRRAY(1,2)
 C
 C RECORD 1 CONTAINS VALUES FOR Element header record
 C
-            IF (KEY.EQ.1) THEN
-                  j = j + 1
-                  locID = JRRAY(1,6)
-            END IF
+         IF (KEY.EQ.1) THEN
+            j = j + 1
+            locID = JRRAY(1,6)
+         END IF
 C
 C RECORD 101 CONTAINS VALUES FOR U
 C           
-            IF (KEY.EQ.101 .AND. locID .EQ. 1) THEN
-                  k = k+1
-                  resNod(k, 1) = ARRAY(4)
-                  resNod(k, 2) = ARRAY(5)
-            END IF
+         IF (KEY.EQ.101 .AND. locID .EQ. 1) THEN
+            k = k+1
+            resNod(k, 1) = ARRAY(4)
+            resNod(k, 2) = ARRAY(5)
+         END IF
 C
 C RECORD 21 CONTAINS VALUES FOR E
 C
-            IF (KEY.EQ.21 .AND. locID .EQ. 1) THEN
-                  resElem(j, 1) = ARRAY(3)
-                  resElem(j, 2) = ARRAY(4)
-                  resElem(j, 3) = ARRAY(5)
-                  resElem(j, 4) = ARRAY(6)
-            END IF
+         IF (KEY.EQ.21 .AND. locID .EQ. 1) THEN
+            resElem(j, 1) = ARRAY(3)
+            resElem(j, 2) = ARRAY(4)
+            resElem(j, 3) = ARRAY(5)
+            resElem(j, 4) = ARRAY(6)
+         END IF
 C
 C RECORD 11 CONTAINS VALUES FOR S
 C
-            IF (KEY.EQ.11 .AND. locID .EQ. 1) THEN
-                  resElem(j, 5) = ARRAY(3)
-                  resElem(j, 6) = ARRAY(4)
-                  resElem(j, 7) = ARRAY(5)
-                  resElem(j, 8) = ARRAY(6)
-            END IF
+         IF (KEY.EQ.11 .AND. locID .EQ. 1) THEN
+            resElem(j, 5) = ARRAY(3)
+            resElem(j, 6) = ARRAY(4)
+            resElem(j, 7) = ARRAY(5)
+            resElem(j, 8) = ARRAY(6)
+         END IF
 C
 C RECORD 12 CONTAINS VALUES FOR SINV
 C
-            IF (KEY.EQ.12 .AND. locID .EQ. 1) THEN
-                  resElem(j, 9) = ARRAY(3)
-            END IF
+         IF (KEY.EQ.12 .AND. locID .EQ. 1) THEN
+            resElem(j, 9) = ARRAY(3)
+         END IF
 C
 C RECORD 201 CONTAINS ...
 C
-            IF (KEY.EQ.201) THEN
-                  k = k+1
-                  resNod(k, 1) = ARRAY(4)
-                  resNod(k, 2) = ARRAY(5)
-            END IF
+         IF (KEY.EQ.201) THEN
+            k = k+1
+            resNod(k, 1) = ARRAY(4)
+            resNod(k, 2) = ARRAY(5)
+         END IF
 C
       END DO
 C
@@ -1232,104 +1234,114 @@ C
       include 'conec.for'
 C
       logical            :: Searstr
-      character(2)       :: faceString ! String to store the face of the element
-      character(2)       :: faceString2 ! String to store the face of the element
+      character(1)       :: faceString ! U letter for compatbility with *DLOAD
+      character(1)       :: loadString ! up to 9 loads
+      character(21)      :: stepString ! For "*Step, name=LoadStep1" detection
+      character(256)     :: wholeLine
       character(256)        JOBDIR
-	character*276         filename
-	integer               i,j,k
-C
-      if (LOP.eq.0) then
+	   character*276         filename
+	   integer               i,j,k
+
+C     Variables llamadas al comienzo del análisis
+
       
-C       Llamada al archivo de grupos físicos
-        call GETOUTDIR(JOBDIR,LENJOBDIR)
-        filename=' '
-        filename(1:lenjobdir)=jobdir(1:lenjobdir)
-        filename(lenjobdir+1:lenjobdir+19)='/gruposFisicos.txt'
+
+      if (LOP.eq.0) then
+C        Extracción de la información de los archivos
+         call GETOUTDIR(JOBDIR,LENJOBDIR)
+C-------------------------------------
+C        Llamada al archivo de grupos físicos
+         filename=' '
+         filename(1:lenjobdir)=jobdir(1:lenjobdir)
+         filename(lenjobdir+1:lenjobdir+19)='/gruposFisicos.txt'
 C
-      open(UNIT=14,file=filename(1:lenjobdir+19), status='old')
-        if (Searstr (14,'Element Tag, Physical Group Tag')) then
-        READ(14,*)((grupoFisico(i,j),j=1,2),i=1,NELEMS)
-        else
-        stop '###..Error en lectura'
-        end if
-        close(14)
+         open(UNIT=14,file=filename(1:lenjobdir+19), status='old')
+            if (Searstr (14,'Element Tag, Physical Group Tag')) then
+               READ(14,*)((grupoFisico(i,j),j=1,2),i=1,NELEMS)
+            else
+               stop '###..Error en lectura'
+            end if
+         close(14)
 C
 C-------------------------------------
-C       Llamada al archivo conectividades.inp
-
-        filename=' '
-        filename(1:lenjobdir)=jobdir(1:lenjobdir)
-        filename(lenjobdir+1:lenjobdir+19)='/conectividades.inp'
+C        Llamada al archivo conectividades.inp
+         filename=' '
+         filename(1:lenjobdir)=jobdir(1:lenjobdir)
+         filename(lenjobdir+1:lenjobdir+19)='/conectividades.inp'
 C
-        open(UNIT=15,file=filename(1:lenjobdir+19), status='old')
-          if (Searstr (15,'*ELEMENT,TYPE=U1,ELSET=UEL')) then
-            READ(15,*)((conectividades(i,j),j=1,nnod + 1),i=1,NELEMS)
-          else
-            stop '###..Error en lectura'
-          end if
-        close(15)
+         open(UNIT=15,file=filename(1:lenjobdir+19), status='old')
+            if (Searstr (15,'*ELEMENT,TYPE=U1,ELSET=UEL')) then
+               READ(15,*)((conectividades(i,j),j=1,nnod + 1),i=1,NELEMS)
+            else
+               stop '###..Error en lectura'
+            end if
+         close(15)
 C
 C-------------------------------------
-C       Llamada al archivo nodos.inp
+C        Llamada al archivo nodos.inp
 
-        filename=' '
-	  filename(1:lenjobdir)=jobdir(1:lenjobdir)
-        filename(lenjobdir+1:lenjobdir+10)='/nodos.inp'
+         filename=' '
+	      filename(1:lenjobdir)=jobdir(1:lenjobdir)
+         filename(lenjobdir+1:lenjobdir+10)='/nodos.inp'
 C
-	  open(UNIT=16,file=filename(1:lenjobdir+10), status='old')
-	    if (Searstr (16,'*NODE,NSET=N2')) then
-  	      READ(16,*) (k,(nodes(i,j),j=1,dim),i=1,NUMNODE)
-	    else
-	      stop '###..Error en lectura'
-	    end if
-	  close(16)
+         open(UNIT=16,file=filename(1:lenjobdir+10), status='old')
+            if (Searstr (16,'*NODE,NSET=N2')) then
+               READ(16,*) (k,(nodes(i,j),j=1,dim),i=1,NUMNODE)
+            else
+               stop '###..Error en lectura'
+            end if
+         close(16)
 C-------------------------------------
 C       Llamada al archivo contorno.inp
 
-        filename=' '
-        filename(1:lenjobdir)=jobdir(1:lenjobdir)
-        filename(lenjobdir+1:lenjobdir+14)='/contorno.inp'
+         filename=' '
+         filename(1:lenjobdir)=jobdir(1:lenjobdir)
+         filename(lenjobdir+1:lenjobdir+14)='/contorno.inp'
 C
-        open(UNIT=15,file=filename(1:lenjobdir+14), status='old')
-        if (Searstr (15,'*NSET,NSET=contorno1')) then
-         READ(15,*)((contorno1(i,j),j=1,6),i=1,filascontorno1)
-        else
-        stop '###..Error en lectura'
-        end if
-        close(15)
+         open(UNIT=15,file=filename(1:lenjobdir+14), status='old')
+            if (Searstr (15,'*NSET,NSET=contorno1')) then
+               READ(15,*)((contorno1(i,j),j=1,6),i=1,filascontorno1)
+            else
+               stop '###..Error en lectura'
+            end if
+         close(15)
 C
-
-        filename=' '
-        filename(1:lenjobdir)=jobdir(1:lenjobdir)
-        filename(lenjobdir+1:lenjobdir+14)='/contorno.inp'
+         filename=' '
+         filename(1:lenjobdir)=jobdir(1:lenjobdir)
+         filename(lenjobdir+1:lenjobdir+14)='/contorno.inp'
 C
-        open(UNIT=15,file=filename(1:lenjobdir+14), status='old')
-        if (Searstr (15,'*NSET,NSET=contorno2')) then
-         READ(15,*)((contorno2(i,j),j=1,6),i=1,filascontorno2)
-        else
-        stop '###..Error en lectura'
-        
-        end if
-        close(15)
+         open(UNIT=15,file=filename(1:lenjobdir+14), status='old')
+            if (Searstr (15,'*NSET,NSET=contorno2')) then
+               READ(15,*)((contorno2(i,j),j=1,6),i=1,filascontorno2)
+            else
+               stop '###..Error en lectura'
+            end if
+         close(15)
+C     Archivos llamados al comienzo de cada paso
+      else if (LOP.eq.1) then
+C        Extracción de la información de los archivos
+         call GETOUTDIR(JOBDIR,LENJOBDIR)
+C        Llamada al archivo de cargas
+         write(loadString, '(I1)') KSTEP
+         stepString = '*Step, name=LoadStep' // trim(adjustl(loadString))
 C-------------------------------------
-C       Llamada al archivo carga.inp
-
-        filename=' '
-        filename(1:lenjobdir)=jobdir(1:lenjobdir)
-        filename(lenjobdir+1:lenjobdir+11)='/carga.inp'
+C        Llamada al archivo carga.inp
+         filename=' '
+         filename(1:lenjobdir)=jobdir(1:lenjobdir)
+         filename(lenjobdir+1:lenjobdir+11)='/carga.inp'
 C
-        open(UNIT=15,file=filename(1:lenjobdir+14), status='old')
-        if (Searstr (15,'*DLOAD')) then
-        do i=1,listNElementLoads(1)
-         read(15, '(I, A, I, F)') elementFaces(i, 1), faceString,
-     1       elementFaces(i, 2), elementLoads(i)
-C         read(faceString(2:2), '(I1)') elementFaces(i, 2)
-        enddo
-        else
-        stop '###..Error en lectura'
-        
-        end if
+         open(UNIT=15,file=filename(1:lenjobdir+11), status='old')
+         if (Searstr (15,stepString)) then
+            ! Number of element loads per load, starts 2 lines after step line
+            read(15, '(A)') wholeLine
+            do i=1,listNElementLoads(KSTEP)
+               read(15, '(I, I, F)') elementFaces(i, 1),
+     1            elementFaces(i, 2), elementLoads(i)
+            enddo
+         else
+            stop '###..Error en lectura'
+         end if
         close(15)
-      endif
+      end if
 	return
 	end

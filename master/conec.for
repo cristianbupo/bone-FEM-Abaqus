@@ -1,5 +1,6 @@
       integer, parameter :: NUMNODE={numNode}, NELEMS={nElems}, dim=2, nnod=4
       integer, parameter :: listNElementLoads({nLoads})={listNElementLoads}
+      integer, parameter :: maxNElementLoads={maxNElementLoads}
       integer, parameter :: order2(2) = (/ 2, 1 /)
       real*8, parameter :: propiedades(2,2) = reshape((/500.0, 0.2, 6.0, 0.47/),
      1 (/2, 2/),  order=order2)
@@ -12,9 +13,9 @@ C     500.0, 0.2
 C     6.0, 0.47
 
 C     Contains the magnitude of the loads
-      real*8 elementLoads(listNElementLoads(1)) 
+      real*8 elementLoads(maxNElementLoads) 
 C     Contains the tag of the elements and the face where the load is applied
-      integer elementFaces(listNElementLoads(1), 2)
+      integer elementFaces(maxNElementLoads, 2)
 
       real*8 nodes(NUMNODE, dim)
       integer conectividades(NELEMS, nnod+1)
