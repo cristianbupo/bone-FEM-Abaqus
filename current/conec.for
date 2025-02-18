@@ -1,12 +1,12 @@
-      integer, parameter :: NUMNODE=5802, NELEMS=5680, dim=2, nnod=4
-      integer, parameter :: listNElementLoads(6)=(/25 ,25 ,25 ,25 ,25 ,25/)
-      integer, parameter :: maxNElementLoads=25
+      integer, parameter :: NUMNODE=1502, NELEMS=1440, dim=2, nnod=4
+      integer, parameter :: listNElementLoads(5)=(/12 ,13 ,14 ,13 ,12/)
+      integer, parameter :: maxNElementLoads=14
       integer, parameter :: order2(2) = (/ 2, 1 /)
       real*8, parameter :: propiedades(2,2) = reshape((/500.0, 0.2, 6.0, 0.47/),
      1 (/2, 2/),  order=order2)
       integer, parameter :: axi=0, tipo_def=2 
-      integer, parameter :: filasContorno1=14
-      integer, parameter :: filasContorno2=14
+      integer, parameter :: filasContorno1=7
+      integer, parameter :: filasContorno2=7
 
 C     E, nu
 C     500.0, 0.2

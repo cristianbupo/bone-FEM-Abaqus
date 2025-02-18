@@ -196,7 +196,6 @@ def container2gmsh(bone, boneConfig, curves):
 
 
 def writeMeshFiles(bone, boneConfig):
-
     print("Writing .inp mesh")
 
     loadVars = bone.load_vars
@@ -212,7 +211,6 @@ def writeMeshFiles(bone, boneConfig):
 
     f2g.write_nodes(tags, coords, inputPath)
     f2g.write_connectivities(elemTypes, elemTags, elemNodeTags, inputPath)
-
     f2g.write_vtk(tags, coords, allElements, boneConfig.inputPath)
 
     physicalGroups_1D = gmsh.model.getPhysicalGroups(1)
@@ -244,18 +242,17 @@ def writeMeshFiles(bone, boneConfig):
     destFile = os.path.join(inputPath, 'resultado.pvd')
     createPVDbefore(srcPattern, destFile, number_loads, 1, shift=1)
     
-        
-    if number_loads == 1:
-        bone.load_vars.load_center = 0.0
-        nElementLoads  = f2g.writeLoads(bone, boneConfig, "contorno2", all2DElements, i)
-        listNElementLoads.append(nElementLoads)
-    else:
-        for i in range(0, number_loads):
-            bone.load_vars.load_center = ((sigma - rl) * (2 * i - number_loads + 1)
-                                        / (2 * number_loads - 2))
+    listNElementLoads = []
 
-            nElementLoads = f2g.writeLoads(bone, boneConfig, "contorno2", all2DElements, i)
-            listNElementLoads.append(nElementLoads)
+    for i in range(number_loads):
+        if number_loads == 1:
+            bone.load_vars.load_center = 0.0
+        else:
+            bone.load_vars.load_center = ((sigma - rl) * (2 * i - number_loads + 1) / (2 * number_loads - 2))
+
+        nElementLoads = f2g.writeLoads(bone, boneConfig, "contorno2", all2DElements, i)
+        listNElementLoads.append(nElementLoads)
+
 
     f2g.writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLoads)
     f2g.writeSteps(boneConfig, number_loads)

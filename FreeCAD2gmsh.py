@@ -266,6 +266,7 @@ def characteristicLengths(loadCurve):
 def linear_interpolate(x, x0, y0, x1, y1):
     return y0 + (y1 - y0) * (x - x0) / (x1 - x0)
 
+
 def calculateLoadParameters(bone, loadCurve):
     NLoads = bone['load_vars']['number_loads']['val']
     head_angle = bone['geom_vars']['head_angle']['val']
@@ -358,150 +359,198 @@ def findLastPosition(A, B):
         return n
     return -1  # return -1 if no match found
 
-
-def writeLoads(bone, boneConfig, physicalName, all2DElements, loadIndex):
-
+def findPhysicalGroup(physicalName):
     physicalGroups = gmsh.model.getPhysicalGroups()
-    physicalGroup = []
-    for dim, tag in physicalGroups:
-        name = gmsh.model.getPhysicalName(dim, tag)
+    dim = None
+    tag = None
+    for d, t in physicalGroups:
+        name = gmsh.model.getPhysicalName(d, t)
         if name == physicalName:
-            physicalGroup.append((dim, tag))
+            dim = d
+            tag = t
+            break
+    
+    if dim is None or tag is None:
+        raise ValueError(f"Physical group with name '{physicalName}' not found.")
 
-    inputPath = boneConfig.inputPath
+    return dim, tag
 
-    h = bone.load_vars.load_center
-    k = bone.load_vars.load_amplitude
-    r = bone.load_vars.load_radius
+
+def findConectivityInfo(dim, entity, allElemTags, allElemNodeTags, elemNodes):
+    # Get contour elements and nodes of a single entity
+    _, elemTags, elemNodeTags = gmsh.model.mesh.getElements(dim, entity)
+    elemTags = elemTags[0]
+    nElementTags = len(elemTags)
+    elemNodeTags = elemNodeTags[0]
+    nodCoords = []
+    elemLengths = np.zeros(nElementTags)
+
+    for i, nodeTag in enumerate(elemNodeTags):
+        coord, _, _, _ = gmsh.model.mesh.getNode(nodeTag)
+        nodCoords.append(coord)
+
+    j = 0
+    contourElements = np.zeros_like(elemTags)  # From body
+    contourElementNodes = np.zeros(len(contourElements) * elemNodes)
+    for j in range(nElementTags):
+        i = 0
+        searchedVector = elemNodeTags[2*j:2*(j+1)]
+        condition = all(
+            elem in allElemNodeTags[0:elemNodes] for elem in searchedVector
+        )
+
+        while i < len(allElemTags) and not condition:
+            i = i+1
+            slicedArr = allElemNodeTags[elemNodes*i:elemNodes*(i+1)]
+            condition = all(elem in slicedArr for elem in searchedVector)
+
+        contourElements[j] = allElemTags[i]
+        contourElementNodes[elemNodes*j:elemNodes*(j+1)] = (
+            allElemNodeTags[elemNodes*i:elemNodes*(i+1)])
+        
+        lenght = math.sqrt(
+            (nodCoords[2*j][0] - nodCoords[2*j+1][0])**2 +
+            (nodCoords[2*j][1] - nodCoords[2*j+1][1])**2
+        )
+        elemLengths[j] = lenght
+
+    firstContourElement = elemNodeTags[0:2]
+    firstBodyElement = contourElementNodes[0:elemNodes]
+
+    loadFace = findLastPosition(firstBodyElement, firstContourElement)
+
+    loadFaces = [loadFace] * len(elemTags)
+
+    return contourElements, elemTags, elemNodeTags, loadFaces, nodCoords, elemLengths
+
+def findConectivityInfoPhysical(physicalName, all2DElements):
+    dim, tag = findPhysicalGroup(physicalName)
+    entities = gmsh.model.getEntitiesForPhysicalGroup(dim, tag)
 
     elemTypes = all2DElements[0][0]
     allElemTags = all2DElements[1][0]
     allElemNodeTags = all2DElements[2][0]
     elemNodes = elemTypes + 1
 
-    for dim, tag in physicalGroup:
-        # Calculate load Vector
-        # Get contour elements and nodes of physical group
-        entities = gmsh.model.getEntitiesForPhysicalGroup(dim, tag)
+    entities = gmsh.model.getEntitiesForPhysicalGroup(dim, tag)
 
-        pContourElements = []
-        pElemTags = []
-        pElemNodeTags = []
-        pLoadFaces = []
-        pNodCoords = []
+    pContourElements = []
+    pElemTags = []
+    pElemNodeTags = []
+    pLoadFaces = []
+    pNodCoords = []
+    pElemLengths = []
 
-        for i, entity in enumerate(entities):
-            # Get contour elements and nodes of a single entity
-            _, elemTags, elemNodeTags = gmsh.model.mesh.getElements(dim, entity)
-            elemTags = elemTags[0]
-            elemNodeTags = elemNodeTags[0]
+    for entity in entities:
+        contourElements, elemTags, elemNodeTags, loadFaces, nodCoords, elemLengths = findConectivityInfo(dim, entity, allElemTags, allElemNodeTags, elemNodes)
 
-            j = 0
-            contourElements = np.zeros_like(elemTags)  # From body
-            contourElementNodes = np.zeros(len(contourElements) * elemNodes)
-            while j < len(elemTags):
-                i = 0
-                searchedVector = elemNodeTags[2*j:2*(j+1)]
-                condition = all(
-                    elem in allElemNodeTags[0:elemNodes] for elem in searchedVector
-                )
+        pContourElements.extend(contourElements)
+        pElemTags.extend(elemTags)
+        pElemNodeTags.extend(elemNodeTags)
+        pLoadFaces.extend(loadFaces)
+        pNodCoords.extend(nodCoords)
+        pElemLengths.extend(elemLengths)
 
-                while i < len(allElemTags) and not condition:
-                    i = i+1
-                    slicedArr = allElemNodeTags[elemNodes*i:elemNodes*(i+1)]
-                    condition = all(elem in slicedArr for elem in searchedVector)
+    return pContourElements, pElemTags, pElemNodeTags, pLoadFaces, pNodCoords, pElemLengths
 
-                contourElements[j] = allElemTags[i]
-                contourElementNodes[elemNodes*j:elemNodes*(j+1)] = (
-                    allElemNodeTags[elemNodes*i:elemNodes*(i+1)])
-                j = j + 1
 
-            firstContourElement = elemNodeTags[0:2]
-            firstBodyElement = contourElementNodes[0:elemNodes]
+def writeLoads(bone, boneConfig, physicalName, all2DElements, loadIndex):
+    inputPath = boneConfig.inputPath
 
-            loadFace = findLastPosition(firstBodyElement, firstContourElement)
+    pContourElements, pElemTags, _, pLoadFaces, pNodCoords, pElemLengths = findConectivityInfoPhysical(physicalName, all2DElements)
 
-            pContourElements.extend(contourElements)
-            pElemTags.extend(elemTags)
-            pElemNodeTags.extend(elemNodeTags)
-            pLoadFaces.extend([loadFace] * len(elemTags))
+    h = bone.load_vars.load_center
+    k = bone.load_vars.load_amplitude
+    r = bone.load_vars.load_radius
 
-            for nodeTag in elemNodeTags:
-                coord, _, _, _ = gmsh.model.mesh.getNode(nodeTag)
-                pNodCoords.append(coord)
+    loadElements, loadFaces, pressureDist, nElementLoads = calculatePressureDist(
+        h, k, r, pContourElements, pLoadFaces, pElemLengths, pElemTags
+    )
 
-        # Calculate midpoints and normals for the outer surface
-        midpoints = vtk.vtkPoints()
-        normals = vtk.vtkDoubleArray()
-        load_magnitudes = vtk.vtkDoubleArray()
-        normals.SetNumberOfComponents(3)  # Normal vectors are 3D
-        normals.SetName("Load Orientation")
-        load_magnitudes.SetName("Load Magnitude")
+    writePressureDist(
+        loadElements, loadFaces, pressureDist, nElementLoads, loadIndex, inputPath
+    )
 
-        nElementLoads = 0
-        npElementTags = len(pElemTags)
-        p = -r**2/(4*k)
-        elemLenghts = np.zeros(npElementTags)
-        distributionPath = os.path.join(inputPath, f"carga.inp")
+    writePressureDistVTP(
+        pNodCoords, pContourElements, loadElements, pressureDist, pElemLengths, loadIndex, inputPath
+    )
 
-        # Check if the file exists and open in the appropriate mode
-        if os.path.exists(distributionPath):
-            mode = "a"  # Append mode
+    return nElementLoads
+
+
+def calculatePressureDist(h, k, r, pContourElements, pLoadFaces, pElemLengths, pElemTags):
+    L = np.sum(pElemLengths)
+    loadElements = []
+    loadFaces = []
+    pressureDist =[]
+    x_im1 = -L/2 # x_im1 is the previous x value
+    p = -r**2/(4*k)
+    
+    nElementLoads = 0
+    npElementTags = len(pElemTags)
+
+    for i in range(npElementTags):
+        x_i = x_im1 + pElemLengths[i]
+        if (h-r < x_i < h+r) or (h-r < x_im1 < h+r):
+            a = max(x_im1, h-r)
+            b = min(x_i, h+r)            
+            loadElements.append(pContourElements[i])
+            loadFaces.append(pLoadFaces[i])
+            pressureDist.append((((b-h)**3-(a-h)**3)/(12*p)+k*(b-a))/pElemLengths[i])
+            nElementLoads += 1
+        x_im1 = x_i
+    return loadElements, loadFaces, pressureDist, nElementLoads
+
+
+def writePressureDist(loadElements, loadFaces, pressureDist, nElementLoads, loadIndex, inputPath):
+    with open(os.path.join(inputPath, "carga.inp"), "a") as g:
+        g.write(f"*Step, name=LoadStep{loadIndex+1}\n")
+        g.write("*DLOAD\n")
+        for i in range(nElementLoads):
+            g.write(f"{loadElements[i]}, {loadFaces[i]}, {pressureDist[i]}\n")
+        g.write("*End Step\n")
+
+
+def writePressureDistVTP(pNodCoords, pContourElements, loadElements, pressureDist, pElemLengths, loadIndex, inputPath):
+    # Calculate midpoints and normals for the outer surface
+    midpoints = vtk.vtkPoints()
+    normals = vtk.vtkDoubleArray()
+    load_magnitudes = vtk.vtkDoubleArray()
+    normals.SetNumberOfComponents(3)  # Normal vectors are 3D
+    normals.SetName("Load Orientation")
+    load_magnitudes.SetName("Load Magnitude")
+
+    j = 0
+    for i, elementTag in enumerate(pContourElements):
+        midpoint = [(pNodCoords[2*i][0] + pNodCoords[2*i+1][0])/2,
+                    (pNodCoords[2*i][1] + pNodCoords[2*i+1][1])/2, 0]
+        midpoints.InsertNextPoint(midpoint)
+
+        normal = [(pNodCoords[2*i+1][1] - pNodCoords[2*i][1])/pElemLengths[i],
+                    -(pNodCoords[2*i+1][0] - pNodCoords[2*i][0])/pElemLengths[i],
+                    0]
+        normals.InsertNextTuple(normal)
+
+
+        if elementTag in loadElements:
+            load_magnitudes.InsertNextValue(pressureDist[j])
+            j += 1
         else:
-            mode = "w"  # Write mode
+            load_magnitudes.InsertNextValue(0.0)
 
-        with open(distributionPath, mode) as g:
-            for i in range(npElementTags):
-                lenght = math.sqrt(
-                    (pNodCoords[2*i][0] - pNodCoords[2*i+1][0])**2 +
-                    (pNodCoords[2*i][1] - pNodCoords[2*i+1][1])**2
-                )
-                elemLenghts[i] = lenght
+    # Writing the vtp for the load distribution
+    polydata = vtk.vtkPolyData()
+    polydata.SetPoints(midpoints)
+    polydata.GetPointData().SetNormals(normals)
+    polydata.GetPointData().AddArray(load_magnitudes)
 
-            for i in range(npElementTags):
-                midpoint = [(pNodCoords[2*i][0] + pNodCoords[2*i+1][0])/2,
-                            (pNodCoords[2*i][1] + pNodCoords[2*i+1][1])/2, 0]
-                midpoints.InsertNextPoint(midpoint)
-
-                normal = [(pNodCoords[2*i+1][1] - pNodCoords[2*i][1])/elemLenghts[i],
-                          -(pNodCoords[2*i+1][0] - pNodCoords[2*i][0])/elemLenghts[i],
-                          0]
-                normals.InsertNextTuple(normal)
-
-            g.write(f"*Step, name=LoadStep{loadIndex+1}\n")
-            g.write("*DLOAD\n")
-            L = np.sum(elemLenghts)
-
-            x_im1 = -L/2
-            for j in range(npElementTags):
-                pressure_i = 0.0
-                x_i = x_im1 + elemLenghts[j]
-                if (h-r < x_i < h+r) or (h-r < x_im1 < h+r):
-                    a = max(x_im1, h-r)
-                    b = min(x_i, h+r)
-                    pressure_i = (((b-h)**3-(a-h)**3)/(12*p)+k*(b-a))/elemLenghts[j]
-                    g.write(f"{pContourElements[j]}, {pLoadFaces[j]}, {pressure_i}\n")
-                    nElementLoads += 1
-                load_magnitudes.InsertNextValue(pressure_i)
-                x_im1 = x_i
-
-            g.write("*End Step\n")
-
-            # Writing the vtp for the load distribution
-            polydata = vtk.vtkPolyData()
-            polydata.SetPoints(midpoints)
-            polydata.GetPointData().SetNormals(normals)
-            polydata.GetPointData().AddArray(load_magnitudes)
-
-            # Write vtkPolyData to a file
-            writer = vtk.vtkXMLPolyDataWriter()
-            file_path = os.path.join(inputPath, f"carga/carga{loadIndex+1}.vtp")
-            writer.SetFileName(file_path)
-            writer.SetInputData(polydata)
-            writer.Write()
-
-            return nElementLoads
-
+    # Write vtkPolyData to a file
+    writer = vtk.vtkXMLPolyDataWriter()
+    file_path = os.path.join(inputPath, f"carga/carga{loadIndex+1}.vtp")
+    writer.SetFileName(file_path)
+    writer.SetInputData(polydata)
+    writer.SetDataModeToAscii()  # Set the data mode to ASCII
+    writer.Write()
 
 def writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLoads):
     kOI = bone.load_vars.kOI
