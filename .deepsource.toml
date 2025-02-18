@@ -1,9 +1,5 @@
 version = 1
 
-test_patterns = ["**/test_*.py"]
-
-exclude_patterns = ["macros/Paraview/*.py"]
-
 [[analyzers]]
 name = "python"
 
