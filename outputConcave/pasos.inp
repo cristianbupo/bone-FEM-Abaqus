@@ -1,0 +1,70 @@
+** ----------------------------------------------------------------
+** STEP: Step-1
+*Step, name=carga1, nlgeom=NO
+*HEAT TRANSFER, STEADY STATE
+** BOUNDARY CONDITIONS
+*INCLUDE, INPUT=condicionesContorno.inp
+** OUTPUT REQUESTS
+*NODE PRINT,FREQ=1 
+NT,  
+*NODE FILE,FREQ=1 
+NT,  
+*OUTPUT,FIELD,FREQ=1 
+NT, 
+*End Step
+** ----------------------------------------------------------------
+** STEP: Step-2
+*Step, name=carga2, nlgeom=NO
+*HEAT TRANSFER, STEADY STATE
+** BOUNDARY CONDITIONS
+*INCLUDE, INPUT=condicionesContorno.inp
+** OUTPUT REQUESTS
+*NODE PRINT,FREQ=1 
+NT,  
+*NODE FILE,FREQ=1 
+NT,  
+*OUTPUT,FIELD,FREQ=1 
+NT, 
+*End Step
+** ----------------------------------------------------------------
+** STEP: Step-3
+*Step, name=carga3, nlgeom=NO
+*HEAT TRANSFER, STEADY STATE
+** BOUNDARY CONDITIONS
+*INCLUDE, INPUT=condicionesContorno.inp
+** OUTPUT REQUESTS
+*NODE PRINT,FREQ=1 
+NT,  
+*NODE FILE,FREQ=1 
+NT,  
+*OUTPUT,FIELD,FREQ=1 
+NT, 
+*End Step
+** ----------------------------------------------------------------
+** STEP: Step-4
+*Step, name=carga4, nlgeom=NO
+*HEAT TRANSFER, STEADY STATE
+** BOUNDARY CONDITIONS
+*INCLUDE, INPUT=condicionesContorno.inp
+** OUTPUT REQUESTS
+*NODE PRINT,FREQ=1 
+NT,  
+*NODE FILE,FREQ=1 
+NT,  
+*OUTPUT,FIELD,FREQ=1 
+NT, 
+*End Step
+** ----------------------------------------------------------------
+** STEP: Step-5
+*Step, name=carga5, nlgeom=NO
+*HEAT TRANSFER, STEADY STATE
+** BOUNDARY CONDITIONS
+*INCLUDE, INPUT=condicionesContorno.inp
+** OUTPUT REQUESTS
+*NODE PRINT,FREQ=1 
+NT,  
+*NODE FILE,FREQ=1 
+NT,  
+*OUTPUT,FIELD,FREQ=1 
+NT, 
+*End Step

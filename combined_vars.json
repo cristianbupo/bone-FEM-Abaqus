@@ -30,6 +30,13 @@
             "default": 3.0,
             "short_name": "hh"
         },
+        "cart_thick": {
+            "type": "double",
+            "min_value": 2.5,
+            "max_value": 2.0,
+            "default": 2.7,
+            "short_name": "ct"
+        },
         "curve_angle": {
             "min_value": -15.0,
             "max_value": 15.0,
@@ -64,6 +71,9 @@
         },
         "number_loads": {
             "default": 5
+        },
+        "total_force": {
+            "default": 7.5
         }
     },
     "mesh_vars": {

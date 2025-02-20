@@ -10,7 +10,7 @@ import gmsh
 import subprocess
 from datetime import datetime
 from sketchUtils import setConstraintValue
-
+import subprocess, sys
 
 class myConfigObject:
     def __init__(self, d=None):
@@ -77,11 +77,13 @@ def modifySketch(bone, boneLimits, boneConfig):
         else:
             print(f"Value for {key} was set correctly: {value}")
 
-    curvesMesh, _, _ = g2g.processSketchNurbs(sketch, boneConfig)
+    curvesMesh, curvesArea, _ = g2g.processSketchNurbs(sketch, boneConfig)
 
-    g2g.container2gmsh(bone, boneConfig, curvesMesh)
+    g2g.container2gmsh(bone, boneConfig, curvesMesh, curvesArea)
 
     gmsh.finalize()  # Finalize gmsh
+
+    return curvesArea
 
 
 def myFunction(bone, boneLimits, boneConfig, sketch):
@@ -209,24 +211,28 @@ def oldRunAbaqus(bone, boneConfig):
     return command
 
 
+import os
+import subprocess
+
 def runAbaqus(boneConfig):
-    os.chdir(boneConfig.inputPath)
-    command = "abaqus.bat job=analisis.inp user=user.for ask_delete=OFF cpus=2"
-    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    # Get the existing system PATH
+    env = os.environ.copy()
 
-    # Print stdout in real-time
-    for line in process.stdout:
-        print(line, end='')
-
-    # Print stderr in real-time
-    for line in process.stderr:
-        print(line, end='')
-
-    process.stdout.close()
-    process.stderr.close()
-    process.wait()
-
-    os.chdir("..")
+    # Add the required Abaqus and Intel Fortran paths
+    additional_paths = [
+        r"C:\SIMULIA\Commands",  # Abaqus Command Path
+        r"C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2017.2.187\windows\bin",  # Intel Fortran Compiler Path
+        r"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin",  # Visual Studio (Adjust if using VS2015)
+    ]
+    
+    # Append them to the PATH
+    env["PATH"] = ";".join(additional_paths) + ";" + env["PATH"]
+    
+    process = subprocess.run("run.bat", shell=True, capture_output=True,
+                             text=True, cwd=boneConfig.inputPath, env=env)
+    
+    print(process.stdout)
+    print(process.stderr)  # Print errors if any
 
 
 def saveResults(dir_name, index):
@@ -261,22 +267,15 @@ def clear_folder(folder):
         except Exception as e:
             print(f'Failed to delete {item_path}. Reason: {e}')
 
-def main():
-    bone, boneLimits, boneConfig = getBoneData()
-    setattr(boneConfig, 'runFltk', True)
-    # setattr(boneConfig, 'writeVTK', True)
-    setattr(boneConfig, 'deleteOutput', True)
-    setattr(bone.load_vars, 'load_center', 0.0)
-    setattr(bone.mesh_vars, 'number_elements', 10)
-    setattr(boneConfig, 'runAbq', True)
-    setattr(bone.load_vars, 'number_loads', 5)
-    setattr(bone.geom_vars, 'head_angle', 20.0)
-
-    if boneConfig.deleteOutput:
-        clear_folder(boneConfig.outputPath)
+def runAnalysis(boneConfig, boneLimits, bone):
+    
+    # Clear the input folder
+    clear_folder(boneConfig.inputPath)
 
     print("Copying the necessary files...")
     inputPath = boneConfig.inputPath
+    outputPath = boneConfig.outputPath
+
     # clear_folder(inputPath)
 
     # Define the source files and their destination filenames
@@ -305,11 +304,65 @@ def main():
     for i in range(1):
         print(f"Running Abaqus {i}")
         modifySketch(bone, boneLimits, boneConfig)
-        # runAbaqus(boneConfig)
+        runAbaqus(boneConfig)
         print("\n\n")
 
 
+    # Copy all the files from the inputPath to the outputPath
+    for item in os.listdir(inputPath):
+        item_path = os.path.join(inputPath, item)
+        dest_path = os.path.join(outputPath, item)
+        if os.path.isfile(item_path):
+            shutil.copy(item_path, dest_path)
+        elif os.path.isdir(item_path):
+            shutil.copytree(item_path, dest_path, dirs_exist_ok=True)
+    
     print("Done!")
+
+def main():
+    bone, boneLimits, boneConfig = getBoneData()
+    # setattr(boneConfig, 'runFltk', True)
+    # setattr(boneConfig, 'writeVTK', True)
+
+    # Constant variables
+    setattr(boneConfig, 'deleteOutput', True)
+    setattr(boneConfig, 'runAbq', True)
+
+    setattr(bone.mesh_vars, 'number_elements', 20)
+
+    setattr(bone.load_vars, 'number_loads', 5)
+
+    setattr(bone.geom_vars, 'bone_width', 2.2)
+    setattr(bone.geom_vars, 'head_height', 3.0)
+
+    # Output convex
+    setattr(boneConfig, 'inputPath', 'outputConvex')
+    setattr(boneConfig, 'outputPath', 'outputConvex')
+
+    setattr(bone.geom_vars, 'radius_x', 1.4)
+    setattr(bone.geom_vars, 'radius_y', 1.5)
+    setattr(bone.geom_vars, 'head_angle', 25.0)
+    setattr(bone.geom_vars, 'cart_thick', 2.5)
+    setattr(bone.geom_vars, 'curve_angle', 0.0)
+
+    setattr(boneConfig, 'outputPath', 'outputConcave')
+
+    runAnalysis(boneConfig, boneLimits, bone)
+
+    # Output concave
+    setattr(boneConfig, 'inputPath', 'outputConcave')
+    setattr(boneConfig, 'outputPath', 'outputConcave')
+
+    setattr(bone.geom_vars, 'radius_x', 1.65)
+    setattr(bone.geom_vars, 'radius_y', 1.2)
+    setattr(bone.geom_vars, 'head_angle', -15.0)
+    setattr(bone.geom_vars, 'cart_thick', 2.0)
+    setattr(bone.geom_vars, 'curve_angle', 9.0)
+
+    setattr(boneConfig, 'outputPath', 'outputConvex')
+
+    runAnalysis(boneConfig, boneLimits, bone)
+
 
 
 if __name__ == '__main__':

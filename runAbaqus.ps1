@@ -1,3 +1,5 @@
+Set-ExecutionPolicy RemoteSigned
+
 Clear-Host
 Set-Location ".\current"
 $batFile = ".\run.bat"

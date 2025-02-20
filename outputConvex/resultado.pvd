@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<VTKFile type="Collection" version="1.0"><Collection><DataSet timestep="0" file="resultado\analisis1.vtu" /><DataSet timestep="1" file="resultado\analisis2.vtu" /><DataSet timestep="2" file="resultado\analisis3.vtu" /><DataSet timestep="3" file="resultado\analisis4.vtu" /><DataSet timestep="4" file="resultado\analisis5.vtu" /></Collection></VTKFile>

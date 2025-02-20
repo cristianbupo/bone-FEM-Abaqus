@@ -267,88 +267,6 @@ def linear_interpolate(x, x0, y0, x1, y1):
     return y0 + (y1 - y0) * (x - x0) / (x1 - x0)
 
 
-def calculateLoadParameters(bone, loadCurve):
-    NLoads = bone['load_vars']['number_loads']['val']
-    head_angle = bone['geom_vars']['head_angle']['val']
-    total_force = bone['load_vars']['total_force']['val']
-    
-    maxLength, midLength, minLength = characteristicLengths(loadCurve)
-
-    if NLoads == 6:
-        concaveExt = (minLength + 2*midLength)/3
-        convexExt = (2*midLength + maxLength)/3
-
-        concaveR = (maxLength - midLength)/3
-        convexR = (maxLength - midLength)/3
-
-        if head_angle <= -15:
-            load_ext = concaveExt
-            r = concaveR
-        elif -15 < head_angle <= 15:
-            load_ext = linear_interpolate(head_angle, -15, concaveExt, 15, convexExt)
-            r = linear_interpolate(head_angle, -15, concaveR, 15, convexR)
-        elif 15 < head_angle:
-            load_ext = convexExt
-            r = convexR
-
-    else: # if NLoads == 5:
-        concave_length = minLength + 1 * (midLength - minLength) / 5
-        convex_length = midLength + 3 * (maxLength - midLength) / 5
-
-        load_ext = 0
-
-        if head_angle <= -15:
-            load_ext = concave_length
-        elif -15 < head_angle <= 0:
-            load_ext = linear_interpolate(head_angle, -15, concave_length, 0, minLength)
-        elif  0 < head_angle <= 15:
-            load_ext = linear_interpolate(head_angle, 0, minLength, 15, convex_length)
-        elif 15 < head_angle:
-            load_ext = convex_length * 1
-
-        concave_radius = load_ext / 2
-        convex_radius = load_ext / 4
-
-        if head_angle <= -15:
-            r = concave_radius
-        elif -15 < head_angle <= 15:
-            r = linear_interpolate(head_angle, -15, concave_radius, 15, convex_radius)
-        elif 15 < head_angle:
-            r = convex_radius
-
-    k = (3 * total_force)/(4 * r)        
-
-    return load_ext, r, k
-
-
-def loadVectors(bone, load_ext, r, k_max):
-    NLoads = bone['load_vars']['number_loads']['val']
-    h_vector = []
-    k_vector = []
-    r_vector = []
-    
-    if NLoads == 6:
-        k_vector = [0.5, 1.0, 0.5, 0.5, 1.0, 0.5]
-        k_vector = [k * k_max for k in k_vector]
-        
-        load_ext_2 = load_ext/2
-        h_vector = [load_ext_2+r, load_ext_2, load_ext_2-r,
-                    -load_ext_2+r, -load_ext_2, -load_ext_2-r]
-        for loadIndex in range(NLoads):
-            r_vector.append(r)
-
-    else: # if NLoads == 5:
-        k_vector = [0.5, 0.75, 1.0, 0.75, 0.5]
-        k_vector = [k * k_max for k in k_vector]
-        
-        for loadIndex in range(NLoads):
-            h_vector.append((load_ext - r)*(2 * loadIndex - NLoads + 1)/(2*NLoads - 2))
-            r_vector.append(r)  
-
-
-    return h_vector, k_vector, r_vector
-
-
 def findLastPosition(A, B):
     # A and B are arrays, B is a 2-element array
     n = len(A)
@@ -442,7 +360,9 @@ def findConectivityInfoPhysical(physicalName, all2DElements):
     pElemLengths = []
 
     for entity in entities:
-        contourElements, elemTags, elemNodeTags, loadFaces, nodCoords, elemLengths = findConectivityInfo(dim, entity, allElemTags, allElemNodeTags, elemNodes)
+        (
+            contourElements, elemTags, elemNodeTags, loadFaces, nodCoords, elemLengths
+        ) = findConectivityInfo(dim, entity, allElemTags, allElemNodeTags, elemNodes)
 
         pContourElements.extend(contourElements)
         pElemTags.extend(elemTags)
@@ -454,14 +374,12 @@ def findConectivityInfoPhysical(physicalName, all2DElements):
     return pContourElements, pElemTags, pElemNodeTags, pLoadFaces, pNodCoords, pElemLengths
 
 
-def writeLoads(bone, boneConfig, physicalName, all2DElements, loadIndex):
+def writeLoads(bone, boneConfig, h, k, r, physicalName, all2DElements, loadIndex):
     inputPath = boneConfig.inputPath
 
-    pContourElements, pElemTags, _, pLoadFaces, pNodCoords, pElemLengths = findConectivityInfoPhysical(physicalName, all2DElements)
-
-    h = bone.load_vars.load_center
-    k = bone.load_vars.load_amplitude
-    r = bone.load_vars.load_radius
+    (
+        pContourElements, pElemTags, _, pLoadFaces, pNodCoords, pElemLengths
+    ) = findConectivityInfoPhysical(physicalName, all2DElements)
 
     loadElements, loadFaces, pressureDist, nElementLoads = calculatePressureDist(
         h, k, r, pContourElements, pLoadFaces, pElemLengths, pElemTags

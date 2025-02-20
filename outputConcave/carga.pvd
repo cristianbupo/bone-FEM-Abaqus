@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<VTKFile type="Collection" version="1.0"><Collection><DataSet timestep="0" file="carga\carga1.vtp" /><DataSet timestep="1" file="carga\carga2.vtp" /><DataSet timestep="2" file="carga\carga3.vtp" /><DataSet timestep="3" file="carga\carga4.vtp" /><DataSet timestep="4" file="carga\carga5.vtp" /></Collection></VTKFile>

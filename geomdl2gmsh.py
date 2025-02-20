@@ -159,15 +159,15 @@ def pixelateBorder(entity):
     return elementaryLineTags, elementaryNodeTags
 
 
-def container2gmsh(bone, boneConfig, curves):
+def container2gmsh(bone, boneConfig, curvesMesh, curvesArea):
 
     numberElements = bone.mesh_vars.number_elements
 
     runFltk = boneConfig.runFltk
 
-    pointsSet = getUniqueControlPoints(curves)
+    pointsSet = getUniqueControlPoints(curvesMesh)
     pointTags = addPointsToModel(pointsSet)
-    addCurvesToModel(curves, pointsSet, pointTags)
+    addCurvesToModel(curvesMesh, pointsSet, pointTags)
     gmsh.model.occ.synchronize()
 
     setGmshOptions()
@@ -188,14 +188,101 @@ def container2gmsh(bone, boneConfig, curves):
     setSurfaceColors()
     addPhysicalGroups()
 
-    if not boneConfig.skipWrite:
-        writeMeshFiles(bone, boneConfig)
+    writeMeshFiles(bone, boneConfig, curvesArea)
 
     if runFltk:
         gmsh.fltk.run()
 
 
-def writeMeshFiles(bone, boneConfig):
+def loadVectors(bone, loadCurve):
+
+    number_loads = bone.load_vars.number_loads
+    head_angle = bone.geom_vars.head_angle
+    total_force = bone.load_vars.total_force
+    # load_ext = bone.load_vars.load_extension
+    # r = bone.load_vars.load_radius
+
+    h_vector = np.zeros(number_loads)
+    k_vector = np.zeros(number_loads)
+    r_vector = np.ones(number_loads)
+
+    maxLength, midLength, minLength = f2g.characteristicLengths(loadCurve)
+    
+    if number_loads % 2 != 0: # Odd number of loads, ie. 5
+        concave_length = minLength + 1 * (midLength - minLength) / 5
+        convex_length = midLength + 3 * (maxLength - midLength) / 5
+
+        if head_angle <= -15:
+            load_ext = concave_length
+        elif -15 < head_angle <= 0:
+            load_ext = f2g.linear_interpolate(head_angle, -15, concave_length, 0, minLength)
+        elif  0 < head_angle <= 15:
+            load_ext = f2g.linear_interpolate(head_angle, 0, minLength, 15, convex_length)
+        elif 15 < head_angle:
+            load_ext = convex_length
+
+        concave_radius = load_ext / 2
+        convex_radius = load_ext / 4
+
+        if head_angle <= -15:
+            r = concave_radius
+        elif -15 < head_angle <= 15:
+            r = f2g.linear_interpolate(head_angle, -15, concave_radius, 15, convex_radius)
+        elif 15 < head_angle:
+            r = convex_radius
+
+        k_vector = triangularPattern(number_loads, 0.5, 1.0)
+        h_vector = np.linspace(-(load_ext-r)/2, (load_ext-r)/2, number_loads)
+    else: # Even number of loads, ie. 6
+        concaveExt = (minLength + 2*midLength)/3
+        convexExt = (2*midLength + maxLength)/3
+
+        concaveR = (maxLength - midLength)/3
+        convexR = (maxLength - midLength)/3
+
+        if head_angle <= -15:
+            load_ext = concaveExt
+            r = concaveR
+        elif -15 < head_angle <= 15:
+            load_ext = f2g.linear_interpolate(head_angle, -15, concaveExt, 15, convexExt)
+            r = f2g.linear_interpolate(head_angle, -15, concaveR, 15, convexR)
+        elif 15 < head_angle:
+            load_ext = convexExt
+            r = convexR
+
+        k_vector = np.zeros(number_loads)
+        k_vector[0:number_loads//2] = triangularPattern(number_loads//2, 0.5, 1.0)
+        k_vector[number_loads//2:number_loads] = triangularPattern(number_loads//2, 0.5, 1.0)
+
+        h_vector[0:number_loads//2] = np.linspace(-load_ext/2-r, -load_ext/2+r,
+                                                  number_loads//2)
+        h_vector[number_loads//2:number_loads] = np.linspace(load_ext/2-r,
+                                                             load_ext/2+r, number_loads//2)
+    
+    k_max = (3 * total_force)/(4 * r)
+    k_vector = k_vector * k_max
+    r_vector = r_vector * r
+
+    print(h_vector)
+    print(k_vector)
+    print(r_vector)
+    return h_vector, k_vector, r_vector
+
+def triangularPattern(size, min, max):
+    vector = np.zeros(size)
+    halfSize = size // 2
+    for i in range(size):
+        if i < halfSize:
+            vector[i] = f2g.linear_interpolate(i, 0, min, halfSize, max)
+        else:
+            vector[i] = vector[size - i - 1]
+    
+    if size % 2 == 1:
+        vector[halfSize] = max
+
+    return vector
+
+def writeMeshFiles(bone, boneConfig, curvesArea):
     print("Writing .inp mesh")
 
     loadVars = bone.load_vars
@@ -242,15 +329,19 @@ def writeMeshFiles(bone, boneConfig):
     destFile = os.path.join(inputPath, 'resultado.pvd')
     createPVDbefore(srcPattern, destFile, number_loads, 1, shift=1)
     
+    loadCurve = curvesArea[1]
+
+    h_vector, k_vector, r_vector = loadVectors(bone, loadCurve)
+
     listNElementLoads = []
 
     for i in range(number_loads):
-        if number_loads == 1:
-            bone.load_vars.load_center = 0.0
-        else:
-            bone.load_vars.load_center = ((sigma - rl) * (2 * i - number_loads + 1) / (2 * number_loads - 2))
 
-        nElementLoads = f2g.writeLoads(bone, boneConfig, "contorno2", all2DElements, i)
+        h = h_vector[i]
+        k = k_vector[i]
+        r = r_vector[i]
+    
+        nElementLoads = f2g.writeLoads(bone, boneConfig, h, k, r, "contorno2", all2DElements, i)
         listNElementLoads.append(nElementLoads)
 
 
