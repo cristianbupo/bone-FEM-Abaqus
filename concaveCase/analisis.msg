@@ -1,6 +1,6 @@
 1
 
-   Abaqus 3DEXPERIENCE R2017x                                  Date 20-Feb-2025   Time 12:56:19
+   Abaqus 3DEXPERIENCE R2017x                                  Date 20-Feb-2025   Time 13:23:25
    For use by Supplied by Team-SolidSQUAD under license from Dassault Systemes or its subsidiary.
 
                                                                                  
@@ -100,10 +100,10 @@
                CONVERGENCE CHECKS FOR EQUILIBRIUM ITERATION     1
 
 
- AVERAGE HEAT FLUX                  2.102E-02   TIME AVG. HEAT FLUX   2.102E-02
- LARGEST RESIDUAL HEAT FLUX        -7.794E-14   AT NODE       1193   DOF 11
- LARGEST INCREMENT OF TEMP.        -0.923       AT NODE          8   DOF 11
- LARGEST CORRECTION TO TEMP.       -0.923       AT NODE          8   DOF 11
+ AVERAGE HEAT FLUX                  4.552E-02   TIME AVG. HEAT FLUX   4.552E-02
+ LARGEST RESIDUAL HEAT FLUX         2.174E-13   AT NODE       1193   DOF 11
+ LARGEST INCREMENT OF TEMP.          1.63       AT NODE        187   DOF 11
+ LARGEST CORRECTION TO TEMP.         1.63       AT NODE        187   DOF 11
           THE HEAT FLUX EQUILIBRIUM RESPONSE WAS LINEAR IN THIS INCREMENT
 
  ITERATION SUMMARY FOR THE INCREMENT:   1 TOTAL ITERATIONS, OF WHICH
@@ -113,7 +113,7 @@
  STEP TIME COMPLETED        1.00    ,  TOTAL TIME COMPLETED         1.00    
 1
 
-   Abaqus 3DEXPERIENCE R2017x                                  Date 20-Feb-2025   Time 12:56:20
+   Abaqus 3DEXPERIENCE R2017x                                  Date 20-Feb-2025   Time 13:23:27
    For use by Supplied by Team-SolidSQUAD under license from Dassault Systemes or its subsidiary.
 
                                                                                  
@@ -204,17 +204,17 @@
      CHECK POINT  END OF SOLVER       
 
        ELAPSED USER TIME (SEC)      =   0.0000    
-       ELAPSED SYSTEM TIME (SEC)    =  0.10000    
-       ELAPSED TOTAL CPU TIME (SEC) =  0.10000    
+       ELAPSED SYSTEM TIME (SEC)    =   0.0000    
+       ELAPSED TOTAL CPU TIME (SEC) =   0.0000    
        ELAPSED WALLCLOCK TIME (SEC) =          0
 
                CONVERGENCE CHECKS FOR EQUILIBRIUM ITERATION     1
 
 
- AVERAGE HEAT FLUX                  2.786E-02   TIME AVG. HEAT FLUX   2.786E-02
- LARGEST RESIDUAL HEAT FLUX         3.264E-14   AT NODE       4404   DOF 11
- LARGEST INCREMENT OF TEMP.        -0.329       AT NODE        207   DOF 12
- LARGEST CORRECTION TO TEMP.       -0.329       AT NODE        207   DOF 12
+ AVERAGE HEAT FLUX                  4.213E-02   TIME AVG. HEAT FLUX   4.213E-02
+ LARGEST RESIDUAL HEAT FLUX         6.095E-14   AT NODE       2794   DOF 11
+ LARGEST INCREMENT OF TEMP.        -0.732       AT NODE        197   DOF 12
+ LARGEST CORRECTION TO TEMP.       -0.732       AT NODE        197   DOF 12
           THE HEAT FLUX EQUILIBRIUM RESPONSE WAS LINEAR IN THIS INCREMENT
 
  ITERATION SUMMARY FOR THE INCREMENT:   1 TOTAL ITERATIONS, OF WHICH
@@ -224,7 +224,7 @@
  STEP TIME COMPLETED        1.00    ,  TOTAL TIME COMPLETED         2.00    
 1
 
-   Abaqus 3DEXPERIENCE R2017x                                  Date 20-Feb-2025   Time 12:56:22
+   Abaqus 3DEXPERIENCE R2017x                                  Date 20-Feb-2025   Time 13:23:28
    For use by Supplied by Team-SolidSQUAD under license from Dassault Systemes or its subsidiary.
 
                                                                                  
@@ -314,18 +314,18 @@
 
      CHECK POINT  END OF SOLVER       
 
-       ELAPSED USER TIME (SEC)      =   0.0000    
+       ELAPSED USER TIME (SEC)      =  0.10000    
        ELAPSED SYSTEM TIME (SEC)    =   0.0000    
-       ELAPSED TOTAL CPU TIME (SEC) =   0.0000    
+       ELAPSED TOTAL CPU TIME (SEC) =  0.10000    
        ELAPSED WALLCLOCK TIME (SEC) =          0
 
                CONVERGENCE CHECKS FOR EQUILIBRIUM ITERATION     1
 
 
- AVERAGE HEAT FLUX                  3.653E-02   TIME AVG. HEAT FLUX   3.653E-02
- LARGEST RESIDUAL HEAT FLUX         7.300E-14   AT NODE       1193   DOF 11
- LARGEST INCREMENT OF TEMP.         0.649       AT NODE        224   DOF 11
- LARGEST CORRECTION TO TEMP.        0.649       AT NODE        224   DOF 11
+ AVERAGE HEAT FLUX                  3.777E-02   TIME AVG. HEAT FLUX   3.777E-02
+ LARGEST RESIDUAL HEAT FLUX        -2.027E-13   AT NODE       1193   DOF 11
+ LARGEST INCREMENT OF TEMP.         -1.54       AT NODE        187   DOF 11
+ LARGEST CORRECTION TO TEMP.        -1.54       AT NODE        187   DOF 11
           THE HEAT FLUX EQUILIBRIUM RESPONSE WAS LINEAR IN THIS INCREMENT
 
  ITERATION SUMMARY FOR THE INCREMENT:   1 TOTAL ITERATIONS, OF WHICH
@@ -335,7 +335,7 @@
  STEP TIME COMPLETED        1.00    ,  TOTAL TIME COMPLETED         3.00    
 1
 
-   Abaqus 3DEXPERIENCE R2017x                                  Date 20-Feb-2025   Time 12:56:23
+   Abaqus 3DEXPERIENCE R2017x                                  Date 20-Feb-2025   Time 13:23:29
    For use by Supplied by Team-SolidSQUAD under license from Dassault Systemes or its subsidiary.
 
                                                                                  
@@ -433,10 +433,10 @@
                CONVERGENCE CHECKS FOR EQUILIBRIUM ITERATION     1
 
 
- AVERAGE HEAT FLUX                  2.786E-02   TIME AVG. HEAT FLUX   2.786E-02
- LARGEST RESIDUAL HEAT FLUX         7.425E-14   AT NODE       1193   DOF 11
- LARGEST INCREMENT OF TEMP.         0.649       AT NODE        186   DOF 11
- LARGEST CORRECTION TO TEMP.        0.649       AT NODE        186   DOF 11
+ AVERAGE HEAT FLUX                  4.213E-02   TIME AVG. HEAT FLUX   4.213E-02
+ LARGEST RESIDUAL HEAT FLUX        -1.832E-13   AT NODE       1193   DOF 11
+ LARGEST INCREMENT OF TEMP.         -1.54       AT NODE        223   DOF 11
+ LARGEST CORRECTION TO TEMP.        -1.54       AT NODE        223   DOF 11
           THE HEAT FLUX EQUILIBRIUM RESPONSE WAS LINEAR IN THIS INCREMENT
 
  ITERATION SUMMARY FOR THE INCREMENT:   1 TOTAL ITERATIONS, OF WHICH
@@ -446,7 +446,7 @@
  STEP TIME COMPLETED        1.00    ,  TOTAL TIME COMPLETED         4.00    
 1
 
-   Abaqus 3DEXPERIENCE R2017x                                  Date 20-Feb-2025   Time 12:56:25
+   Abaqus 3DEXPERIENCE R2017x                                  Date 20-Feb-2025   Time 13:23:31
    For use by Supplied by Team-SolidSQUAD under license from Dassault Systemes or its subsidiary.
 
                                                                                  
@@ -536,18 +536,18 @@
 
      CHECK POINT  END OF SOLVER       
 
-       ELAPSED USER TIME (SEC)      =   0.0000    
+       ELAPSED USER TIME (SEC)      =  0.10000    
        ELAPSED SYSTEM TIME (SEC)    =   0.0000    
-       ELAPSED TOTAL CPU TIME (SEC) =   0.0000    
+       ELAPSED TOTAL CPU TIME (SEC) =  0.10000    
        ELAPSED WALLCLOCK TIME (SEC) =          0
 
                CONVERGENCE CHECKS FOR EQUILIBRIUM ITERATION     1
 
 
- AVERAGE HEAT FLUX                  2.103E-02   TIME AVG. HEAT FLUX   2.103E-02
- LARGEST RESIDUAL HEAT FLUX         3.197E-14   AT NODE       5532   DOF 12
- LARGEST INCREMENT OF TEMP.         0.329       AT NODE        203   DOF 12
- LARGEST CORRECTION TO TEMP.        0.329       AT NODE        203   DOF 12
+ AVERAGE HEAT FLUX                  4.553E-02   TIME AVG. HEAT FLUX   4.553E-02
+ LARGEST RESIDUAL HEAT FLUX        -5.249E-14   AT NODE       3978   DOF 11
+ LARGEST INCREMENT OF TEMP.         0.732       AT NODE        213   DOF 12
+ LARGEST CORRECTION TO TEMP.        0.732       AT NODE        213   DOF 12
           THE HEAT FLUX EQUILIBRIUM RESPONSE WAS LINEAR IN THIS INCREMENT
 
  ITERATION SUMMARY FOR THE INCREMENT:   1 TOTAL ITERATIONS, OF WHICH
@@ -580,7 +580,7 @@
 
 
      JOB TIME SUMMARY
-       USER TIME (SEC)      =   2.5000    
-       SYSTEM TIME (SEC)    =   3.9000    
-       TOTAL CPU TIME (SEC) =   6.4000    
+       USER TIME (SEC)      =   2.4000    
+       SYSTEM TIME (SEC)    =   3.5000    
+       TOTAL CPU TIME (SEC) =   5.9000    
        WALLCLOCK TIME (SEC) =          7

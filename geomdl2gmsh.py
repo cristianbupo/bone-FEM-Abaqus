@@ -287,10 +287,9 @@ def writeMeshFiles(bone, boneConfig, curvesArea):
 
     loadVars = bone.load_vars
     number_loads = loadVars.number_loads
-    sigma = loadVars.load_extension
-    rl = loadVars.number_loads
 
     inputPath = boneConfig.inputPath
+    outputPath = boneConfig.outputPath
 
     tags, coords, _ = gmsh.model.mesh.getNodes(-1, -1, False)
     allElements = gmsh.model.mesh.getElements()
@@ -310,23 +309,23 @@ def writeMeshFiles(bone, boneConfig, curvesArea):
     listNElementLoads =[]
 
     # Create carga and resultado folder
-    if not os.path.exists(os.path.join(inputPath, "carga")):
-        os.makedirs(os.path.join(inputPath, "carga"))
+    if not os.path.exists(os.path.join(outputPath, "carga")):
+        os.makedirs(os.path.join(outputPath, "carga"))
 
-    if not os.path.exists(os.path.join(inputPath, "resultado")):
-        os.makedirs(os.path.join(inputPath, "resultado"))
+    if not os.path.exists(os.path.join(outputPath, "resultado")):
+        os.makedirs(os.path.join(outputPath, "resultado"))
 
     # Create carga and resultado PDV and VTM files
-    srcPattern = os.path.join(inputPath, 'carga', 'carga*.vtp')
-    destFile = os.path.join(inputPath, 'carga.vtm')
+    srcPattern = os.path.join(outputPath, 'carga', 'carga*.vtp')
+    destFile = os.path.join(outputPath, 'carga.vtm')
     createVTMbefore(srcPattern, destFile, number_loads, 1, shift=1)
 
-    srcPattern = os.path.join(inputPath, 'carga', 'carga*.vtp')
-    destFile = os.path.join(inputPath, 'carga.pvd')
+    srcPattern = os.path.join(outputPath, 'carga', 'carga*.vtp')
+    destFile = os.path.join(outputPath, 'carga.pvd')
     createPVDbefore(srcPattern, destFile, number_loads, 1, shift=1)
 
-    srcPattern = os.path.join(inputPath, 'resultado', 'analisis*.vtu')
-    destFile = os.path.join(inputPath, 'resultado.pvd')
+    srcPattern = os.path.join(outputPath, 'resultado', 'analisis*.vtu')
+    destFile = os.path.join(outputPath, 'resultado.pvd')
     createPVDbefore(srcPattern, destFile, number_loads, 1, shift=1)
     
     loadCurve = curvesArea[1]
@@ -341,7 +340,7 @@ def writeMeshFiles(bone, boneConfig, curvesArea):
         k = k_vector[i]
         r = r_vector[i]
     
-        nElementLoads = f2g.writeLoads(bone, boneConfig, h, k, r, "contorno2", all2DElements, i)
+        nElementLoads = f2g.writeLoads(boneConfig, h, k, r, "contorno2", all2DElements, i)
         listNElementLoads.append(nElementLoads)
 
 

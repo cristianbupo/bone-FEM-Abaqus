@@ -1,6 +1,6 @@
       integer, parameter :: NUMNODE=5802, NELEMS=5680, dim=2, nnod=4
-      integer, parameter :: listNElementLoads(5)=(/27 ,26 ,26 ,26 ,27/)
-      integer, parameter :: maxNElementLoads=27
+      integer, parameter :: listNElementLoads(5)=(/23 ,30 ,34 ,30 ,23/)
+      integer, parameter :: maxNElementLoads=34
       integer, parameter :: order2(2) = (/ 2, 1 /)
       real*8, parameter :: propiedades(2,2) = reshape((/500.0, 0.2, 6.0, 0.47/),
      1 (/2, 2/),  order=order2)

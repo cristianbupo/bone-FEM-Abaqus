@@ -7,10 +7,22 @@ import geomdl2gmsh as g2g
 import shutil
 import os
 import gmsh
-import subprocess
 from datetime import datetime
 from sketchUtils import setConstraintValue
-import subprocess, sys
+import subprocess
+
+# Get the existing system PATH
+env = os.environ.copy()
+
+# Add the required Abaqus and Intel Fortran paths
+additional_paths = [
+    r"C:\SIMULIA\Commands",  # Abaqus Command Path
+    r"C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2017.2.187\windows\bin",  # Intel Fortran Compiler Path
+    r"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin",  # Visual Studio (Adjust if using VS2015)
+]
+
+# Append them to the PATH
+env["PATH"] = ";".join(additional_paths) + ";" + env["PATH"]
 
 class myConfigObject:
     def __init__(self, d=None):
@@ -210,31 +222,6 @@ def oldRunAbaqus(bone, boneConfig):
 
     return command
 
-
-import os
-import subprocess
-
-def runAbaqus(boneConfig):
-    # Get the existing system PATH
-    env = os.environ.copy()
-
-    # Add the required Abaqus and Intel Fortran paths
-    additional_paths = [
-        r"C:\SIMULIA\Commands",  # Abaqus Command Path
-        r"C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2017.2.187\windows\bin",  # Intel Fortran Compiler Path
-        r"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin",  # Visual Studio (Adjust if using VS2015)
-    ]
-    
-    # Append them to the PATH
-    env["PATH"] = ";".join(additional_paths) + ";" + env["PATH"]
-    
-    process = subprocess.run("run.bat", shell=True, capture_output=True,
-                             text=True, cwd=boneConfig.inputPath, env=env)
-    
-    print(process.stdout)
-    print(process.stderr)  # Print errors if any
-
-
 def saveResults(dir_name, index):
     copyFile("current\\analisis.vtu", f"{dir_name}\\analisis{index}.vtu")
     copyFile("current\\malla.vtu", f"{dir_name}\\malla{index}.vtu")
@@ -304,18 +291,12 @@ def runAnalysis(boneConfig, boneLimits, bone):
     for i in range(1):
         print(f"Running Abaqus {i}")
         modifySketch(bone, boneLimits, boneConfig)
-        runAbaqus(boneConfig)
+        process = subprocess.run("run.bat", shell=True, capture_output=True,
+                                text=True, cwd=boneConfig.inputPath, env=env)
+    
+        print(process.stdout)
+        print(process.stderr)
         print("\n\n")
-
-
-    # Copy all the files from the inputPath to the outputPath
-    for item in os.listdir(inputPath):
-        item_path = os.path.join(inputPath, item)
-        dest_path = os.path.join(outputPath, item)
-        if os.path.isfile(item_path):
-            shutil.copy(item_path, dest_path)
-        elif os.path.isdir(item_path):
-            shutil.copytree(item_path, dest_path, dirs_exist_ok=True)
     
     print("Done!")
 
@@ -336,7 +317,7 @@ def main():
     setattr(bone.geom_vars, 'head_height', 3.0)
 
     # Output convex
-    setattr(boneConfig, 'inputPath', 'outputConvex')
+    setattr(boneConfig, 'inputPath', 'inputConvex')
     setattr(boneConfig, 'outputPath', 'outputConvex')
 
     setattr(bone.geom_vars, 'radius_x', 1.4)
@@ -345,13 +326,16 @@ def main():
     setattr(bone.geom_vars, 'cart_thick', 2.5)
     setattr(bone.geom_vars, 'curve_angle', 0.0)
 
-    setattr(boneConfig, 'outputPath', 'outputConcave')
+    folder = 'concaveCase'
+    setattr(boneConfig, 'inputPath', folder)
+    setattr(boneConfig, 'outputPath', folder)
 
     runAnalysis(boneConfig, boneLimits, bone)
 
     # Output concave
-    setattr(boneConfig, 'inputPath', 'outputConcave')
-    setattr(boneConfig, 'outputPath', 'outputConcave')
+    folder = 'convexCase'
+    setattr(boneConfig, 'inputPath', folder)
+    setattr(boneConfig, 'outputPath', folder)
 
     setattr(bone.geom_vars, 'radius_x', 1.65)
     setattr(bone.geom_vars, 'radius_y', 1.2)

@@ -374,7 +374,7 @@ def findConectivityInfoPhysical(physicalName, all2DElements):
     return pContourElements, pElemTags, pElemNodeTags, pLoadFaces, pNodCoords, pElemLengths
 
 
-def writeLoads(bone, boneConfig, h, k, r, physicalName, all2DElements, loadIndex):
+def writeLoads(boneConfig, h, k, r, physicalName, all2DElements, loadIndex):
     inputPath = boneConfig.inputPath
 
     (
@@ -390,7 +390,7 @@ def writeLoads(bone, boneConfig, h, k, r, physicalName, all2DElements, loadIndex
     )
 
     writePressureDistVTP(
-        pNodCoords, pContourElements, loadElements, pressureDist, pElemLengths, loadIndex, inputPath
+        boneConfig, pNodCoords, pContourElements, loadElements, pressureDist, pElemLengths, loadIndex
     )
 
     return nElementLoads
@@ -429,7 +429,8 @@ def writePressureDist(loadElements, loadFaces, pressureDist, nElementLoads, load
         g.write("*End Step\n")
 
 
-def writePressureDistVTP(pNodCoords, pContourElements, loadElements, pressureDist, pElemLengths, loadIndex, inputPath):
+def writePressureDistVTP(boneConfig, pNodCoords, pContourElements, loadElements, pressureDist, pElemLengths, loadIndex):
+    outputPath = boneConfig.outputPath
     # Calculate midpoints and normals for the outer surface
     midpoints = vtk.vtkPoints()
     normals = vtk.vtkDoubleArray()
@@ -464,7 +465,7 @@ def writePressureDistVTP(pNodCoords, pContourElements, loadElements, pressureDis
 
     # Write vtkPolyData to a file
     writer = vtk.vtkXMLPolyDataWriter()
-    file_path = os.path.join(inputPath, f"carga/carga{loadIndex+1}.vtp")
+    file_path = os.path.join(outputPath, f"carga/carga{loadIndex+1}.vtp")
     writer.SetFileName(file_path)
     writer.SetInputData(polydata)
     writer.SetDataModeToAscii()  # Set the data mode to ASCII
