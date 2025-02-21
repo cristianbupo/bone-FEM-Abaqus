@@ -269,7 +269,7 @@ def runAnalysis(boneConfig, boneLimits, bone):
     files_to_copy = {
         # "master/abaqus_v6.env": "abaqus_v6.env",
         "master/analisis.inp": "analisis.inp",
-        # "master/debug.bat": "debug.bat",
+        "master/debug.bat": "debug.bat",
         "master/general2DElastic.for": "user.for",
         "master/run.bat": "run.bat"
     }
@@ -305,48 +305,34 @@ def main():
     # setattr(boneConfig, 'runFltk', True)
     # setattr(boneConfig, 'writeVTK', True)
 
-    # Constant variables
     setattr(boneConfig, 'deleteOutput', True)
     setattr(boneConfig, 'runAbq', True)
-
     setattr(bone.mesh_vars, 'number_elements', 20)
-
     setattr(bone.load_vars, 'number_loads', 5)
-
     setattr(bone.geom_vars, 'bone_width', 2.2)
     setattr(bone.geom_vars, 'head_height', 3.0)
 
-    # Output convex
-    setattr(boneConfig, 'inputPath', 'inputConvex')
-    setattr(boneConfig, 'outputPath', 'outputConvex')
-
-    setattr(bone.geom_vars, 'radius_x', 1.4)
-    setattr(bone.geom_vars, 'radius_y', 1.5)
-    setattr(bone.geom_vars, 'head_angle', 25.0)
-    setattr(bone.geom_vars, 'cart_thick', 2.5)
-    setattr(bone.geom_vars, 'curve_angle', 0.0)
-
-    folder = 'concaveCase'
-    setattr(boneConfig, 'inputPath', folder)
-    setattr(boneConfig, 'outputPath', folder)
-
-    runAnalysis(boneConfig, boneLimits, bone)
-
     # Output concave
-    folder = 'convexCase'
+    folder = r'E:\results\concaveCase'
     setattr(boneConfig, 'inputPath', folder)
     setattr(boneConfig, 'outputPath', folder)
-
     setattr(bone.geom_vars, 'radius_x', 1.65)
     setattr(bone.geom_vars, 'radius_y', 1.2)
     setattr(bone.geom_vars, 'head_angle', -15.0)
     setattr(bone.geom_vars, 'cart_thick', 2.0)
     setattr(bone.geom_vars, 'curve_angle', 9.0)
-
-    setattr(boneConfig, 'outputPath', 'outputConvex')
-
     runAnalysis(boneConfig, boneLimits, bone)
 
+    # Output convex
+    folder = r'E:\results\convexCase'
+    setattr(boneConfig, 'inputPath', folder)
+    setattr(boneConfig, 'outputPath', folder)
+    setattr(bone.geom_vars, 'radius_x', 1.4)
+    setattr(bone.geom_vars, 'radius_y', 1.5)
+    setattr(bone.geom_vars, 'head_angle', 25.0)
+    setattr(bone.geom_vars, 'cart_thick', 2.5)
+    setattr(bone.geom_vars, 'curve_angle', 0.0)
+    runAnalysis(boneConfig, boneLimits, bone)
 
 
 if __name__ == '__main__':

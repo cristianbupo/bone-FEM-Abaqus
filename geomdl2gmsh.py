@@ -263,9 +263,6 @@ def loadVectors(bone, loadCurve):
     k_vector = k_vector * k_max
     r_vector = r_vector * r
 
-    print(h_vector)
-    print(k_vector)
-    print(r_vector)
     return h_vector, k_vector, r_vector
 
 def triangularPattern(size, min, max):
@@ -356,7 +353,6 @@ def createPVDbefore(srcPattern, destFile, numCombinations, numDigits, shift=0):
     # Find all .vtp files matching the source pattern
     for i in range(numCombinations):
         vtpFile = srcPattern.replace('*', f"{i+shift:0{numDigits}d}")
-        print(vtpFile)
         vtpFiles.append(vtpFile)
 
     # Create the root element

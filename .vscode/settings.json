@@ -29,6 +29,12 @@
         // "editor.lineHighlightBorder": "#101010"
     },
 
+    // Fortran settings
+    "[fortran]": {
+        "editor.rulers": [72, 132],
+        "editor.wordWrap": "on"
+    },
+
     "highlight.regexes": {
         "(\\\\begin\\{newtextcolor\\}\\{([^}]+)\\}[\\s\\S]*?\\\\end\\{newtextcolor\\})": [
             {         

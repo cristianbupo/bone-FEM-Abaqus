@@ -29,7 +29,7 @@ C-------------------------------------------------------------------------------
      4 PERIOD)
 C
       include 'ABA_PARAM.INC'
-	include 'conec.for'
+	   include 'conec.for'
 C
       dimension RHS(MLVARX,*),AMATRX(NDOFEL,NDOFEL),PROPS(*),
      1 SVARS(*),ENERGY(8),COORDS(MCRD,NNODE),U(NDOFEL),
@@ -37,7 +37,7 @@ C
      3 JDLTYP(MDLOAD,*),ADLMAG(MDLOAD,*),DDLMAG(MDLOAD,*),
      4 PREDEF(2,NPREDF,NNODE),LFLAGS(*),JPROPS(*)
 C
-	real*8    x(dim,nnod)!,de(8)
+	   real*8    x(dim,nnod)!,de(8)
       integer   k1,k2
 C
       integer debugUnit
@@ -58,11 +58,11 @@ C     Inicializacion
     4 CONTINUE                                      
     6 CONTINUE   
 C
-	do k1=1,nnod
-	  do j=1,dim
-		x(j,k1)=coords(j,k1)
-	  enddo
-	enddo
+      do k1=1,nnod
+      do j=1,dim
+         x(j,k1)=coords(j,k1)
+      enddo
+      enddo
 C
 C     Funcion que regresa RHS y AMATRX
 C    
@@ -862,7 +862,7 @@ C
       include 'ABA_PARAM.INC'
       include    'conec.for'
 C
-      integer    i,J,k,jelem,j2,n,M
+      integer    i,j,k,jelem,j2,n,M
       real*8     ESFUERZOS(3),bmat(3,nnod*2),
      1           shp(3,nnod),xjac,x(2,nnod),
      2           DEFORMACIONES(3),DESP(nnod*2)
@@ -873,6 +873,7 @@ C
       real*8     I1,I2,I3,r,def_crec(4),dx
       real*8     zita,t,sigma_zz,Et(10),nut(10),Def2D(3),deforma
       real*8     Esf_Hid,Esf_VM,OI
+
 
       real*8   def3D(6)
       real*8   dv,EsMax,EsMin,theta,thetadf
@@ -943,6 +944,8 @@ C
       thao_oct=Esf_VM*sqrt(2.d0)/3.d0
 C     
       OI =  thao_oct + kOI * Esf_Hid
+
+      print *, 'kOI = ', kOI
 C
       resElem(jelem, 1) = DEFORMACIONES(1) !E11
       resElem(jelem, 2) = DEFORMACIONES(2) !E22
@@ -956,8 +959,58 @@ C
       resElem(jelem, 10) = Esf_Hid !S_Hyd
       resElem(jelem, 11) = thao_oct !S_Oct
       resElem(jelem, 12) = OI !OI
-C
+C     
       enddo
+C
+      return
+      end
+C------------------------------------------------------------------------------------------
+C---------------------------------------------------------------------------oute-----------
+C       
+C       Funcion accumulateResults()
+C
+C
+C       Funcion para acumular los resultados de los elementos
+C       
+C
+C -----------------------------------------------------------------------------------------
+C
+C      Argumentos: KSTEP, paso
+C
+      subroutine accumulateResults(KSTEP)
+C  
+      include 'ABA_PARAM.INC'
+      include    'conec.for'
+C
+      integer    i,j,KSTEP
+
+      if (KSTEP == 1) then
+         do i=1,size(cumulativeResElem,1)
+            do j=1,size(cumulativeResElem,2)
+               cumulativeResElem(i,j) = resElem(i,j)
+            enddo
+         enddo
+
+         do i=1,size(cumulativeResNod,1)
+            do j=1,size(cumulativeResNod,2)
+               cumulativeResNod(i,j) = resNod(i,j)
+            enddo
+         enddo
+
+      else
+         do i=1,size(cumulativeResElem,1)
+            do j=1,size(cumulativeResElem,2)
+               cumulativeResElem(i,j) = cumulativeResElem(i,j) + resElem(i,j)
+            enddo
+         enddo
+
+         do i=1,size(cumulativeResNod,1)
+            do j=1,size(cumulativeResNod,2)
+               cumulativeResNod(i,j) = cumulativeResNod(i,j) + resNod(i,j)
+            enddo
+         enddo
+
+      end if
 C
       return
       end
@@ -1026,17 +1079,6 @@ C
       character(256)        JOBNAME
       character(21)         loadString
 C
-      call GETOUTDIR(JOBDIR,LENJOBDIR)
-      call GETJOBNAME(JOBNAME,LENJOBNAME)
-      write(loadString, '(I1)') KSTEP
-
-      filename=' '
-      filename(1:lenjobdir)=jobdir(1:lenjobdir)
-      filename(lenjobdir+1:lenjobdir+11)='\resultado\'
-      filename(lenjobdir+12:lenjobdir+lenjobname+11)=jobname(1:lenjobname)
-      filename(lenjobdir+lenjobname+12:lenjobdir+lenjobname+12)=loadString
-      filename(lenjobdir+lenjobname+13:lenjobdir+lenjobname+16)='.vtu'
-C
 C FIND CURRENT INCREMENT.
 C
       j = 0
@@ -1102,6 +1144,55 @@ C
 C     Cálculo de los esfuerzos y las deformaciones
       call outsigma()
 C
+C     Acumulación de los resultados, TODO: Revisar que lo hace en el ultimo paso
+      call accumulateResults(KSTEP)
+C
+      call GETOUTDIR(JOBDIR,LENJOBDIR)
+      call GETJOBNAME(JOBNAME,LENJOBNAME)
+      write(loadString, '(I1)') KSTEP
+C
+      filename=' '
+      filename(1:lenjobdir)=jobdir(1:lenjobdir)
+      filename(lenjobdir+1:lenjobdir+11)='\resultado\'
+      filename(lenjobdir+12:lenjobdir+lenjobname+11)=jobname(1:lenjobname)
+      filename(lenjobdir+lenjobname+12:lenjobdir+lenjobname+12)=loadString
+      filename(lenjobdir+lenjobname+13:lenjobdir+lenjobname+16)='.vtu'
+C
+C     Escritura de los resultados en el archivo VTK
+      call writeVTKFile(filename, resNod, resElem)
+C
+C     Escritura de los resultados acumulados
+      
+      if (KSTEP==nLoads) then
+         filename=' '
+         filename(1:lenjobdir)=jobdir(1:lenjobdir)
+         filename(lenjobdir+1:lenjobdir+15)='\acumulado.vtu'
+
+         print *, 'Writing cumulative results to file: ', filename
+         call writeVTKFile(filename, cumulativeResNod, cumulativeResElem)
+      end if
+
+      print *, ''
+      print *, 'URDFIL called'
+      print *, 'KSTEP = ', KSTEP, ' KINC = ', KINC, 'nLoads = ', nLoads
+C
+      return
+      end
+C-------------------------------------------------------------------------------------------
+C-------------------------------------------------------------writeVTKFile-------------------
+C
+C     Rutina para escribir datos en VTK
+C
+C     
+C
+C-------------------------------------------------------------------------------------------
+      subroutine writeVTKFile(filename, mNod, mElem)
+C     
+      include 'conec.for'
+C
+      character*276         filename
+      real*8 mNod(NUMNODE, 2), mElem(NELEMS, 12) ! Matrices de nodos y elementos, mismo tamaño que matrices de resultados
+C
       open(UNIT=16,file=filename,action='write',status='UNKNOWN')
       write(16,'(a73)') '<VTKFile type="UnstructuredGrid" version="1,0" byte_order="LittleEndian">'
       write(16,'(a18)') '<UnstructuredGrid>'
@@ -1111,7 +1202,7 @@ C
       write(16,'(a64)') '<DataArray type="Float64" NumberOfComponents="3" format="ascii">'
 C
       do i=1,NUMNODE
-            write(16,'(3(E20.13,1X))') (nodes(i,j),j=1,2),0.0d0
+         write(16,'(3(E20.13,1X))') (nodes(i,j),j=1,2),0.0d0
       enddo 
 C
       write(16,'(a12)') '</DataArray>'
@@ -1121,20 +1212,20 @@ C
       write(16,'(a59)')'<DataArray type="Int64" Name="connectivity" format="ascii">'
 C
       do i=1,NELEMS
-            write(16,'(I0,1X,I0,1X,I0,1X,I0)') (conectividades(i,j)-1,j=2,nnod+1)
+         write(16,'(I0,1X,I0,1X,I0,1X,I0)') (conectividades(i,j)-1,j=2,nnod+1)
       end do
 C
       write(16,'(a12)') '</DataArray>'
 C
       write(16,'(a54)')'<DataArray type="Int64" Name="offsets" format="ascii">'
       DO i = 1, NELEMS
-            write(16,'(I0)') i*4
+         write(16,'(I0)') i*4
       END DO
       write(16,'(a12)') '</DataArray>'
 C
       write(16,'(a52)')'<DataArray type="Int64" Name="types" format="ascii">'
       DO i = 1, NELEMS
-            write(16,'(I0)') 9
+         write(16,'(I0)') 9
       END DO
       write(16,'(a12)') '</DataArray>'
 C
@@ -1143,7 +1234,7 @@ C
       write(16,'(a58,a55)') '<DataArray type="Float64" Name="U" NumberOfComponents="2" ',
      & 'ComponentName0="U1" ComponentName1="U2" format="ascii">'
       DO i=1,NUMNODE
-            write(16,'(2(E20.13,1X))') resNod(i, 1), resNod(i, 2)
+         write(16,'(2(E20.13,1X))') mNod(i, 1), mNod(i, 2)
       END DO
       write(16,'(a12)') '</DataArray>'
       write(16,'(a12)') '</PointData>'
@@ -1151,7 +1242,7 @@ C
       write(16,'(a64,a40)') '<DataArray type="Float64" Name="Load" NumberOfComponents="1" ',
      & 'ComponentName0="Load" format="ascii">'
       DO i=1,NELEMS
-            write(16,'(1(E20.13,1X))') resElem(i, 9)
+         write(16,'(1(E20.13,1X))') mElem(i, 9)
       END DO
       write(16,'(a12)') '</DataArray>'
 C
@@ -1159,55 +1250,57 @@ C
       write(16,'(a67,a99)') '<DataArray type="Float64" Name="E_Centroid" NumberOfComponents="4" ',
      & 'ComponentName0="E11" ComponentName1="E22" ComponentName2="E33" ComponentName3="E12" format="ascii">'
       DO i=1,NELEMS
-            write(16,'(4(E20.13,1X))') resElem(i, 1), resElem(i, 2), resElem(i, 3), resElem(i, 4)
+         write(16,'(4(E20.13,1X))') mElem(i, 1), mElem(i, 2),
+     & mElem(i, 3), mElem(i, 4)
       END DO
       write(16,'(a12)') '</DataArray>'
 C
       write(16,'(a67,a99)') '<DataArray type="Float64" Name="S_Centroid" NumberOfComponents="4" ',
      & 'ComponentName0="S11" ComponentName1="S22" ComponentName2="S33" ComponentName3="S12" format="ascii">'
       DO i=1,NELEMS
-            write(16,'(4(E20.13,1X))') resElem(i, 5), resElem(i, 6), resElem(i, 7), resElem(i, 8)
+         write(16,'(4(E20.13,1X))') mElem(i, 5), mElem(i, 6),
+     &         mElem(i, 7), mElem(i, 8)
       END DO
       write(16,'(a12)') '</DataArray>'
 C
       write(16,'(a64,a40)') '<DataArray type="Float64" Name="S_Mises" NumberOfComponents="1" ',
      & 'ComponentName0="S_Mises" format="ascii">'
       DO i=1,NELEMS
-            write(16,'(1(E20.13,1X))') resElem(i, 9)
+         write(16,'(1(E20.13,1X))') mElem(i, 9)
       END DO
       write(16,'(a12)') '</DataArray>'
 C
       write(16,'(a62,a38)') '<DataArray type="Float64" Name="S_Hyd" NumberOfComponents="1" ',
      & 'ComponentName0="S_Hyd" format="ascii">'
       DO i=1,NELEMS
-            write(16,'(1(E20.13,1X))') resElem(i, 10)
+         write(16,'(1(E20.13,1X))') mElem(i, 10)
       END DO
       write(16,'(a12)') '</DataArray>'
 C
       write(16,'(a62,a38)') '<DataArray type="Float64" Name="S_Oct" NumberOfComponents="1" ',
      & 'ComponentName0="S_Oct" format="ascii">'
       DO i=1,NELEMS
-            write(16,'(1(E20.13,1X))') resElem(i, 11)
+         write(16,'(1(E20.13,1X))') mElem(i, 11)
       END DO
       write(16,'(a12)') '</DataArray>'
 C
       write(16,'(a59,a35)') '<DataArray type="Float64" Name="OI" NumberOfComponents="1" ',
      & 'ComponentName0="OI" format="ascii">'
       DO i=1,NELEMS
-            write(16,'(1(E20.13,1X))') resElem(i, 12)
+         write(16,'(1(E20.13,1X))') mElem(i, 12)
       END DO
       write(16,'(a12)') '</DataArray>'
 C
       write(16,'(a59,a35)') '<DataArray type="Float64" Name="CK" NumberOfComponents="1" ',
      & 'ComponentName0="CK" format="ascii">'
       DO i=1,NELEMS
-            write(16,'(1(E20.13,1X))') resElem(i, 11) - sqrt(2.d0) * resElem(i, 9) / 3.d0
+         write(16,'(1(E20.13,1X))') 0.d0
       END DO
       write(16,'(a12)') '</DataArray>'
 C
       write(16,'(a53)') '<DataArray type="Int32" Name="Region" format="ascii">'
       DO i=1,NELEMS
-            write(16,*) grupoFisico(i, 2)
+         write(16,*) grupoFisico(i, 2)
       END DO
       write(16,'(a12)') '</DataArray>'
 C
@@ -1216,7 +1309,7 @@ C
       write(16,'(a19)') '</UnstructuredGrid>'
       write(16,'(a10)') '</VTKFile>'
       close(16)
-
+C
       RETURN
       END
 C-------------------------------------------------------------------------------------------
@@ -1239,13 +1332,11 @@ C
       character(21)      :: stepString ! For "*Step, name=LoadStep1" detection
       character(256)     :: wholeLine
       character(256)        JOBDIR
-	   character*276         filename
-	   integer               i,j,k
+      character*276         filename
+      integer               i,j,k
+
 
 C     Variables llamadas al comienzo del análisis
-
-      
-
       if (LOP.eq.0) then
 C        Extracción de la información de los archivos
          call GETOUTDIR(JOBDIR,LENJOBDIR)

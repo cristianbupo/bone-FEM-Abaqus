@@ -1,6 +1,6 @@
 1
 
-   Abaqus 3DEXPERIENCE R2017x                                  Date 20-Feb-2025   Time 12:32:12
+   Abaqus 3DEXPERIENCE R2017x                                  Date 20-Feb-2025   Time 14:27:21
    For use by Supplied by Team-SolidSQUAD under license from Dassault Systemes or its subsidiary.
 
                                                                                  
@@ -113,7 +113,7 @@
  STEP TIME COMPLETED        1.00    ,  TOTAL TIME COMPLETED         1.00    
 1
 
-   Abaqus 3DEXPERIENCE R2017x                                  Date 20-Feb-2025   Time 12:32:14
+   Abaqus 3DEXPERIENCE R2017x                                  Date 20-Feb-2025   Time 14:27:23
    For use by Supplied by Team-SolidSQUAD under license from Dassault Systemes or its subsidiary.
 
                                                                                  
@@ -224,7 +224,7 @@
  STEP TIME COMPLETED        1.00    ,  TOTAL TIME COMPLETED         2.00    
 1
 
-   Abaqus 3DEXPERIENCE R2017x                                  Date 20-Feb-2025   Time 12:32:15
+   Abaqus 3DEXPERIENCE R2017x                                  Date 20-Feb-2025   Time 14:27:24
    For use by Supplied by Team-SolidSQUAD under license from Dassault Systemes or its subsidiary.
 
                                                                                  
@@ -317,7 +317,7 @@
        ELAPSED USER TIME (SEC)      =  0.10000    
        ELAPSED SYSTEM TIME (SEC)    =   0.0000    
        ELAPSED TOTAL CPU TIME (SEC) =  0.10000    
-       ELAPSED WALLCLOCK TIME (SEC) =          1
+       ELAPSED WALLCLOCK TIME (SEC) =          0
 
                CONVERGENCE CHECKS FOR EQUILIBRIUM ITERATION     1
 
@@ -335,7 +335,7 @@
  STEP TIME COMPLETED        1.00    ,  TOTAL TIME COMPLETED         3.00    
 1
 
-   Abaqus 3DEXPERIENCE R2017x                                  Date 20-Feb-2025   Time 12:32:17
+   Abaqus 3DEXPERIENCE R2017x                                  Date 20-Feb-2025   Time 14:27:26
    For use by Supplied by Team-SolidSQUAD under license from Dassault Systemes or its subsidiary.
 
                                                                                  
@@ -446,7 +446,7 @@
  STEP TIME COMPLETED        1.00    ,  TOTAL TIME COMPLETED         4.00    
 1
 
-   Abaqus 3DEXPERIENCE R2017x                                  Date 20-Feb-2025   Time 12:32:18
+   Abaqus 3DEXPERIENCE R2017x                                  Date 20-Feb-2025   Time 14:27:27
    For use by Supplied by Team-SolidSQUAD under license from Dassault Systemes or its subsidiary.
 
                                                                                  
@@ -580,7 +580,7 @@
 
 
      JOB TIME SUMMARY
-       USER TIME (SEC)      =   2.7000    
-       SYSTEM TIME (SEC)    =   4.0000    
-       TOTAL CPU TIME (SEC) =   6.7000    
-       WALLCLOCK TIME (SEC) =          8
+       USER TIME (SEC)      =   2.4000    
+       SYSTEM TIME (SEC)    =   3.7000    
+       TOTAL CPU TIME (SEC) =   6.1000    
+       WALLCLOCK TIME (SEC) =          7
