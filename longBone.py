@@ -302,12 +302,12 @@ def runAnalysis(boneConfig, boneLimits, bone):
 
 def main():
     bone, boneLimits, boneConfig = getBoneData()
-    # setattr(boneConfig, 'runFltk', True)
+    setattr(boneConfig, 'runFltk', True)
     # setattr(boneConfig, 'writeVTK', True)
 
     setattr(boneConfig, 'deleteOutput', True)
     setattr(boneConfig, 'runAbq', True)
-    setattr(bone.mesh_vars, 'number_elements', 20)
+    setattr(bone.mesh_vars, 'number_elements', 15)
     setattr(bone.load_vars, 'number_loads', 5)
     setattr(bone.geom_vars, 'bone_width', 2.2)
     setattr(bone.geom_vars, 'head_height', 3.0)
@@ -327,6 +327,7 @@ def main():
     folder = r'E:\results\convexCase'
     setattr(boneConfig, 'inputPath', folder)
     setattr(boneConfig, 'outputPath', folder)
+
     setattr(bone.geom_vars, 'radius_x', 1.4)
     setattr(bone.geom_vars, 'radius_y', 1.5)
     setattr(bone.geom_vars, 'head_angle', 25.0)

@@ -211,6 +211,9 @@ def loadVectors(bone, loadCurve):
     if number_loads % 2 != 0: # Odd number of loads, ie. 5
         concave_length = minLength + 1 * (midLength - minLength) / 5
         convex_length = midLength + 3 * (maxLength - midLength) / 5
+        # Original: 
+        # convex_length = midLength + 3 * (maxLength - midLength) / 5
+
 
         if head_angle <= -15:
             load_ext = concave_length

@@ -6,7 +6,7 @@
       real*8, parameter :: propiedades(2,2) = reshape((/500.0, 0.2, 6.0, 0.47/),
      1 (/2, 2/),  order=order2)
       real*8, parameter :: kOI = 0.5
-      integer, parameter :: axi=0, tipo_def=2 
+      integer, parameter :: axi=0, tipo_def=2
       integer, parameter :: filasContorno1={filasContorno1}
       integer, parameter :: filasContorno2={filasContorno2}
 
