@@ -447,7 +447,6 @@ C     Insercion de carga distribuida
 
       do i = 1, listNElementLoads(KSTEP)
          if (jelem == elementFaces(i, 1)) then
-            print *, 'Elemento: ', jelem
             found = .true.
             exit
          end if
@@ -461,8 +460,6 @@ C     ENDDO
 
       if (found) then ! Works just for 1 load per element
 
-         print *, 'STEP: ', KSTEP, 'Elemento: ', jelem,
-     & 'Carga distribuida: ', elementLoads(i)
          n1 = elementFaces(i, 2) ! Cara de la carga distribuida
          mag = elementLoads(i) ! Magnitud de la carga distribuida
 
@@ -865,100 +862,101 @@ C
       subroutine outsigma()
 C  
       include 'ABA_PARAM.INC'
-      include 'conec.for'
+      include    'conec.for'
 C
-      integer    i, j, jelem
-      real*8     ESFUERZOS(3), shp(3, nnod), xjac, x(2, nnod),
-     1           DEFORMACIONES(3), DESP(nnod*2)
-      real*8     dmat2(3*(dim-1), 3*(dim-1))
-      real*8     sigma_zz, Esf_Hid, Esf_VM, OI
-      real*8     S11, S22, S33, S12
-      real*8     EsMax, EsMin, E, nu
-C
-      data       /-0.557350, 0.557350/
+      integer    i,j,k,jelem,j2,n,M
+      real*8     ESFUERZOS(3),bmat(3,nnod*2),
+     1           shp(3,nnod),xjac,x(2,nnod),
+     2           DEFORMACIONES(3),DESP(nnod*2)
+      real*8     dmat2(3*(dim-1),3*(dim-1))
+      real*8     chi,eta,sg(2),sigma_oct,thao_oct
+      real*8     Nm(1,nnod),Ne(2,2*nnod),Bm(2,nnod),Be(4,2*nnod)
+      real*8     I1,I2,I3,r,def_crec(4),dx
+      real*8     zita,t,sigma_zz,Et(10),nut(10),Def2D(3)
+      real*8     Esf_Hid,Esf_VM,OI
+
+      real*8   dv,EsMax,EsMin,theta
+      real*8   E,nu
 C
 C     Inicializacion
 C      
-      DESP = 0.d0
-      ESFUERZOS = 0.d0
-      DEFORMACIONES = 0.d0
+      DESP= 0.d0
+      ESFUERZOS    = 0.d0
+      DEFORMACIONES= 0.d0
+      n            = 1
+      def2D        = 0.d0
 C     Definicion del tensor de constantes elasticas
-      Dmat = 0.d0
-      Esf_Hid = 0.D0
+      Dmat   = 0.d0
+      Esf_Hid= 0.D0
       Esf_VM = 0.D0
 C     
-      do jelem = 1, NELEMS
-        Dmat2 = 0.d0
-        do J = 1, nnod
-          x(1, J) = nodes(conectividades(jelem, J+1), 1)
-          x(2, J) = nodes(conectividades(jelem, J+1), 2)
-        enddo
+      do jelem=1,NELEMS
+         Dmat2 = 0.d0
+         do J=1,nnod
+            x(1,J)       = nodes(conectividades(jelem,J+1),1)
+            x(2,J)       = nodes(conectividades(jelem,J+1),2)
+         enddo
 C           Funcion de forma
-        call f_forma2D(0.d0, 0.d0, x, shp, xjac)
+         call f_forma2D(0.d0,0.d0,x,shp,xjac)
 C           Se obtienen las matrices de calculo
-        call Matrices_de_calculo2D(shp, Nm, Bm, Ne, Be)
+         call Matrices_de_calculo2D(shp,Nm,Bm,Ne,Be)
 C           Calculo de los esfuerzos
-        call matriz_constantes_el(a, b, zita, U, ndofel, de, x, jelem,
-     1     t, Dmat2)
+         call matriz_constantes_el(a,b,zita,U,ndofel,de,x,jelem,
+     1     t,Dmat2)
 
-        do J = 1, nnod
-           DESP(2*(J-1)+1) = resNod(conectividades(jelem, J+1), 1) 
-           DESP(2*(J-1)+2) = resNod(conectividades(jelem, J+1), 2) 
-        enddo
+         do J=1,nnod
+            DESP(2*(J-1)+1) = resNod(conectividades(jelem,J+1),1) 
+            DESP(2*(J-1)+2) = resNod(conectividades(jelem,J+1),2) 
+         enddo
 C
-        DEFORMACIONES = MATMUL(Be(1:3, :), DESP)
+         DEFORMACIONES = MATMUL(Be(1:3, :),DESP) !-def2D
 C
-        ESFUERZOS = MATMUL(Dmat2, DEFORMACIONES)
+         ESFUERZOS = 0.d0
+         ESFUERZOS = MATMUL(Dmat2,DEFORMACIONES) !-def2D)   
 C           Centro y radio del esfuerzo (circulo de Mohr)
-        radio = sqrt(0.25d0*(ESFUERZOS(1) - ESFUERZOS(2))**2)
-        centro = 0.5d0*(ESFUERZOS(1) + ESFUERZOS(2))
+         radio  = sqrt(((ESFUERZOS(1) - ESFUERZOS(2))/2.d0)**2 + 
+     &             ESFUERZOS(3)**2)
+         centro = 0.5d0*(ESFUERZOS(1) + ESFUERZOS(2))
 C
-        EsMax = centro + radio
-        EsMin = centro - radio
+         EsMax = centro+radio
+         EsMin = centro-radio
 C
-        if (tipo_def.eq.2) then
-           E = propiedades(grupoFisico(jelem, 2), 1)
-           nu = propiedades(grupoFisico(jelem, 2), 2)
-           sigma_zz = nu*(ESFUERZOS(1) + ESFUERZOS(2))
+         if(tipo_def.eq.2)then
+            E      = propiedades(grupoFisico(jelem,2),1)
+            nu     = propiedades(grupoFisico(jelem,2),2)
+            sigma_zz = nu*(ESFUERZOS(1) + ESFUERZOS(2))
 C           Esfuerzos equivalentes de Von Mises
-        else if (tipo_def.eq.1) then
-           sigma_zz = 0.d0
-        end if
+         else if(tipo_def.eq.1)then
+            sigma_zz = 0.d0
+         end if
 C
-        Esf_VM = sqrt(((EsMax-EsMin)**2 + (EsMin-sigma_zz)**2
-     1      + (sigma_zz-EsMax)**2)/2.d0)
-
-        S11 = ESFUERZOS(1)
-        S22 = ESFUERZOS(2)
-        S33 = sigma_zz
-        S12 = ESFUERZOS(3)
-             
-        Esf_Hid = (S11 + S22 + S33) / 3.d0
-        thao_oct = sqrt((S11 - S22) ** 2 + (S22 - S33) ** 2 +
-     & (S33 - S11) ** 2 + 6 * S12 ** 2) / 3.d0
-            
+         Esf_VM = sqrt(((EsMax-EsMin)**2+(EsMin-sigma_zz)**2
+     1      +(sigma_zz-EsMax)**2)/2.d0)
+C             
+         Esf_Hid=(EsMax+EsMin+sigma_zz)/3.d0
+C
+         thao_oct=Esf_VM*sqrt(2.d0)/3.d0
 C     
-        OI = thao_oct + kOI * Esf_Hid
+         OI =  thao_oct + kOI * Esf_Hid
 
-        print *, 'kOI = ', kOI
 C
-        resElem(jelem, 1) = DEFORMACIONES(1) !E11
-        resElem(jelem, 2) = DEFORMACIONES(2) !E22
-        resElem(jelem, 3) = 0.0 !E33 (Not implemented)
-        resElem(jelem, 4) = DEFORMACIONES(3) !E12
-        resElem(jelem, 5) = ESFUERZOS(1) !S11
-        resElem(jelem, 6) = ESFUERZOS(2) !S22
-        resElem(jelem, 7) = sigma_zz !S33
-        resElem(jelem, 8) = ESFUERZOS(3) !S12
-        resElem(jelem, 9) = Esf_VM !S_Mises
-        resElem(jelem, 10) = Esf_Hid !S_Hyd
-        resElem(jelem, 11) = thao_oct !S_Oct
-        resElem(jelem, 12) = OI !OI
+         resElem(jelem, 1) = DEFORMACIONES(1) !E11
+         resElem(jelem, 2) = DEFORMACIONES(2) !E22
+         resElem(jelem, 3) = 0.0 !E33 (Not implemented)
+         resElem(jelem, 4) = DEFORMACIONES(3) !E12
+         resElem(jelem, 5) = ESFUERZOS(1) !S11
+         resElem(jelem, 6) = ESFUERZOS(2) !S22
+         resElem(jelem, 7) = sigma_zz !S33
+         resElem(jelem, 8) = ESFUERZOS(3) !S12
+         resElem(jelem, 9) = Esf_VM !S_Mises
+         resElem(jelem, 10) = Esf_Hid !S_Hyd
+         resElem(jelem, 11) = thao_oct !S_Oct
+         resElem(jelem, 12) = OI !OI
 C     
       enddo
-C
       return
       end
+C
 C------------------------------------------------------------------------------------------
 C---------------------------------------------------------------------------oute-----------
 C       
@@ -1162,14 +1160,9 @@ C     Escritura de los resultados acumulados
          filename=' '
          filename(1:lenjobdir)=jobdir(1:lenjobdir)
          filename(lenjobdir+1:lenjobdir+15)='\acumulado.vtu'
-
-         print *, 'Writing cumulative results to file: ', filename
+C
          call writeVTKFile(filename, cumulativeResNod, cumulativeResElem)
       end if
-
-      print *, ''
-      print *, 'URDFIL called'
-      print *, 'KSTEP = ', KSTEP, ' KINC = ', KINC, 'nLoads = ', nLoads
 C
       return
       end

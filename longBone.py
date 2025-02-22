@@ -18,7 +18,7 @@ env = os.environ.copy()
 additional_paths = [
     r"C:\SIMULIA\Commands",  # Abaqus Command Path
     r"C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2017.2.187\windows\bin",  # Intel Fortran Compiler Path
-    r"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin",  # Visual Studio (Adjust if using VS2015)
+    r"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin",  # Visual Studio
 ]
 
 # Append them to the PATH
@@ -302,7 +302,7 @@ def runAnalysis(boneConfig, boneLimits, bone):
 
 def main():
     bone, boneLimits, boneConfig = getBoneData()
-    setattr(boneConfig, 'runFltk', True)
+    # setattr(boneConfig, 'runFltk', True)
     # setattr(boneConfig, 'writeVTK', True)
 
     setattr(boneConfig, 'deleteOutput', True)
