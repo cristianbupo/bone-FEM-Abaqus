@@ -1,7 +1,9 @@
 ** ----------------------------------------------------------------
-** STEP: Step-{loadIndex}
-*Step, name=carga{loadIndex}, nlgeom=NO
-*HEAT TRANSFER, STEADY STATE
+** STEPS
+*STEP, NAME=STEP-{nStep}
+** RESTART, WRITE, FREQ=0
+*HEATTRANSFER, END=PERIOD
+1.0, {nLoads}.0, 1.0, 1.0
 ** BOUNDARY CONDITIONS
 *INCLUDE, INPUT=condicionesContorno.inp
 ** OUTPUT REQUESTS
@@ -11,4 +13,4 @@ NT,
 NT,  
 *OUTPUT,FIELD,FREQ=1 
 NT, 
-*End Step
+*ENDSTEP

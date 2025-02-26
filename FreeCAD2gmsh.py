@@ -499,7 +499,7 @@ def writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLo
         f.write(modified_content)
 
 
-def writeSteps(boneConfig, nLoads):
+def writeSteps(boneConfig, nSteps, nLoads):
     pasoPath = os.path.join(boneConfig.masterPath, "paso.inp")
     pasosPath = os.path.join(boneConfig.inputPath, "pasos.inp")
 
@@ -507,6 +507,6 @@ def writeSteps(boneConfig, nLoads):
         paso_content = f.read()
 
     with open(pasosPath, "w") as g:
-        for i in range(nLoads):
-            formatted_content = paso_content.format(loadIndex=i+1)
+        for i in range(nSteps):
+            formatted_content = paso_content.format(nStep=i,nLoads=nLoads)
             g.write(formatted_content)

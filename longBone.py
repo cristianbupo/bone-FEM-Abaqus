@@ -181,8 +181,6 @@ def myFunction(bone, boneLimits, boneConfig, sketch):
     
     saveResults(dir_name, 0)
 
-    print(base_path)
-
 
 def oldRunAbaqus(bone, boneConfig):
     # Construct the command string
@@ -241,7 +239,7 @@ def copyFile(origin, destination):
 
 def clear_folder(folder):
     if not os.path.exists(folder):
-        print(f'Folder {folder} does not exist.')
+        print(f'Folder {folder} ist.')
         return
 
     for item in os.listdir(folder):
@@ -259,9 +257,8 @@ def runAnalysis(boneConfig, boneLimits, bone):
     # Clear the input folder
     clear_folder(boneConfig.inputPath)
 
-    print("Copying the necessary files...")
     inputPath = boneConfig.inputPath
-    outputPath = boneConfig.outputPath
+    # outputPath = boneConfig.outputPath
 
     # clear_folder(inputPath)
 
@@ -286,45 +283,26 @@ def runAnalysis(boneConfig, boneLimits, bone):
             
         shutil.copy(src_path, dest_path)
 
-    print("Files copied successfully!")
-    print("Running the script...")
-    for i in range(1):
-        print(f"Running Abaqus {i}")
-        modifySketch(bone, boneLimits, boneConfig)
-        process = subprocess.run("run.bat", shell=True, capture_output=True,
-                                text=True, cwd=boneConfig.inputPath, env=env)
-    
-        print(process.stdout)
-        print(process.stderr)
-        print("\n\n")
-    
-    print("Done!")
+    modifySketch(bone, boneLimits, boneConfig)
+    process = subprocess.run("run.bat", shell=True, capture_output=True,
+                            text=True, cwd=boneConfig.inputPath, env=env)
 
-def main():
+    print(process.stdout)
+    print(process.stderr)
+
+
+def singleAnalysis():
     bone, boneLimits, boneConfig = getBoneData()
-    # setattr(boneConfig, 'runFltk', True)
-    # setattr(boneConfig, 'writeVTK', True)
 
     setattr(boneConfig, 'deleteOutput', True)
     setattr(boneConfig, 'runAbq', True)
+    # setattr(boneConfig, 'runFltk', True)
     setattr(bone.mesh_vars, 'number_elements', 15)
-    setattr(bone.load_vars, 'number_loads', 5)
     setattr(bone.geom_vars, 'bone_width', 2.2)
     setattr(bone.geom_vars, 'head_height', 3.0)
 
-    # Output concave
-    folder = r'E:\results\concaveCase'
-    setattr(boneConfig, 'inputPath', folder)
-    setattr(boneConfig, 'outputPath', folder)
-    setattr(bone.geom_vars, 'radius_x', 1.65)
-    setattr(bone.geom_vars, 'radius_y', 1.2)
-    setattr(bone.geom_vars, 'head_angle', -15.0)
-    setattr(bone.geom_vars, 'cart_thick', 2.0)
-    setattr(bone.geom_vars, 'curve_angle', 9.0)
-    runAnalysis(boneConfig, boneLimits, bone)
-
-    # Output convex
-    folder = r'E:\results\convexCase'
+    # Output concave single load case
+    folder = r'E:\results\singleAnalysis'
     setattr(boneConfig, 'inputPath', folder)
     setattr(boneConfig, 'outputPath', folder)
 
@@ -333,9 +311,61 @@ def main():
     setattr(bone.geom_vars, 'head_angle', 25.0)
     setattr(bone.geom_vars, 'cart_thick', 2.5)
     setattr(bone.geom_vars, 'curve_angle', 0.0)
+    setattr(bone.load_vars, 'number_loads', 5)
+    setattr(bone.time_vars, 'number_steps', 5)
     runAnalysis(boneConfig, boneLimits, bone)
 
 
+
+def multipleAnalysis():
+    bone, boneLimits, boneConfig = getBoneData()
+    # setattr(boneConfig, 'runFltk', True)
+    # setattr(boneConfig, 'writeVTK', True)
+
+    setattr(boneConfig, 'deleteOutput', True)
+    setattr(boneConfig, 'runAbq', True)
+    setattr(bone.mesh_vars, 'number_elements', 15)
+    setattr(bone.geom_vars, 'bone_width', 2.2)
+    setattr(bone.geom_vars, 'head_height', 3.0)
+
+    # Output concave single load case
+    folder = r'E:\results\concaveCase\singleLoad'
+    setattr(boneConfig, 'inputPath', folder)
+    setattr(boneConfig, 'outputPath', folder)
+    setattr(bone.geom_vars, 'radius_x', 1.65)
+    setattr(bone.geom_vars, 'radius_y', 1.2)
+    setattr(bone.geom_vars, 'head_angle', -15.0)
+    setattr(bone.geom_vars, 'cart_thick', 2.0)
+    setattr(bone.geom_vars, 'curve_angle', 9.0)
+    setattr(bone.load_vars, 'number_loads', 5)
+    runAnalysis(boneConfig, boneLimits, bone)
+
+    # Output concave double load case
+    folder = r'E:\results\concaveCase\doubleLoad'
+    setattr(boneConfig, 'inputPath', folder)
+    setattr(boneConfig, 'outputPath', folder)
+    setattr(bone.load_vars, 'number_loads', 6)
+    runAnalysis(boneConfig, boneLimits, bone)
+
+    # Output convex single load case
+    folder = r'E:\results\convexCase\singleLoad'
+    setattr(boneConfig, 'inputPath', folder)
+    setattr(boneConfig, 'outputPath', folder)
+
+    setattr(bone.geom_vars, 'radius_x', 1.4)
+    setattr(bone.geom_vars, 'radius_y', 1.5)
+    setattr(bone.geom_vars, 'head_angle', 25.0)
+    setattr(bone.geom_vars, 'cart_thick', 2.5)
+    setattr(bone.geom_vars, 'curve_angle', 0.0)
+    setattr(bone.load_vars, 'number_loads', 5)
+    runAnalysis(boneConfig, boneLimits, bone)
+
+    # Output convex double load case
+    folder = r'E:\results\convexCase\doubleLoad'
+    setattr(boneConfig, 'inputPath', folder)
+    setattr(boneConfig, 'outputPath', folder)
+    setattr(bone.load_vars, 'number_loads', 6)
+    runAnalysis(boneConfig, boneLimits, bone)
+
 if __name__ == '__main__':
-    print("Starting the script...")
-    main()
+    singleAnalysis()

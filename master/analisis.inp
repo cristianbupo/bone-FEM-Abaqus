@@ -21,7 +21,4 @@
 *UEL PROPERTY,ELSET=UEL
 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
 *INCLUDE, INPUT=contorno.inp
-************************************************************************
-** STEPS
-*RESTART, WRITE, FREQ=0
 *INCLUDE, INPUT=pasos.inp

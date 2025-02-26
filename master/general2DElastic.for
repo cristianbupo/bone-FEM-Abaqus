@@ -66,7 +66,7 @@ C
 C
 C     Funcion que regresa RHS y AMATRX
 C    
-      call ENSAMBLE(de,x,du,u,v,nst,ndofel,KSTEP,
+      call ENSAMBLE(de,x,du,u,v,nst,ndofel,KSTEP,KINC,
      1 nrhs,dtime,svars,nsvars,jelem,time,RHS,AMATRX)
 C
 C----- DEBUG OUTPUT SECTION ------------------------------------------
@@ -358,7 +358,7 @@ C
 C-------------------------------------------------------------------------------*/
 C-------------------------------------------------------------------------------*/
 C
-      subroutine ENSAMBLE(de,x,du,u,v,nst,ndofel,KSTEP,
+      subroutine ENSAMBLE(de,x,du,u,v,nst,ndofel,KSTEP,KINC,
      1 nrhs,dtime,svars,nsvars,jelem,time,p,m_k)
 C
       include 'conec.for'
@@ -445,7 +445,7 @@ C
 C     Insercion de carga distribuida
       found = .false.
 
-      do i = 1, listNElementLoads(KSTEP)
+      do i = 1, listNElementLoads(KINC)
          if (jelem == elementFaces(i, 1)) then
             found = .true.
             exit
@@ -462,7 +462,6 @@ C     ENDDO
 
          n1 = elementFaces(i, 2) ! Cara de la carga distribuida
          mag = elementLoads(i) ! Magnitud de la carga distribuida
-
          n2 = mod(n1, nnod)+1
 
          x1 = x(:,n1)
@@ -968,16 +967,16 @@ C
 C
 C -----------------------------------------------------------------------------------------
 C
-C      Argumentos: KSTEP, paso
+C      Argumentos: KINC, paso
 C
-      subroutine accumulateResults(KSTEP)
+      subroutine accumulateResults(KINC)
 C  
       include 'ABA_PARAM.INC'
       include    'conec.for'
 C
-      integer    i,j,KSTEP
+      integer    i,j,KINC
 
-      if (KSTEP == 1) then
+      if (KINC == 1) then
          do i=1,size(cumulativeResElem,1)
             do j=1,size(cumulativeResElem,2)
                cumulativeResElem(i,j) = resElem(i,j)
@@ -989,7 +988,6 @@ C
                cumulativeResNod(i,j) = resNod(i,j)
             enddo
          enddo
-
       else
          do i=1,size(cumulativeResElem,1)
             do j=1,size(cumulativeResElem,2)
@@ -1002,7 +1000,20 @@ C
                cumulativeResNod(i,j) = cumulativeResNod(i,j) + resNod(i,j)
             enddo
          enddo
+      end if
 
+      if (KINC==nLoads) then
+         do i=1,size(cumulativeResElem,1)
+            do j=1,size(cumulativeResElem,2)
+               cumulativeResElem(i,j) = cumulativeResElem(i,j) / DBLE(nLoads)
+            enddo
+         enddo
+
+         do i=1,size(cumulativeResNod,1)
+            do j=1,size(cumulativeResNod,2)
+               cumulativeResNod(i,j) = cumulativeResNod(i,j) / DBLE(nLoads)
+            enddo
+         enddo
       end if
 C
       return
@@ -1071,6 +1082,7 @@ C
       character(256)        JOBDIR
       character(256)        JOBNAME
       character(21)         loadString
+      character(21)         stepString
 C
 C FIND CURRENT INCREMENT.
 C
@@ -1084,7 +1096,7 @@ C
          KEY=JRRAY(1,2)
 C
 C RECORD 1 CONTAINS VALUES FOR Element header record
-C
+C 
          IF (KEY.EQ.1) THEN
             j = j + 1
             locID = JRRAY(1,6)
@@ -1138,28 +1150,34 @@ C     Cálculo de los esfuerzos y las deformaciones
       call outsigma()
 C
 C     Acumulación de los resultados, TODO: Revisar que lo hace en el ultimo paso
-      call accumulateResults(KSTEP)
+      call accumulateResults(KINC)
 C
       call GETOUTDIR(JOBDIR,LENJOBDIR)
       call GETJOBNAME(JOBNAME,LENJOBNAME)
-      write(loadString, '(I1)') KSTEP
+      write(loadString, '(I1)') KINC
+      write(stepString, '(I1)') KSTEP
 C
       filename=' '
       filename(1:lenjobdir)=jobdir(1:lenjobdir)
-      filename(lenjobdir+1:lenjobdir+11)='\resultado\'
-      filename(lenjobdir+12:lenjobdir+lenjobname+11)=jobname(1:lenjobname)
-      filename(lenjobdir+lenjobname+12:lenjobdir+lenjobname+12)=loadString
-      filename(lenjobdir+lenjobname+13:lenjobdir+lenjobname+16)='.vtu'
+      filename(lenjobdir+1:lenjobdir+11)='\resultado'
+      filename(lenjobdir+11:lenjobdir+12)='\'
+      filename(lenjobdir+12:lenjobdir+lenjobname+12)=jobname(1:lenjobname)
+      filename(lenjobdir+lenjobname+12:lenjobdir+lenjobname+13)=stepString
+      filename(lenjobdir+lenjobname+13:lenjobdir+lenjobname+14)='_'
+      filename(lenjobdir+lenjobname+14:lenjobdir+lenjobname+15)=loadString
+      filename(lenjobdir+lenjobname+15:lenjobdir+lenjobname+18)='.vtu'
 C
 C     Escritura de los resultados en el archivo VTK
       call writeVTKFile(filename, resNod, resElem)
 C
 C     Escritura de los resultados acumulados
       
-      if (KSTEP==nLoads) then
+      if (KINC==nLoads) then
          filename=' '
          filename(1:lenjobdir)=jobdir(1:lenjobdir)
-         filename(lenjobdir+1:lenjobdir+15)='\acumulado.vtu'
+         filename(lenjobdir+1:lenjobdir+11)='\acumulado'
+         filename(lenjobdir+11:lenjobdir+12)=stepString
+         filename(lenjobdir+12:lenjobdir+16)='.vtu'
 C
          call writeVTKFile(filename, cumulativeResNod, cumulativeResElem)
       end if
@@ -1401,7 +1419,7 @@ C     Archivos llamados al comienzo de cada paso
 C        Extracción de la información de los archivos
          call GETOUTDIR(JOBDIR,LENJOBDIR)
 C        Llamada al archivo de cargas
-         write(loadString, '(I1)') KSTEP
+         write(loadString, '(I1)') KINC
          stepString = '*Step, name=LoadStep' // trim(adjustl(loadString))
 C-------------------------------------
 C        Llamada al archivo carga.inp
@@ -1413,7 +1431,7 @@ C
          if (Searstr (15,stepString)) then
             ! Number of element loads per load, starts 2 lines after step line
             read(15, '(A)') wholeLine
-            do i=1,listNElementLoads(KSTEP)
+            do i=1,listNElementLoads(KINC)
                read(15, '(I, I, F)') elementFaces(i, 1),
      1            elementFaces(i, 2), elementLoads(i)
             enddo

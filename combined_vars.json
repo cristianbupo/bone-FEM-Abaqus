@@ -82,5 +82,12 @@
             "default": 20,
             "short_name": "ne"
         }
+    },
+    "time_vars":{
+        "number_steps": {
+            "min_value": 1,
+            "default": 2,
+            "short_name": "ns"
+        }
     }
 }

@@ -211,8 +211,6 @@ def loadVectors(bone, loadCurve):
     if number_loads % 2 != 0: # Odd number of loads, ie. 5
         concave_length = minLength + 1 * (midLength - minLength) / 5
         convex_length = midLength + 3 * (maxLength - midLength) / 5
-        # Original: 
-        # convex_length = midLength + 3 * (maxLength - midLength) / 5
 
 
         if head_angle <= -15:
@@ -257,10 +255,14 @@ def loadVectors(bone, loadCurve):
         k_vector[0:number_loads//2] = triangularPattern(number_loads//2, 0.5, 1.0)
         k_vector[number_loads//2:number_loads] = triangularPattern(number_loads//2, 0.5, 1.0)
 
-        h_vector[0:number_loads//2] = np.linspace(-load_ext/2-r, -load_ext/2+r,
-                                                  number_loads//2)
-        h_vector[number_loads//2:number_loads] = np.linspace(load_ext/2-r,
-                                                             load_ext/2+r, number_loads//2)
+        leftVal = load_ext/2-r
+        rightVal = load_ext/2+r
+        number = number_loads//2
+
+        rightVal = load_ext/2+2*r
+
+        h_vector[0:number_loads//2] = np.linspace(-rightVal, -leftVal, number)
+        h_vector[number_loads//2:number_loads] = np.linspace(leftVal, rightVal, number)
     
     k_max = (3 * total_force)/(4 * r)
     k_vector = k_vector * k_max
@@ -285,8 +287,8 @@ def triangularPattern(size, min, max):
 def writeMeshFiles(bone, boneConfig, curvesArea):
     print("Writing .inp mesh")
 
-    loadVars = bone.load_vars
-    number_loads = loadVars.number_loads
+    number_loads = bone.load_vars.number_loads
+    number_steps = bone.time_vars.number_steps
 
     inputPath = boneConfig.inputPath
     outputPath = boneConfig.outputPath
@@ -345,7 +347,7 @@ def writeMeshFiles(bone, boneConfig, curvesArea):
 
 
     f2g.writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLoads)
-    f2g.writeSteps(boneConfig, number_loads)
+    f2g.writeSteps(boneConfig, number_steps, number_loads)
 
 def createPVDbefore(srcPattern, destFile, numCombinations, numDigits, shift=0):
     # Ensure the destination directory exists
