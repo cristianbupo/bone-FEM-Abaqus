@@ -264,11 +264,12 @@ def runAnalysis(boneConfig, boneLimits, bone):
 
     # Define the source files and their destination filenames
     files_to_copy = {
-        # "master/abaqus_v6.env": "abaqus_v6.env",
+#        "master/abaqus_v6.env": "abaqus_v6.env",
         "master/analisis.inp": "analisis.inp",
         "master/debug.bat": "debug.bat",
         "master/general2DElastic.for": "user.for",
-        "master/run.bat": "run.bat"
+        "master/run.bat": "run.bat",
+        "master/propiedades.txt": "propiedades.txt"
     }
 
     # Copy each file to the inputPath with the new name
@@ -297,7 +298,7 @@ def singleAnalysis():
     setattr(boneConfig, 'deleteOutput', True)
     setattr(boneConfig, 'runAbq', True)
     # setattr(boneConfig, 'runFltk', True)
-    setattr(bone.mesh_vars, 'number_elements', 15)
+    setattr(bone.mesh_vars, 'number_elements', 30)
     setattr(bone.geom_vars, 'bone_width', 2.2)
     setattr(bone.geom_vars, 'head_height', 3.0)
 
@@ -311,6 +312,8 @@ def singleAnalysis():
     setattr(bone.geom_vars, 'head_angle', 25.0)
     setattr(bone.geom_vars, 'cart_thick', 2.5)
     setattr(bone.geom_vars, 'curve_angle', 0.0)
+    setattr(bone.geom_vars, 'head_height', 1)
+
     setattr(bone.load_vars, 'number_loads', 5)
     setattr(bone.time_vars, 'number_steps', 5)
     runAnalysis(boneConfig, boneLimits, bone)

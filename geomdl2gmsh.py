@@ -446,7 +446,7 @@ def setGmshOptions():
 def createTrasnfiniteParameters(numberElements, pixelInfo=None):
     a2 = numberElements + 1
     a3 = 2 * numberElements + 1
-    b = 2 * numberElements + 2
+    b = numberElements // 2 + 1
 
     parameters = [
         ([1, 2, 10, 5, 4, 3, 9], [a3, a3, b, a2, a3, a2, b], [1, 4, 5]),

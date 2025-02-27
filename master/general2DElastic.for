@@ -59,9 +59,9 @@ C     Inicializacion
     6 CONTINUE   
 C
       do k1=1,nnod
-      do j=1,dim
-         x(j,k1)=coords(j,k1)
-      enddo
+         do j=1,dim
+            x(j,k1)=coords(j,k1)
+         enddo
       enddo
 C
 C     Funcion que regresa RHS y AMATRX
@@ -145,7 +145,7 @@ C     Busca Str en la unidad Lu y devuelve .true.// si lo encuentra. Si no
 C     lo encuentra devuelve un .false.
 C
 C-----------------------------------------------------------------------------------------
-	function Searstr (Lu, Str)
+	function Searstr(Lu, Str)
 C
 	integer            :: Lu,j,L1
 	character (len=*)  :: Str
@@ -173,7 +173,7 @@ C
    10 	Write (*,20) Lu,Str
 	stop
 C
-   20 format ('###..Error en la funcion Searstr (Unidad=)',I3,2X,15A)
+   20 format ('###..Error en la funcion Searstr(Unidad=)',I3,2X,15A)
 C
 	end function Searstr
 C---------------------------------------------------------------------------------------------
@@ -191,35 +191,35 @@ C
 C
 C     Puesta a cero
       N = 0.d0
-	Ne= 0.d0
-	B = 0.d0
-	Be= 0.d0
+      Ne= 0.d0
+      B = 0.d0
+      Be= 0.d0
 C
 C     Incializacion
-	do n1 = 1,nnod
-	  col=2*(n1-1)+1
+      do n1 = 1,nnod
+         col=2*(n1-1)+1
 C
-C       Funciones de forma para descripcion de variable escalar
-	  N(1,n1)    = shp(1,n1)
+C        Funciones de forma para descripcion de variable escalar
+         N(1,n1)    = shp(1,n1)
 C
-C       Funciones de forma para descripcion de variable vectorial	  
-	  Ne(1,col)  = shp(1,n1)
-	  Ne(2,col+1)= shp(1,n1)
+C        Funciones de forma para descripcion de variable vectorial	  
+         Ne(1,col)  = shp(1,n1)
+         Ne(2,col+1)= shp(1,n1)
 C
-C       Funciones de forma derivadas en el espacio para variable escalar	
-	  B(1,n1)    = shp(2,n1)
-	  B(2,n1)    = shp(3,n1)
+C        Funciones de forma derivadas en el espacio para variable escalar	
+         B(1,n1)    = shp(2,n1)
+         B(2,n1)    = shp(3,n1)
 C
-C       Funciones de forma derivadas para el caso elastico
-        Be(1,col)  = shp(2,n1)
-	  Be(2,col+1)= shp(3,n1)
-	  Be(3,col)  = shp(3,n1)
-	  Be(3,col+1)= shp(2,n1)
-	  Be(4,col)  = shp(1,n1)
-	enddo  
+C        Funciones de forma derivadas para el caso elastico
+         Be(1,col)  = shp(2,n1)
+         Be(2,col+1)= shp(3,n1)
+         Be(3,col)  = shp(3,n1)
+         Be(3,col+1)= shp(2,n1)
+         Be(4,col)  = shp(1,n1)
+	   enddo  
 C
-	return
-	end
+      return
+      end
 C----------------------------------------------------------------------------------------
 C------------------------------------------------------------------------ F_FORMA2D------
 C	  Funcion f_forma2D(chi,eta,x,shp,xjac,d2shp)
@@ -268,10 +268,10 @@ C     Primeras derivadas de las funciones de forma con respecto a eta
 C
 
 C     Segundas derivadas de las funciones de forma con respecto a chi y eta
-       d2Nchi_eta(1) =  0.25
-	 d2Nchi_eta(2) = -0.25
-	 d2Nchi_eta(3) =  0.25
-	 d2Nchi_eta(4) = -0.25
+      d2Nchi_eta(1) =  0.25
+      d2Nchi_eta(2) = -0.25
+      d2Nchi_eta(3) =  0.25
+      d2Nchi_eta(4) = -0.25
 C
 c     Calculo de la matriz jacobiana
       dxchi=0.25*((x(1,2)-x(1,1))*(1.0-eta)+(x(1,3)-x(1,4))*(1.0+eta))
@@ -348,6 +348,22 @@ C
       return
       end
 C---------------------------------------------------------------------------------------------
+C-------------------------------------------------------------updateProps-----------
+C
+C      Funcion updateProps
+C	
+C      Funcion que actualiza los grupos físicos.
+C
+C-------------------------------------------------------------------------------*/
+C-------------------------------------------------------------------------------*/
+C
+      subroutine updateProps()
+C
+      include 'conec.for'
+C
+      return
+      end
+C---------------------------------------------------------------------------------------------
 C-------------------------------------------------------------ENSAMBLE-----------
 C
 C      Funcion ENSAMBLE
@@ -380,7 +396,6 @@ C     Generales
 C     real*8  du1(nnod),du2(nnod),du3(nnod),du4(nnod),du5(nnod)
 C	   real*8  u1(nnod),u2(nnod),u3(nnod),u4(nnod),u5(nnod)
 	   real*8  paux(ndofel),Kelast(dim*nnod,dim*nnod)
-      real*8  masa_el(dim*nnod,dim*nnod),vector_carga(dim*nnod)
       real*8  Def(dim*nnod)
       logical :: found
 C
@@ -412,6 +427,17 @@ C
 C     Inicializacion de matrices y variables
       m_k   =   0.d0
       p     =   0.d0
+C
+C     Actualización de propiedades
+      if ((KSTEP .ne. 1) .and. (KINC .eq. 1)) then
+         if (grupoFisico(jelem,2) == 3) then
+            grupoFisico(jelem,2) = 4
+         elseif (grupoFisico(jelem,2) == 2) then
+            if (cumulativeResElem(jelem,12) >= 0.8) then
+               grupoFisico(jelem,2) = 3
+            endif
+         end if
+      endif
 C
 C     Ensamblar la matriz de rigidez elastica en la matriz tangente global
 C     Llamado de la matriz de rigidez para la expansion
@@ -642,8 +668,9 @@ C	real*8   u1(nnod),u2(nnod),u3(nnod),u4(nnod),u5(nnod)
 C
 C     Definicion del tensor de constantes elasticas
       Dmat   = 0.d0
+C
       E      = propiedades(grupoFisico(jelem,2),1)
-   	nu     = propiedades(grupoFisico(jelem,2),2)
+      nu     = propiedades(grupoFisico(jelem,2),2)
 C
       if(dim.eq.2)then
 C       Analisis bidimensional
@@ -1347,13 +1374,26 @@ C     Variables llamadas al comienzo del análisis
 C        Extracción de la información de los archivos
          call GETOUTDIR(JOBDIR,LENJOBDIR)
 C-------------------------------------
+C        Llamada al archivo de propiedades
+         filename=' '
+         filename(1:lenjobdir)=jobdir(1:lenjobdir)
+         filename(lenjobdir+1:lenjobdir+17)='/propiedades.txt'
+C
+         open(UNIT=14,file=filename(1:lenjobdir+17), status='old')
+            if (Searstr(14,'*UEL PROPERTY')) then
+               READ(14,*)((propiedades(i,j),j=1,numProps),i=1,numMats)
+            else
+               stop '###..Error en lectura'
+            end if
+         close(14)
+C-------------------------------------
 C        Llamada al archivo de grupos físicos
          filename=' '
          filename(1:lenjobdir)=jobdir(1:lenjobdir)
          filename(lenjobdir+1:lenjobdir+19)='/gruposFisicos.txt'
 C
          open(UNIT=14,file=filename(1:lenjobdir+19), status='old')
-            if (Searstr (14,'Element Tag, Physical Group Tag')) then
+            if (Searstr(14,'Element Tag, Physical Group Tag')) then
                READ(14,*)((grupoFisico(i,j),j=1,2),i=1,NELEMS)
             else
                stop '###..Error en lectura'
@@ -1367,7 +1407,7 @@ C        Llamada al archivo conectividades.inp
          filename(lenjobdir+1:lenjobdir+19)='/conectividades.inp'
 C
          open(UNIT=15,file=filename(1:lenjobdir+19), status='old')
-            if (Searstr (15,'*ELEMENT,TYPE=U1,ELSET=UEL')) then
+            if (Searstr(15,'*ELEMENT,TYPE=U1,ELSET=UEL')) then
                READ(15,*)((conectividades(i,j),j=1,nnod + 1),i=1,NELEMS)
             else
                stop '###..Error en lectura'
@@ -1382,7 +1422,7 @@ C        Llamada al archivo nodos.inp
          filename(lenjobdir+1:lenjobdir+10)='/nodos.inp'
 C
          open(UNIT=16,file=filename(1:lenjobdir+10), status='old')
-            if (Searstr (16,'*NODE,NSET=N2')) then
+            if (Searstr(16,'*NODE,NSET=N2')) then
                READ(16,*) (k,(nodes(i,j),j=1,dim),i=1,NUMNODE)
             else
                stop '###..Error en lectura'
@@ -1396,7 +1436,7 @@ C       Llamada al archivo contorno.inp
          filename(lenjobdir+1:lenjobdir+14)='/contorno.inp'
 C
          open(UNIT=15,file=filename(1:lenjobdir+14), status='old')
-            if (Searstr (15,'*NSET,NSET=contorno1')) then
+            if (Searstr(15,'*NSET,NSET=contorno1')) then
                READ(15,*)((contorno1(i,j),j=1,6),i=1,filascontorno1)
             else
                stop '###..Error en lectura'
@@ -1408,7 +1448,7 @@ C
          filename(lenjobdir+1:lenjobdir+14)='/contorno.inp'
 C
          open(UNIT=15,file=filename(1:lenjobdir+14), status='old')
-            if (Searstr (15,'*NSET,NSET=contorno2')) then
+            if (Searstr(15,'*NSET,NSET=contorno2')) then
                READ(15,*)((contorno2(i,j),j=1,6),i=1,filascontorno2)
             else
                stop '###..Error en lectura'
@@ -1428,7 +1468,7 @@ C        Llamada al archivo carga.inp
          filename(lenjobdir+1:lenjobdir+11)='/carga.inp'
 C
          open(UNIT=15,file=filename(1:lenjobdir+11), status='old')
-         if (Searstr (15,stepString)) then
+         if (Searstr(15,stepString)) then
             ! Number of element loads per load, starts 2 lines after step line
             read(15, '(A)') wholeLine
             do i=1,listNElementLoads(KINC)
