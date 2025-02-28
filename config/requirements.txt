@@ -1,6 +1,1 @@
-geomdl
-gmsh
-numpy
-PySide2
-scipy
-vtk
+pip install geomdl gmsh numpy PySide6 scipy vtk
