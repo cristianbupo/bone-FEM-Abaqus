@@ -16,9 +16,9 @@ env = os.environ.copy()
 
 # Add the required Abaqus and Intel Fortran paths
 additional_paths = [
-    r"C:\SIMULIA\Commands",  # Abaqus Command Path
-    r"C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2017.2.187\windows\bin",  # Intel Fortran Compiler Path
-    r"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin",  # Visual Studio
+    r"C:\\SIMULIA\\Commands",  # Abaqus Command Path
+    r"C:\\Program Files (x86)\\IntelSWTools\\compilers_and_libraries_2017.2.187\\windows\\bin",  # Intel Fortran Compiler Path
+    r"C:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\bin",  # Visual Studio
 ]
 
 # Append them to the PATH
@@ -175,7 +175,7 @@ def myFunction(bone, boneLimits, boneConfig, sketch):
 
     gmsh.finalize()  # Finalize gmsh
 
-    base_path = "D:\\bone-FEM-results"
+    base_path = "D:\\\\bone-FEM-results"
     id_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     dir_name = os.path.join(base_path, f"test_{id_time}")
     
@@ -187,7 +187,7 @@ def oldRunAbaqus(bone, boneConfig):
     boneG = bone.geom_vars
     boneL = bone.load_vars
     command = (
-        f'current\\analisis.bat "-ne {bone.mesh_vars.number_elements}'
+        f'current\\\\analisis.bat "-ne {bone.mesh_vars.number_elements}'
         f'-rx {boneG.radius_x} -ry {boneG.radius_y} '
         f'-ha {boneG.head_angle} -bw {boneG.bone_width} -hh {boneG.head_angle} '
         f'-bh {boneG.bone_height} -ca {boneG.curve_angle} '
@@ -215,15 +215,15 @@ def oldRunAbaqus(bone, boneConfig):
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
 
     # Print the output and error (if any)
-    print("Output:\n", result.stdout)
-    print("Error:\n", result.stderr)
+    print("Output:\\n", result.stdout)
+    print("Error:\\n", result.stderr)
 
     return command
 
 def saveResults(dir_name, index):
-    copyFile("current\\analisis.vtu", f"{dir_name}\\analisis{index}.vtu")
-    copyFile("current\\malla.vtu", f"{dir_name}\\malla{index}.vtu")
-    copyFile("current\\carga.vtp", f"{dir_name}\\carga{index}.vtp")
+    copyFile("current\\\\analisis.vtu", f"{dir_name}\\\\analisis{index}.vtu")
+    copyFile("current\\\\malla.vtu", f"{dir_name}\\\\malla{index}.vtu")
+    copyFile("current\\\\carga.vtp", f"{dir_name}\\\\carga{index}.vtp")
 
 
 def copyFile(origin, destination):
@@ -264,7 +264,7 @@ def runAnalysis(boneConfig, boneLimits, bone):
 
     # Define the source files and their destination filenames
     files_to_copy = {
-#        "master/abaqus_v6.env": "abaqus_v6.env",
+        "master/run.f90": "run.f90",
         "master/analisis.inp": "analisis.inp",
         "master/debug.bat": "debug.bat",
         "master/general2DElastic.for": "user.for",
@@ -285,12 +285,13 @@ def runAnalysis(boneConfig, boneLimits, bone):
         shutil.copy(src_path, dest_path)
 
     modifySketch(bone, boneLimits, boneConfig)
-    process = subprocess.run("run.bat", shell=True, capture_output=True,
-                            text=True, cwd=boneConfig.inputPath, env=env)
+
+    command = f'cd {boneConfig.inputPath} && gfortran run.f90 -o run && run.exe'
+
+    process = subprocess.run(command, shell=True, capture_output=True, text=True, env=env)
 
     print(process.stdout)
     print(process.stderr)
-
 
 def singleAnalysis():
     bone, boneLimits, boneConfig = getBoneData()
@@ -298,12 +299,12 @@ def singleAnalysis():
     setattr(boneConfig, 'deleteOutput', True)
     setattr(boneConfig, 'runAbq', True)
     # setattr(boneConfig, 'runFltk', True)
-    setattr(bone.mesh_vars, 'number_elements', 30)
+    setattr(bone.mesh_vars, 'number_elements', 15)
     setattr(bone.geom_vars, 'bone_width', 2.2)
     setattr(bone.geom_vars, 'head_height', 3.0)
 
     # Output concave single load case
-    folder = r'C:\Users\crist\OneDrive\Documents\results\singleAnalysis'
+    folder = r'C:\\Users\\crist\\OneDrive\\Documents\\results\\singleAnalysis'
     setattr(boneConfig, 'inputPath', folder)
     setattr(boneConfig, 'outputPath', folder)
 
@@ -332,7 +333,7 @@ def multipleAnalysis():
     setattr(bone.geom_vars, 'head_height', 3.0)
 
     # Output concave single load case
-    folder = r'C:\Users\crist\OneDrive\Documents\results\concaveCase\singleLoad'
+    folder = r'C:\\Users\\crist\\OneDrive\\Documents\\results\\concaveCase\\singleLoad'
     setattr(boneConfig, 'inputPath', folder)
     setattr(boneConfig, 'outputPath', folder)
     setattr(bone.geom_vars, 'radius_x', 1.65)
@@ -344,14 +345,14 @@ def multipleAnalysis():
     runAnalysis(boneConfig, boneLimits, bone)
 
     # Output concave double load case
-    folder = r'C:\Users\crist\OneDrive\Documents\results\concaveCase\doubleLoad'
+    folder = r'C:\\Users\\crist\\OneDrive\\Documents\\results\\concaveCase\\doubleLoad'
     setattr(boneConfig, 'inputPath', folder)
     setattr(boneConfig, 'outputPath', folder)
     setattr(bone.load_vars, 'number_loads', 6)
     runAnalysis(boneConfig, boneLimits, bone)
 
     # Output convex single load case
-    folder = r'C:\Users\crist\OneDrive\Documents\results\convexCase\singleLoad'
+    folder = r'C:\\Users\\crist\\OneDrive\\Documents\\results\\convexCase\\singleLoad'
     setattr(boneConfig, 'inputPath', folder)
     setattr(boneConfig, 'outputPath', folder)
 
@@ -364,11 +365,11 @@ def multipleAnalysis():
     runAnalysis(boneConfig, boneLimits, bone)
 
     # Output convex double load case
-    folder = r'C:\Users\crist\OneDrive\Documents\results\convexCase\doubleLoad'
+    folder = r'C:\\Users\\crist\\OneDrive\\Documents\\results\\convexCase\\doubleLoad'
     setattr(boneConfig, 'inputPath', folder)
     setattr(boneConfig, 'outputPath', folder)
     setattr(bone.load_vars, 'number_loads', 6)
     runAnalysis(boneConfig, boneLimits, bone)
 
-if __name__ == '__main__':
-    singleAnalysis()
+def main():
+    print("hola")

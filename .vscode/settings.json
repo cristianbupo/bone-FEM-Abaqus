@@ -75,4 +75,9 @@
     "[latex]": {
         "editor.wordWrap": "on"
     },
+    "code-runner.executorMap": {
+        "fortran": "gfortran $fileName -o $fileNameWithoutExt && $fileNameWithoutExt",
+        "python": ""
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }
