@@ -1,1 +1,1 @@
-abaqus job=analisis user=user.for ask_delete=OFF
+abaqus job={jobname} user=user.for ask_delete=OFF

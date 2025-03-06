@@ -21,3 +21,14 @@ __pycache__/*
 *.023
 *.app_cache
 *.exception
+
+# Ignore binary files
+*.exe
+*.mod
+
+# Ignore other build artifacts
+*.o
+*.obj
+*.dll
+*.so
+*.dylib

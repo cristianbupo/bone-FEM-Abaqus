@@ -105,17 +105,17 @@ def appendEntity(e, m):
 # Writing INP
 
 
-def write_nodes(nodes, coords, inputPath):
+def write_nodes(nodes, coords, inputPath, filename):
     numNode = len(nodes)
-    nodosPath = os.path.join(inputPath, "nodos.inp")
+    nodosPath = os.path.join(inputPath, filename)
     with open(nodosPath, "w") as f:
         f.write("*NODE,NSET=N2\n")
         for n in range(numNode):
             f.write(f"{nodes[n]}, {coords[3 * n]}, {coords[3 * n + 1]}\n")
 
 
-def write_connectivities(elemTypes, elemTags, elemNodeTags, inputPath):
-    conectivitidadesVerPath = os.path.join(inputPath, "conectividades.inp")
+def write_connectivities(elemTypes, elemTags, elemNodeTags, inputPath, filename):
+    conectivitidadesVerPath = os.path.join(inputPath, filename)
     with open(conectivitidadesVerPath, "w") as h:
         h.write("*ELEMENT,TYPE=U1,ELSET=UEL\n")
         for i, _ in enumerate(elemTypes):
@@ -132,7 +132,7 @@ def write_connectivities(elemTypes, elemTags, elemNodeTags, inputPath):
                             f"{elemNodeTags[i][4 * elem + 3]}\n")
 
 
-def write_vtk(nodes, coords, allElements, inputPath):
+def write_vtk(nodes, coords, allElements, inputPath, filename):
     elemTypes = allElements[0]
     elemTags = allElements[1]
     elemNodeTags = allElements[2]
@@ -164,7 +164,7 @@ def write_vtk(nodes, coords, allElements, inputPath):
                                                 quad.GetPointIds())
 
     writer = vtk.vtkXMLUnstructuredGridWriter()
-    vtuPath = os.path.join(inputPath, "malla.vtu")
+    vtuPath = os.path.join(inputPath, filename)
     writer.SetFileName(vtuPath)
     writer.SetInputData(unstructuredGrid)
     writer.Write()
@@ -390,7 +390,7 @@ def writeLoads(boneConfig, h, k, r, physicalName, all2DElements, loadIndex):
     )
 
     writePressureDistVTP(
-        boneConfig, pNodCoords, pContourElements, loadElements, pressureDist, pElemLengths, loadIndex
+         boneConfig, pNodCoords, pContourElements, loadElements, pressureDist, pElemLengths, loadIndex
     )
 
     return nElementLoads
@@ -470,33 +470,6 @@ def writePressureDistVTP(boneConfig, pNodCoords, pContourElements, loadElements,
     writer.SetInputData(polydata)
     writer.SetDataModeToAscii()  # Set the data mode to ASCII
     writer.Write()
-
-def writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLoads):
-    kOI = bone.load_vars.kOI
-
-    nLoads = bone.load_vars.number_loads
-    nElems = len(all2DElements[1][0])
-    numNode = len(tags)
-    formatedNList = f"(/{' ,'.join(map(str, listNElementLoads))}/)"
-    fillPath = os.path.join(boneConfig.masterPath, "conec.for")
-    parametrosPath = os.path.join(boneConfig.inputPath, "conec.for")
-
-    with open(fillPath, 'r') as file:
-        f_longBone_content = file.read()
-
-    modified_content = f_longBone_content.format(
-        nLoads=nLoads,
-        listNElementLoads=formatedNList,
-        maxNElementLoads=max(listNElementLoads),
-        numNode=numNode,
-        nElems=nElems,
-        kOI=kOI,
-        filasContorno1=(lines[0] + 5) // 6,
-        filasContorno2=(lines[1] + 5) // 6
-    )
-
-    with open(parametrosPath, "w") as f:
-        f.write(modified_content)
 
 
 def writeSteps(boneConfig, nSteps, nLoads):

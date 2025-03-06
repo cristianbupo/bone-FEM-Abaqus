@@ -4,19 +4,19 @@
             "radius_x": {
                 "min_value": 1.1,
                 "max_value": 2.0,
-                "default": 2.0,
+                "default": 1.65,
                 "short_name": "rx"
             },
             "radius_y": {
                 "min_value": 1.1,
                 "max_value": 2.0,
-                "default": 1.3,
+                "default": 1.2,
                 "short_name": "ry"
             },
             "head_angle": {
                 "min_value": -20.0,
                 "max_value": 20.0,
-                "default": -20.0,
+                "default": -15.0,
                 "short_name": "ha"
             },
             "bone_width": {
@@ -28,20 +28,20 @@
             "head_height": {
                 "min_value": 0.5,
                 "max_value": 10.0,
-                "default": 3.0,
+                "default": 1.0,
                 "short_name": "hh"
             },
             "cart_thick": {
                 "type": "double",
                 "min_value": 2.5,
                 "max_value": 2.0,
-                "default": 2.7,
+                "default": 2.0,
                 "short_name": "ct"
             },
             "curve_angle": {
                 "min_value": -15.0,
                 "max_value": 15.0,
-                "default": 15.0,
+                "default": 9.0,
                 "short_name": "ca"
             }
         },
@@ -81,7 +81,7 @@
         "time_vars":{
             "number_steps": {
                 "min_value": 1,
-                "default": 2,
+                "default": 10,
                 "short_name": "ns"
             }
         },
@@ -93,8 +93,8 @@
                 "short_name": "koi"
             },
             "OI_threshold": {
-                "min_value": 0.0,
-                "max_value": 1.0,
+                "min_value": 0.6,
+                "max_value": 0.7,
                 "default": 0.7,
                 "short_name": "oit"
             }
@@ -108,16 +108,16 @@
                 "default": "",
                 "short_name": "cs"
             },
-            "number_simulations": {
-                "default": 1,
+            "number_analyzes": {
+                "default": 10,
                 "short_name": "ns"
             }
         }
     },
     "boneConfig":{
-        "runAbq": {
+        "runFltk": {
         "default": false,
-        "help": "Run Abaqus if specified."
+        "help": "Run gmsh with the generated script if specified."
         },
         "showLoad": {
         "default": false,
@@ -139,44 +139,12 @@
         "default": false,
         "help": "Render the length if specified."
         },
-        "runFltk": {
-        "default": false,
-        "help": "Run gmsh with the generated script if specified."
-        },
-        "skipWrite": {
-        "default": false,
-        "help": "Skip writing the generated script if specified."
-        },
-        "writeVTK": {
-        "default": false,
-        "help": "Write the generated VTK file if specified."
-        },
-        "runMeshing": {
-        "default": false,
-        "help": "Mesh the model"
-        },
-        "pickleIn": {
-        "default": false,
-        "help": "Pickle out data"
-        },
-        "pickleOut": {
-        "default": false,
-        "help": "Pickle out data"
-        },
-        "deleteOutput": {
-        "default": false,
-        "help": "Delete the backup files"
-        },
-        "runAbaqus": {
-        "default": false,
-        "help": "Run Abaqus"
-        },
         "inputPath": {
-        "default": "current",
+        "default": "C:\\Users\\crist\\OneDrive\\Documents\\results\\",
         "help": "The path to write the input files"
         },
         "outputPath": {
-        "default": "current",
+        "default": "C:\\Users\\crist\\OneDrive\\Documents\\results\\",
         "help": "The path to write the output files"
         },
         "logPath": {

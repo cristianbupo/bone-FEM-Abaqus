@@ -397,7 +397,7 @@ C     real*8  du1(nnod),du2(nnod),du3(nnod),du4(nnod),du5(nnod)
 C	   real*8  u1(nnod),u2(nnod),u3(nnod),u4(nnod),u5(nnod)
 	   real*8  paux(ndofel),Kelast(dim*nnod,dim*nnod)
       real*8  Def(dim*nnod)
-      logical :: found
+      logical :: found, change, ossByFront, ossBySOC, isEarlyOss
 C
 C     Variables de la carga distribuida
       integer n1, n2, i
@@ -429,15 +429,43 @@ C     Inicializacion de matrices y variables
       p     =   0.d0
 C
 C     Actualización de propiedades
-      if ((KSTEP .ne. 1) .and. (KINC .eq. 1)) then
-         if (grupoFisico(jelem,2) == 3) then
-            grupoFisico(jelem,2) = 4
+C     
+      change = (KSTEP .ne. 1) .and. (KINC .eq. 1)
+     & .and. not(cambioGrupoFisico(jelem))
+
+      ossByFront = .false.
+      do i = 1, a2e + a3e + a2e
+         do j = 1, velocidad
+            if (advanceElements(velocidad*(KSTEP-2) + j, i) == jelem) then
+               ossByFront = .true.
+               exit
+            end if
+         end do
+      end do
+
+      ossBySOC = cumulativeResElem(jelem,12) >= OIthreshold
+
+      isEarlyOss = grupoFisico(jelem,2) == 3
+
+C     Centro secundario de osificacion
+      if (change) then
+         if (isEarlyOss) then
+            grupoFisico(jelem,2) = sigGrupoFisico(jelem)
+            cambioGrupoFisico(jelem) = .true.
          elseif (grupoFisico(jelem,2) == 2) then
-            if (cumulativeResElem(jelem,12) >= 0.8) then
+            if (ossBySOC) then
                grupoFisico(jelem,2) = 3
+               sigGrupoFisico(jelem) = 4
+               cambioGrupoFisico(jelem) = .true.
+            elseif (ossByFront) then
+               grupoFisico(jelem,2) = 3
+               sigGrupoFisico(jelem) = 1
+               cambioGrupoFisico(jelem) = .true.
             endif
          end if
       endif
+C     Placa de crecimiento
+
 C
 C     Ensamblar la matriz de rigidez elastica en la matriz tangente global
 C     Llamado de la matriz de rigidez para la expansion
@@ -1091,6 +1119,7 @@ C
 C------------------------------------------------------------------------------
       SUBROUTINE URDFIL(LSTOP,LOVRWRT,KSTEP,KINC,DTIME,TIME)
 C
+      use iso_c_binding
       INCLUDE 'ABA_PARAM.INC'
       INCLUDE 'conec.for'
 C
@@ -1106,6 +1135,7 @@ C
       real*8 S1, S2, S_avg, R
 C
       character*276         filename
+      character*276         folderName
       character(256)        JOBDIR
       character(256)        JOBNAME
       character(21)         loadString
@@ -1181,18 +1211,17 @@ C     Acumulación de los resultados, TODO: Revisar que lo hace en el ultimo pas
 C
       call GETOUTDIR(JOBDIR,LENJOBDIR)
       call GETJOBNAME(JOBNAME,LENJOBNAME)
-      write(loadString, '(I1)') KINC
-      write(stepString, '(I1)') KSTEP
-C
-      filename=' '
-      filename(1:lenjobdir)=jobdir(1:lenjobdir)
-      filename(lenjobdir+1:lenjobdir+11)='\resultado'
-      filename(lenjobdir+11:lenjobdir+12)='\'
-      filename(lenjobdir+12:lenjobdir+lenjobname+12)=jobname(1:lenjobname)
-      filename(lenjobdir+lenjobname+12:lenjobdir+lenjobname+13)=stepString
-      filename(lenjobdir+lenjobname+13:lenjobdir+lenjobname+14)='_'
-      filename(lenjobdir+lenjobname+14:lenjobdir+lenjobname+15)=loadString
-      filename(lenjobdir+lenjobname+15:lenjobdir+lenjobname+18)='.vtu'
+      write(loadString, '(I3.3)') KINC
+      write(stepString, '(I3.3)') KSTEP
+C     
+      folderName = trim(jobdir) // '\resultados\' // trim(jobname) // '\' //
+     & 'step' // trim(stepString) // '\'
+
+      call execute_command_line('if not exist ' // trim(folderName) //
+     & ' mkdir ' // trim(folderName))
+
+      filename = trim(folderName) // trim(jobname) //
+     &'_step' // trim(stepString) // '_load' // trim(loadString) // '.vtu'
 C
 C     Escritura de los resultados en el archivo VTK
       call writeVTKFile(filename, resNod, resElem)
@@ -1200,11 +1229,8 @@ C
 C     Escritura de los resultados acumulados
       
       if (KINC==nLoads) then
-         filename=' '
-         filename(1:lenjobdir)=jobdir(1:lenjobdir)
-         filename(lenjobdir+1:lenjobdir+11)='\acumulado'
-         filename(lenjobdir+11:lenjobdir+12)=stepString
-         filename(lenjobdir+12:lenjobdir+16)='.vtu'
+         folderName = trim(jobdir) // '\resultados\' // trim(jobname)
+         filename = trim(folderName) // '\' // trim(jobname) // '_step' // trim(stepString)//'.vtu'
 C
          call writeVTKFile(filename, cumulativeResNod, cumulativeResElem)
       end if
@@ -1365,14 +1391,75 @@ C
       character(21)      :: stepString ! For "*Step, name=LoadStep1" detection
       character(256)     :: wholeLine
       character(256)        JOBDIR
+      character(256)        JOBNAME
       character*276         filename
-      integer               i,j,k
+      character*276         folderName
+      character*276         line, key
+      integer               ios, pos
+      integer               i,j,k,elem
 
 
 C     Variables llamadas al comienzo del análisis
       if (LOP.eq.0) then
 C        Extracción de la información de los archivos
          call GETOUTDIR(JOBDIR,LENJOBDIR)
+         call GETJOBNAME(JOBNAME,LENJOBNAME)
+C        Llenado de la matriz de avance
+
+         elem = 2*a3e*be0 + 1
+         
+         do j = a2e+1 , a2e+a3e
+            do i = 1 , a4e
+               advanceElements(i,j) = elem
+               elem = elem + 1
+            enddo
+         enddo
+         
+         do j = 1 , a2e
+            do i = 1 , a4e
+               advanceElements(i,j) = elem
+               elem = elem + 1
+            enddo
+         enddo
+            
+         do j = a2e + a3e + 1, a2e + a3e + a2e
+            do i = 1 , a4e
+               advanceElements(i,j) = elem
+               elem = elem + 1
+            enddo
+         enddo
+
+         do i=1, a4e
+C         print *, (advanceElements(i,j), j=1, a2e+a3e+a2e)
+         enddo
+C-------------------------------------
+C        Llamada al archivo de parametros
+         filename=trim(jobdir)//'\'//trim(jobname)//'.txt'
+C
+         open(UNIT=14,file=trim(filename), status='old')
+            ! Read the line containing the OIthreshold value
+            read(14, '(A)') line
+
+            ! Find the position of the comma
+            pos = index(line, ',')
+
+            ! Extract the key and value from the line
+            if (pos > 0) then
+                  key = line(1:pos-1)
+                  read(line(pos+1:), *) OIthreshold
+            else
+                  print *, "Error: Invalid format in file: ", filename
+                  stop
+            end if
+
+            ! Check if the key matches
+            if (trim(key) /= 'OIthreshold') then
+               print *, "Error: Invalid format in file: ", filename
+               stop
+            end if
+
+            print *, "OIthreshold: ", OIthreshold
+         close(14)
 C-------------------------------------
 C        Llamada al archivo de propiedades
          filename=' '
@@ -1456,6 +1543,9 @@ C
          close(15)
 C     Archivos llamados al comienzo de cada paso
       else if (LOP.eq.1) then
+C     Reinicialización de variables
+         cambioGrupoFisico = 0
+C-------------------------------------
 C        Extracción de la información de los archivos
          call GETOUTDIR(JOBDIR,LENJOBDIR)
 C        Llamada al archivo de cargas

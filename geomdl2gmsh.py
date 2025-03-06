@@ -4,6 +4,7 @@ from geomdl import  operations, multi
 import gmsh
 import FreeCAD2gmsh as f2g
 import xml.etree.ElementTree as ET
+import matplotlib.pyplot as plt
 
 
 def createTransfiniteSurface(edges, meshSize, direction="Left", ignorePoint=0):
@@ -92,6 +93,18 @@ def borderPoints(curve):
     return curve.evaluate_list([dom[0], dom[1]])
 
 
+def splitOnce(curve, point):
+    curves = multi.CurveContainer()
+    curves.sample_size = 40
+
+    T = findT(curve, point)
+    curve1, curve2 = operations.split_curve(curve, T)
+
+    curves.add(curve1)
+    curves.add(curve2)
+    return curves
+
+
 def splitTwice(curve, points1):
     curves = multi.CurveContainer()
     curves.sample_size = 40
@@ -159,11 +172,11 @@ def pixelateBorder(entity):
     return elementaryLineTags, elementaryNodeTags
 
 
-def container2gmsh(bone, boneConfig, curvesMesh, curvesArea):
+def container2gmsh(bone, boneConfig, curvesMesh, curvesArea, curvesAdvance):
+
+    # Main mesh
 
     numberElements = bone.mesh_vars.number_elements
-
-    runFltk = boneConfig.runFltk
 
     pointsSet = getUniqueControlPoints(curvesMesh)
     pointTags = addPointsToModel(pointsSet)
@@ -176,7 +189,6 @@ def container2gmsh(bone, boneConfig, curvesMesh, curvesArea):
         createTransfiniteLine(param[0], param[1])
 
     gmsh.model.occ.remove(gmsh.model.occ.getEntities(0), True)
-    gmsh.model.mesh.generate(1)
 
     createTransfiniteSurfaces(parameters)
 
@@ -190,8 +202,51 @@ def container2gmsh(bone, boneConfig, curvesMesh, curvesArea):
 
     writeMeshFiles(bone, boneConfig, curvesArea)
 
-    if runFltk:
+    if boneConfig.runFltk:
         gmsh.fltk.run()
+
+
+def container2advanceMesh(bone, boneConfig, curvesAdvance):
+    numberElements = bone.mesh_vars.number_elements
+
+    a2, a3, _, _ = meshLineElements(numberElements)
+
+    horizontalElements = a2 + a3 + a2 - 2
+    verticalElements = int(np.round(bone.geom_vars.total_advance // 0.1)) # each element is approximately 0.1 mm
+
+    pointsSet = getUniqueControlPoints(curvesAdvance)
+    pointTags = addPointsToModel(pointsSet)
+    addCurvesToModel(curvesAdvance, pointsSet, pointTags)
+    gmsh.model.occ.synchronize()
+
+    setGmshOptions()
+
+    parameters = [
+        ([1, 2, 3, 4], [horizontalElements, verticalElements, horizontalElements, verticalElements]),
+    ]
+
+    for param in parameters:
+        createTransfiniteLine(param[0], param[1])
+
+    createTransfiniteSurfaces(parameters)
+
+    gmsh.model.mesh.generate(2)
+
+    if boneConfig.runFltk:
+        gmsh.fltk.run()
+
+    inputPath = boneConfig.inputPath
+    # outputPath = boneConfig.outputPath
+
+    tags, coords, _ = gmsh.model.mesh.getNodes(-1, -1, False)
+    allElements = gmsh.model.mesh.getElements()
+    elemTypes, elemTags, elemNodeTags = allElements
+
+    f2g.write_nodes(tags, coords, inputPath, "nodosAdvance.inp")
+    f2g.write_connectivities(elemTypes, elemTags, elemNodeTags, inputPath, "conectividadesAdvance.inp")
+    f2g.write_vtk(tags, coords, allElements, inputPath, "mallaAdvance.vtu")
+
+
 
 
 def loadVectors(bone, loadCurve):
@@ -284,12 +339,57 @@ def triangularPattern(size, min, max):
 
     return vector
 
+
+def writeOnFile(originFile, destinationFile, content):
+    with open(originFile, 'r') as file, open(destinationFile, "w") as f:
+        f_longBone_content = file.read()
+        f.write(f_longBone_content.format(**content))
+
+
+def writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLoads):
+    kOI = bone.oss_vars.kOI
+
+    nLoads = bone.load_vars.number_loads
+    nElems = len(all2DElements[1][0])
+    numNode = len(tags)
+    formatedNList = f"(/{' ,'.join(map(str, listNElementLoads))}/)"
+
+    a2, a3, a4, b = meshLineElements(bone.mesh_vars.number_elements)
+
+    originFile = os.path.join(boneConfig.masterPath, "conec.for")
+    destinationFile = os.path.join(boneConfig.inputPath, "conec.for")
+    content = {
+        'nLoads': nLoads,
+        'listNElementLoads': formatedNList,
+        'maxNElementLoads': max(listNElementLoads),
+        'numNode': numNode,
+        'nElems': nElems,
+        'kOI': kOI,
+        'filasContorno1': (lines[0] + 5) // 6,
+        'filasContorno2': (lines[1] + 5) // 6,
+        'velocidad': bone.simulation_vars.growth_vel,
+        'a2': a2-1,
+        'a3': a3-1,
+        'a4': a4-1,
+        'b': b-1
+    }
+
+    writeOnFile(originFile, destinationFile, content)
+
+
+def writeParametersOI(bone, boneConfig):
+    originFile = os.path.join(boneConfig.masterPath, "parametros.txt")
+    destinationFile = os.path.join(
+        boneConfig.inputPath,
+        f"analisis{bone.simulation_vars.case_string}.txt")
+    content = {
+        'OIthreshold': bone.oss_vars.OI_threshold
+    }
+
+    writeOnFile(originFile, destinationFile, content)
+
+
 def writeMeshFiles(bone, boneConfig, curvesArea):
-    print("Writing .inp mesh")
-
-    number_loads = bone.load_vars.number_loads
-    number_steps = bone.time_vars.number_steps
-
     inputPath = boneConfig.inputPath
     outputPath = boneConfig.outputPath
 
@@ -297,9 +397,9 @@ def writeMeshFiles(bone, boneConfig, curvesArea):
     allElements = gmsh.model.mesh.getElements()
     elemTypes, elemTags, elemNodeTags = allElements
 
-    f2g.write_nodes(tags, coords, inputPath)
-    f2g.write_connectivities(elemTypes, elemTags, elemNodeTags, inputPath)
-    f2g.write_vtk(tags, coords, allElements, boneConfig.inputPath)
+    f2g.write_nodes(tags, coords, inputPath, "nodos.inp")
+    f2g.write_connectivities(elemTypes, elemTags, elemNodeTags, inputPath, "conectividades.inp")
+    f2g.write_vtk(tags, coords, allElements, inputPath, "malla.vtu")
 
     physicalGroups_1D = gmsh.model.getPhysicalGroups(1)
     physicalGroups_2D = gmsh.model.getPhysicalGroups(2)
@@ -314,8 +414,8 @@ def writeMeshFiles(bone, boneConfig, curvesArea):
     if not os.path.exists(os.path.join(outputPath, "carga")):
         os.makedirs(os.path.join(outputPath, "carga"))
 
-    if not os.path.exists(os.path.join(outputPath, "resultado")):
-        os.makedirs(os.path.join(outputPath, "resultado"))
+    number_loads = bone.load_vars.number_loads
+    number_steps = bone.time_vars.number_steps
 
     # Create carga and resultado PDV and VTM files
     srcPattern = os.path.join(outputPath, 'carga', 'carga*.vtp')
@@ -346,7 +446,9 @@ def writeMeshFiles(bone, boneConfig, curvesArea):
         listNElementLoads.append(nElementLoads)
 
 
-    f2g.writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLoads)
+    writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLoads)
+    
+    
     f2g.writeSteps(boneConfig, number_steps, number_loads)
 
 def createPVDbefore(srcPattern, destFile, numCombinations, numDigits, shift=0):
@@ -443,16 +545,21 @@ def setGmshOptions():
     gmsh.option.setNumber("Mesh.Algorithm", 8)
 
 
-def createTrasnfiniteParameters(numberElements, pixelInfo=None):
+def meshLineElements(numberElements):
     a2 = numberElements + 1
     a3 = 2 * numberElements + 1
-    b = numberElements // 2 + 1
+    a4 = 2 * numberElements + 1
+    b = numberElements + 1
+    return a2, a3, a4, b
+
+def createTrasnfiniteParameters(numberElements, pixelInfo=None):
+    a2, a3, a4, b = meshLineElements(numberElements)
 
     parameters = [
         ([1, 2, 10, 5, 4, 3, 9], [a3, a3, b, a2, a3, a2, b], [1, 4, 5]),
-        ([4, 13, 11, 12], [a3, a2, a3, a2]),
-        ([3, 12, 14, 6], [a2, a2, a2, a2]),
-        ([5, 8, 15, 13], [a2, a2, a2, a2]),
+        ([4, 13, 11, 12], [a3, a4, a3, a4]),
+        ([3, 12, 14, 6], [a2, a4, a2, a4]),
+        ([5, 8, 15, 13], [a2, a4, a2, a4]),
         ([11, 15, 7, 14], [a3, a2, a3, a2])
     ]
 
@@ -531,6 +638,7 @@ def processSketchNurbs(local_sketch, boneConfig):
     renderArea = boneConfig.renderArea
     renderMesh = boneConfig.renderMesh
     renderLength = boneConfig.renderLength
+    renderAdvance = boneConfig.renderAdvance
 
     curves0 = f2g.getBSplineGeom(local_sketch, 1000)
     curves1 = splitTwice(curves0[0], borderPoints(curves0[1]))
@@ -553,15 +661,83 @@ def processSketchNurbs(local_sketch, boneConfig):
                                   selectCurves=[0, 1, 2, 3, 4, 5, 6,
                                                 7, 8, 9, 10, 11, 12])
 
+    curvesLength = splitSymmetric(curves0[0], 5/16)
+
+    # Advance mesh
+
+    curvesAdvance0 = multi.CurveContainer()
+    curvesAdvance0.add(curves0[1])
+    curvesAdvance0.add(curves0[8])
+
+    curvesAdvance1 = splitTwice(curves0[0], borderPoints(curves0[8]))
+    
+    print("Border points:")
+    print(borderPoints(curves0[1]))
+    curveAdvance2 = splitOnce(curvesAdvance1[0], borderPoints(curves0[1])[0])[1]
+    curveAdvance3 = splitOnce(curvesAdvance1[2], borderPoints(curves0[1])[1])[0]
+
+    curvesAdvance1.add(curveAdvance2)
+    curvesAdvance1.add(curveAdvance3)
+    # curvesAdvance = mergeContainers(curvesAdvance0, curvesAdvance1)
+    # curvesAdvance.add(curveAdvance2)
+
+    curvesAdvance = multi.CurveContainer()
+    curvesAdvance.add(curvesAdvance0[0])
+    curvesAdvance.add(curvesAdvance1[4])
+    curvesAdvance.add(curvesAdvance0[1])
+    curvesAdvance.add(curvesAdvance1[3])
+
+
     render_flags = {
-        renderRaw: curves0,
-        renderMesh: curvesMesh0,
-        renderArea: curvesArea,
-        renderLength: splitSymmetric(curves0[0], 5/16)
+        'renderRaw': (renderRaw, curves0),
+        'renderMesh': (renderMesh, curvesMesh0),
+        'renderArea': (renderArea, curvesArea),
+        'renderLength': (renderLength, curvesLength),
+        'renderAdvance': (renderAdvance, curvesAdvance)
     }
 
-    for flag, curve in render_flags.items():
-        if flag:
-            curve.render()
 
-    return curvesMesh0, curvesArea, render_flags[renderLength]
+    i = 1
+    for key, (flag, container) in render_flags.items():
+        print(f"Flag: {flag}, Container: {key}")
+        if flag:
+            print(f"Rendering {i}: {key}")
+            drawContainer(container)
+            plt.show()
+
+            i += 1
+
+    return curvesMesh0, curvesArea, curvesAdvance
+
+
+def drawContainer(container, controlPol=False, knotEval=False):
+    fig, ax = plt.subplots()
+
+    for i, curve in enumerate(container):
+        knotVector = curve.knotvector
+        ctrlPoints = np.array(curve.ctrlpts)
+        evaluated_points = np.array(curve.evalpts)
+        
+        # Plot the evaluated points
+        plt.plot(evaluated_points[:, 0], evaluated_points[:, 1], label=f'curve {i}')
+        
+        # Plot the control points if controlPol is True
+        if controlPol:
+            plt.plot(ctrlPoints[:, 0], ctrlPoints[:, 1], 'o--', markersize=3, linewidth=0.5, label='Control Points', color='black')       
+        # Evaluate and plot the spline at the knots
+        if knotEval:
+            knot_evaluations = np.array([curve.evaluate_single(knot) for knot in knotVector])
+            plt.plot(knot_evaluations[:, 0], knot_evaluations[:, 1], 'x', label='Knot Evaluations', color='red')
+        
+    
+    # Position the legend to the right of the plot
+    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.0, frameon=False)
+    
+    # Set aspect ratio and turn off axis
+    ax.set_aspect('equal', adjustable='box')
+    ax.axis('off')
+    
+    # Adjust layout to make room for the legend
+    plt.tight_layout(rect=[0, 0, 0.85, 1])
+
+    return fig, ax
