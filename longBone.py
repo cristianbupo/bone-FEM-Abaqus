@@ -341,12 +341,12 @@ def modifySketch():
 
     gmsh.initialize()
     g2g.container2gmsh(bone, boneConfig, curvesMesh, curvesArea, curvesAdvance)
-    gmsh.write(boneConfig.inputPath + '/longBone.msh')
+    # gmsh.write(boneConfig.inputPath + '/longBone.msh')
     gmsh.finalize()
 
     gmsh.initialize()
     g2g.container2advanceMesh(bone, boneConfig, curvesAdvance)
-    gmsh.write(boneConfig.inputPath + '/advanceMesh.msh')
+    # gmsh.write(boneConfig.inputPath + '/advanceMesh.msh')
     gmsh.finalize()
 
     return curvesArea
@@ -403,17 +403,19 @@ def setupSimulations():
         N
     )
 
-    for i in range(1, N+1):
-        bone.simulation_vars.case_id = i
-        bone.simulation_vars.case_string = str(i).zfill(3)
-        bone.oss_vars.OI_threshold = OI_threshold_vec[i-1]
-        copyAnalysisFiles()
-        g2g.writeParametersOI(bone, boneConfig)
+    if N > 1:
+        for i in range(1, N+1):
+            bone.simulation_vars.case_id = i
+            bone.simulation_vars.case_string = str(i).zfill(3)
+            bone.oss_vars.OI_threshold = OI_threshold_vec[i-1]
+            
+    copyAnalysisFiles()
+    g2g.writeParametersOI(bone, boneConfig)
 
 
 if __name__ == '__main__':
 
-    bone, boneLimits, boneConfig = getBoneData(r'loadCases\test.json')
+    bone, boneLimits, boneConfig = getBoneData(r'loadCases\testConcave10Loads15Elem.json')
     clear_folder(boneConfig.inputPath)
 
     with open(os.path.join(boneConfig.inputPath,'runCommands.txt'), 'w') as file:

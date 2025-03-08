@@ -1074,6 +1074,68 @@ C
       return
       end
 C------------------------------------------------------------------------------------------
+C---------------------------------------------------------------------------oute-----------
+C       
+C       Funcion compareResults()
+C
+C
+C       Funcion para acumular los resultados de los elementos
+C       
+C
+C -----------------------------------------------------------------------------------------
+C
+C      Argumentos: KINC, paso
+C
+      subroutine compareResults(KINC)
+C  
+      include 'ABA_PARAM.INC'
+      include    'conec.for'
+C
+      integer    i,j,KINC
+
+      if (KINC == 1) then
+         do i=1,size(cumulativeResElem,1)
+            do j=1,size(cumulativeResElem,2)
+               cumulativeResElem(i,j) = resElem(i,j)
+            enddo
+         enddo
+
+         do i=1,size(cumulativeResNod,1)
+            do j=1,size(cumulativeResNod,2)
+               cumulativeResNod(i,j) = resNod(i,j)
+            enddo
+         enddo
+      else
+         do i=1,size(cumulativeResElem,1)
+            do j=1,size(cumulativeResElem,2)
+               cumulativeResElem(i,j) = cumulativeResElem(i,j) + resElem(i,j)
+            enddo
+         enddo
+
+         do i=1,size(cumulativeResNod,1)
+            do j=1,size(cumulativeResNod,2)
+               cumulativeResNod(i,j) = cumulativeResNod(i,j) + resNod(i,j)
+            enddo
+         enddo
+      end if
+
+      if (KINC==nLoads) then
+         do i=1,size(cumulativeResElem,1)
+            do j=1,size(cumulativeResElem,2)
+               cumulativeResElem(i,j) = cumulativeResElem(i,j) / DBLE(nLoads)
+            enddo
+         enddo
+
+         do i=1,size(cumulativeResNod,1)
+            do j=1,size(cumulativeResNod,2)
+               cumulativeResNod(i,j) = cumulativeResNod(i,j) / DBLE(nLoads)
+            enddo
+         enddo
+      end if
+C
+      return
+      end
+C------------------------------------------------------------------------------------------
 C---------------------------------------------------------VECTOR DE DEFORMACION------------
 C
 C	 Funcion vector de deformacion impuesta
@@ -1386,9 +1448,9 @@ C
       include 'conec.for'
 C
       logical            :: Searstr
-      character(1)       :: faceString ! U letter for compatbility with *DLOAD
-      character(1)       :: loadString ! up to 9 loads
-      character(21)      :: stepString ! For "*Step, name=LoadStep1" detection
+      character(256)       :: faceString ! U letter for compatbility with *DLOAD
+      character(256)       :: loadString ! up to 9 loads
+      character(25)      :: stepString ! For "*Step, name=LoadStep1" detection
       character(256)     :: wholeLine
       character(256)        JOBDIR
       character(256)        JOBNAME
@@ -1549,8 +1611,9 @@ C-------------------------------------
 C        Extracción de la información de los archivos
          call GETOUTDIR(JOBDIR,LENJOBDIR)
 C        Llamada al archivo de cargas
-         write(loadString, '(I1)') KINC
-         stepString = '*Step, name=LoadStep' // trim(adjustl(loadString))
+         write(loadString, *) KINC
+         stepString = trim('*Step, name=LoadStep' // trim(adjustl(loadString)))
+C         print *, stepString
 C-------------------------------------
 C        Llamada al archivo carga.inp
          filename=' '

@@ -5,7 +5,7 @@
       integer, parameter :: maxNElementLoads={maxNElementLoads}
       integer, parameter :: numProps = 2, numMats = 4
       real*8, parameter :: kOI = 0.5
-      integer, parameter :: axi=0, tipo_def=2
+      integer, parameter :: axi=0, tipo_def=1
       integer, parameter :: filasContorno1={filasContorno1}
       integer, parameter :: filasContorno2={filasContorno2}
       integer, parameter :: velocidad = {velocidad}
@@ -24,9 +24,9 @@ C     Contains the tag of the elements and the face where the load is applied
       real*8 propiedades(numMats,numProps)
       integer contorno1(filasContorno1, 6), contorno2(filasContorno2, 6)
       real*8 resNod(NUMNODE, 2)
-      real*8 resElem(NELEMS, 12)
+      real*8 resElem(NELEMS, 15)
       real*8 cumulativeResNod(NUMNODE, 2)
-      real*8 cumulativeResElem(NELEMS, 12)
+      real*8 cumulativeResElem(NELEMS, 15)
       real*8 OIthreshold
       
       COMMON resNod, resElem, cumulativeResNod, cumulativeResElem
