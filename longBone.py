@@ -113,7 +113,7 @@ def singleAnalysis():
     setattr(bone.geom_vars, 'head_height', 3.0)
 
     # Output concave single load case
-    folder = r'C:\\Users\\crist\\OneDrive\\Documents\\results\\singleAnalysis'
+    folder = r'C:\\Users\\crist\\Documents\\results\\singleAnalysis'
     setattr(boneConfig, 'inputPath', folder)
     setattr(boneConfig, 'outputPath', folder)
 
@@ -140,7 +140,7 @@ def singleAnalysis2():
     setattr(bone.geom_vars, 'head_height', 3.0)
 
     # Output concave single load case
-    folder = r'C:\\Users\\crist\\OneDrive\\Documents\\results\\singleAnalysis'
+    folder = r'C:\\Users\\crist\\Documents\\results\\singleAnalysis'
     setattr(boneConfig, 'inputPath', folder)
     setattr(boneConfig, 'outputPath', folder)
     setattr(bone.geom_vars, 'radius_x', 1.65)
@@ -163,7 +163,7 @@ def multipleAnalysis():
     setattr(bone.geom_vars, 'head_height', 3.0)
 
     # Output concave single load case
-    folder = r'C:\\Users\\crist\\OneDrive\\Documents\\results\\concaveCase\\singleLoad'
+    folder = r'C:\\Users\\crist\\Documents\\results\\concaveCase\\singleLoad'
     setattr(boneConfig, 'inputPath', folder)
     setattr(boneConfig, 'outputPath', folder)
     setattr(bone.geom_vars, 'radius_x', 1.65)
@@ -175,14 +175,14 @@ def multipleAnalysis():
     copyAnalysisFiles(boneConfig, boneLimits, bone)
 
     # Output concave double load case
-    folder = r'C:\\Users\\crist\\OneDrive\\Documents\\results\\concaveCase\\doubleLoad'
+    folder = r'C:\\Users\\crist\\Documents\\results\\concaveCase\\doubleLoad'
     setattr(boneConfig, 'inputPath', folder)
     setattr(boneConfig, 'outputPath', folder)
     setattr(bone.load_vars, 'number_loads', 6)
     copyAnalysisFiles(boneConfig, boneLimits, bone)
 
     # Output convex single load case
-    folder = r'C:\\Users\\crist\\OneDrive\\Documents\\results\\convexCase\\singleLoad'
+    folder = r'C:\\Users\\crist\\Documents\\results\\convexCase\\singleLoad'
     setattr(boneConfig, 'inputPath', folder)
     setattr(boneConfig, 'outputPath', folder)
 
@@ -195,7 +195,7 @@ def multipleAnalysis():
     copyAnalysisFiles(boneConfig, boneLimits, bone)
 
     # Output convex double load case
-    folder = r'C:\\Users\\crist\\OneDrive\\Documents\\results\\convexCase\\doubleLoad'
+    folder = r'C:\\Users\\crist\\Documents\\results\\convexCase\\doubleLoad'
     setattr(boneConfig, 'inputPath', folder)
     setattr(boneConfig, 'outputPath', folder)
     setattr(bone.load_vars, 'number_loads', 6)
@@ -219,7 +219,7 @@ def sensitivityAnalisys():
     setattr(bone.load_vars, 'number_loads', 5)
     setattr(bone.time_vars, 'number_steps', 10)
 
-    folder = r'C:\\Users\\crist\\OneDrive\\Documents\\results\\singleAnalysis'
+    folder = r'C:\\Users\\crist\\Documents\\results\\singleAnalysis'
 
     setattr(boneConfig, 'inputPath', folder)
     setattr(boneConfig, 'outputPath', folder)
@@ -258,7 +258,7 @@ def sensitivityAnalysis2():
     setattr(bone.load_vars, 'number_loads', 5)
     setattr(bone.time_vars, 'number_steps', 10)
 
-    folder = r'C:\\Users\\crist\\OneDrive\\Documents\\results\\singleAnalysis'
+    folder = r'C:\\Users\\crist\\Documents\\results\\singleAnalysis'
 
     setattr(boneConfig, 'inputPath', folder)
     setattr(boneConfig, 'outputPath', folder)

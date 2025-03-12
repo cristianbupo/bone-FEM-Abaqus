@@ -140,11 +140,11 @@
         "help": "Render the length if specified."
         },
         "inputPath": {
-        "default": "C:\\Users\\crist\\OneDrive\\Documents\\results\\",
+        "default": "C:\\Users\\crist\\Documents\\results\\",
         "help": "The path to write the input files"
         },
         "outputPath": {
-        "default": "C:\\Users\\crist\\OneDrive\\Documents\\results\\",
+        "default": "C:\\Users\\crist\\Documents\\results\\",
         "help": "The path to write the output files"
         },
         "logPath": {

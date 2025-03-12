@@ -101,7 +101,7 @@ contains
    pythonScriptPath = "C:/Users/crist/git/bone-FEM-Abaqus/longBone.py"
    pythonCommand = trim(pythonVenvPath) // " " // trim(pythonScriptPath)
 
-   inputPath = "C:/Users/crist/OneDrive/Documents/results/singleAnalysis/"
+   inputPath = "C:/Users/crist/Documents/results/singleAnalysis/"
    command = "run.bat"
 
    write(*,*) trim(pythonCommand)
