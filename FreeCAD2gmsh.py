@@ -227,6 +227,10 @@ def writeBoundaries(physicalGroups, inputPath):
     with open(contornoPath, "w") as f, open(boundaryConditionsPath, "w") as g:
         g.write("*Boundary\n")
         g.write("contorno1, 11, 12, 0.0\n")
+        g.write("contorno3, 13, 13, 1.0\n")
+        g.write("contorno4, 13, 13, 0.0\n")
+        g.write("contorno3, 14, 14, 0.0\n")
+        g.write("contorno4, 14, 14, 1.0\n")
         for dim, tag in physicalGroups:
             name = gmsh.model.getPhysicalName(dim, tag)
             nodeTags = gmsh.model.mesh.getNodesForPhysicalGroup(dim, tag)[0]

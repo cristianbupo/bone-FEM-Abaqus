@@ -439,6 +439,7 @@ C     Generales
 	   real*8  paux(ndofel),Kelast(dim*nnod,dim*nnod) ! 2 gdl correspondientes a elasticidad
       real*8  Kdiff(2*nnod,2*nnod) ! 2 gdl correspondientes a difusion
       real*8  Def(dim*nnod)
+      real*8  Dif(2)
 C
 C     Variables de la carga distribuida
       integer n1, n2, i, j, k
@@ -456,14 +457,14 @@ C
 C     Inicializacion de matrices y variables
       m_k   =   0.d0
       p     =   0.d0
-      ndofnod = ndofel/nnod
-      ndofdiff = ndofnod
+      ndofnod = ndofel/nnod 
+      ndofdiff = 2
 C
 C     Ensamblar la matriz de rigidez elastica en la matriz tangente global
 C     Llamado de la matriz de rigidez para la expansion
       call matriz_rigidez_el(u,ndofel,de,x,jelem,time(2),Kelast)
       call matriz_rigidez_dif(u,ndofdiff,ndofel,de,x,jelem,time(2),Kdiff)
-
+C
       do k1=1,nnod
          do k2=1,nnod
             fil = ndofnod*(k1-1)+1
@@ -534,13 +535,12 @@ C         angulo = atan2(x2(2)-x1(2), x2(1)-x1(1))
          p(ndofnod*(n2-1)+1, 1) = p(ndofnod*(n2-1)+1, 1) + fx
          p(ndofnod*(n2-1)+2, 1) = p(ndofnod*(n2-1)+2, 1) + fy
       end if
-C
 C     Insercion del vector de deformacion
 	   call vector_deformacion(u,ndofel,de,x,jelem,time(2),Def)
 C
       do k1=1,nnod
-         fil=ndofnod*(k1-1)+1 !2 es el número de grados de libertad por nodo
-         ff =dim*(k1-1)+1
+         fil = ndofnod*(k1-1)+1
+         ff = dim*(k1-1)+1
          do i=1,dim
             filg = fil+(i-1)
             filp = ff +(i-1) 
@@ -739,7 +739,7 @@ C           Se llevan a cabo las operaciones de sumatoria
 	      enddo
 	end if
 C
-	return 
+	return
 	end
 C------------------------------------------------------------------------------------------
 C---------------------------------------------------------------MATRIZ_CONSTANTES_E________
@@ -931,7 +931,7 @@ C           Se obtienen las matrices de calculo
 C
 C           Llamado al vector deformacion
             call deformacion(chi,eta,zita,u,ndofel,de,x,jelem,
-	1      t,def2D)
+     &     t,def2D)
 C
 C           Se calcula el diferencial de la integral
             dx = wg(i)*wg(j)*xjac
@@ -1121,11 +1121,12 @@ c     resElem(i,14) = CMI
          do j=1,nResNod
             if (KINC == 1) then
                cumulativeResNod(i,j) = resNod(i,j)
-            elseif (KINC==nLoads) then
-               cumulativeResNod(i,j) = cumulativeResNod(i,j) / DBLE(nLoads)
             else
                cumulativeResNod(i,j) = cumulativeResNod(i,j) + resNod(i,j)
-            endif       
+            endif
+            if (KINC==nLoads) then
+               cumulativeResNod(i,j) = cumulativeResNod(i,j) / DBLE(nLoads)
+            endif
          enddo
       enddo
 
@@ -1133,10 +1134,11 @@ c     resElem(i,14) = CMI
          do j=1,nResElem
             if (KINC == 1) then
                cumulativeResElem(i,j) = resElem(i,j)
-            elseif (KINC==nLoads) then
-               cumulativeResElem(i,j) = cumulativeResElem(i,j) / DBLE(nLoads)
             else
                cumulativeResElem(i,j) = cumulativeResElem(i,j) + resElem(i,j)
+            endif
+            if (KINC==nLoads) then
+               cumulativeResElem(i,j) = cumulativeResElem(i,j) / DBLE(nLoads)
             endif
          enddo
 
@@ -1296,6 +1298,8 @@ C
             k = k+1
             resNod(k, 1) = ARRAY(4)
             resNod(k, 2) = ARRAY(5)
+            resNod(k, 3) = ARRAY(6)
+            resNod(k, 4) = ARRAY(7)
          END IF
 C
       END DO
@@ -1388,11 +1392,19 @@ C
       write(16,'(a12)') '</DataArray>'
 C
       write(16,'(a8)') '</Cells>'
-      write(16,'(a25)') '<PointData Vectors="''U''">'
+C
+      write(16,'(a30)') '<PointData Vectors="''U'', ''C''">'
       write(16,'(a58,a55)') '<DataArray type="Float64" Name="U" NumberOfComponents="2" ',
      & 'ComponentName0="U1" ComponentName1="U2" format="ascii">'
       DO i=1,NUMNODE
          write(16,'(2(E20.13,1X))') mNod(i, 1), mNod(i, 2)
+      END DO
+      write(16,'(a12)') '</DataArray>'
+
+      write(16,'(a58,a55)') '<DataArray type="Float64" Name="C" NumberOfComponents="2" ',
+     & 'ComponentName0="C1" ComponentName1="C2" format="ascii">'
+      DO i=1,NUMNODE
+         write(16,'(2(E20.13,1X))') mNod(i, 3), mNod(i, 4)
       END DO
       write(16,'(a12)') '</DataArray>'
       write(16,'(a12)') '</PointData>'

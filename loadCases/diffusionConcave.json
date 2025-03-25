@@ -128,7 +128,7 @@
     },
     "boneConfig":{
         "runFltk": {
-        "default": false,
+        "default": true,
         "help": "Run gmsh with the generated meshes if specified."
         },
         "showLoad": {

@@ -368,6 +368,8 @@ def writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLo
         'kOI': kOI,
         'filasContorno1': (lines[0] + 5) // 6,
         'filasContorno2': (lines[1] + 5) // 6,
+        'filasContorno3': (lines[2] + 5) // 6,
+        'filasContorno4': (lines[3] + 5) // 6,
         'velocidad': bone.simulation_vars.growth_vel,
         'a2': a2-1,
         'a3': a3-1,
@@ -621,6 +623,8 @@ def addPhysicalGroups():
     gmsh.model.addPhysicalGroup(2, [2, 3, 4, 5], -1, "Cartilago")
     gmsh.model.addPhysicalGroup(1, [1, 2], -1, "contorno1")
     gmsh.model.addPhysicalGroup(1, [6, 7, 8], -1, "contorno2")
+    gmsh.model.addPhysicalGroup(1, [3, 4, 5], -1, "contorno3")
+    gmsh.model.addPhysicalGroup(1, [7], -1, "contorno4")
     gmsh.model.addPhysicalGroup(0, [2], -1, "pin")
 
 

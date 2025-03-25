@@ -415,6 +415,15 @@ def setupSimulations():
 
 if __name__ == '__main__':
 
+    bone, boneLimits, boneConfig = getBoneData(r'loadCases\diffusionConvex.json')
+    clear_folder(boneConfig.inputPath)
+
+    with open(os.path.join(boneConfig.inputPath,'runCommands.txt'), 'w') as file:
+        pass
+
+    modifySketch() # Modify sketch, create and write mesh
+    setupSimulations() # Set up simulations parameters
+
     bone, boneLimits, boneConfig = getBoneData(r'loadCases\diffusionConcave.json')
     clear_folder(boneConfig.inputPath)
 
