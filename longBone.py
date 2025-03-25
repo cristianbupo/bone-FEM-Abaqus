@@ -365,7 +365,7 @@ def copyAnalysisFiles():
         # "master/run.f90": "run.f90",
         "master/analisis.inp": jobName + ".inp",
         # "master/debug.bat": "debug.bat",
-        "master/general2DElastic.for": "user.for",
+        "master/general2DElasticDiffusion.for": "user.for",
         "master/run.ps1":  "run.ps1",
         "master/propiedades.txt": "propiedades.txt"
     }
@@ -415,7 +415,7 @@ def setupSimulations():
 
 if __name__ == '__main__':
 
-    bone, boneLimits, boneConfig = getBoneData(r'loadCases\testConcave10Loads15Elem.json')
+    bone, boneLimits, boneConfig = getBoneData(r'loadCases\diffusionConcave.json')
     clear_folder(boneConfig.inputPath)
 
     with open(os.path.join(boneConfig.inputPath,'runCommands.txt'), 'w') as file:

@@ -123,7 +123,7 @@
     "boneConfig":{
         "runFltk": {
         "default": true,
-        "help": "Run gmsh with the generated script if specified."
+        "help": "Run gmsh with the generated bone mesh if specified."
         },
         "showLoad": {
         "default": false,

@@ -4,19 +4,19 @@
             "radius_x": {
                 "min_value": 1.1,
                 "max_value": 2.0,
-                "default": 1.4,
+                "default": 1.65,
                 "short_name": "rx"
             },
             "radius_y": {
                 "min_value": 1.1,
                 "max_value": 2.0,
-                "default": 1.5,
+                "default": 1.2,
                 "short_name": "ry"
             },
             "head_angle": {
                 "min_value": -20.0,
                 "max_value": 20.0,
-                "default": 25.0,
+                "default": -15.0,
                 "short_name": "ha"
             },
             "bone_width": {
@@ -35,13 +35,13 @@
                 "type": "double",
                 "min_value": 2.5,
                 "max_value": 2.0,
-                "default": 2.5,
+                "default": 2.0,
                 "short_name": "ct"
             },
             "curve_angle": {
                 "min_value": -15.0,
                 "max_value": 15.0,
-                "default": 0.0,
+                "default": 9.0,
                 "short_name": "ca"
             },
             "total_advance": {
@@ -49,12 +49,6 @@
                 "max_value": 2.0,
                 "default": 1.5,
                 "short_name": "ta"
-            },
-            "angle_advance": {
-                "min_value": 0.0,
-                "max_value": 15.0,
-                "default": 5.0,
-                "short_name": "aa"
             }
         },
         "load_vars": {
@@ -77,7 +71,7 @@
                 "default": 6.85
             },
             "number_loads": {
-                "default": 10
+                "default": 5
             },
             "total_force": {
                 "default": 7.5
@@ -85,7 +79,7 @@
         },
         "mesh_vars": {
             "number_elements": {
-                "min_value": 8,
+                "min_value": 20,
                 "default": 20,
                 "short_name": "ne"
             }
@@ -93,7 +87,7 @@
         "time_vars":{
             "number_steps": {
                 "min_value": 1,
-                "default": 10,
+                "default": 1,
                 "short_name": "ns"
             }
         },
@@ -105,9 +99,9 @@
                 "short_name": "koi"
             },
             "OI_threshold": {
-                "min_value": 0.75,
-                "max_value": 0.85,
-                "default": 1.13,
+                "min_value": 0.6,
+                "max_value": 0.7,
+                "default": 0.7,
                 "short_name": "oit"
             }
         },
@@ -127,7 +121,7 @@
             "growth_vel":{
                 "min_value": 0,
                 "max_value": 10,
-                "default": 0,
+                "default": 5,
                 "short_name": "gv"
             }
         }
@@ -135,7 +129,7 @@
     "boneConfig":{
         "runFltk": {
         "default": false,
-        "help": "Run gmsh with the generated script if specified."
+        "help": "Run gmsh with the generated meshes if specified."
         },
         "showLoad": {
         "default": false,

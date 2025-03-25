@@ -277,6 +277,7 @@ def findLastPosition(A, B):
         return n
     return -1  # return -1 if no match found
 
+
 def findPhysicalGroup(physicalName):
     physicalGroups = gmsh.model.getPhysicalGroups()
     dim = None
@@ -340,6 +341,7 @@ def findConectivityInfo(dim, entity, allElemTags, allElemNodeTags, elemNodes):
     loadFaces = [loadFace] * len(elemTags)
 
     return contourElements, elemTags, elemNodeTags, loadFaces, nodCoords, elemLengths
+
 
 def findConectivityInfoPhysical(physicalName, all2DElements):
     dim, tag = findPhysicalGroup(physicalName)
