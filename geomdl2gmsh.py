@@ -172,7 +172,7 @@ def pixelateBorder(entity):
     return elementaryLineTags, elementaryNodeTags
 
 
-def container2gmsh(bone, boneConfig, curvesMesh, curvesArea, curvesAdvance):
+def container2gmsh(bone, boneConfig, curvesMesh, curvesArea):
 
     # Main mesh
 
@@ -200,10 +200,75 @@ def container2gmsh(bone, boneConfig, curvesMesh, curvesArea, curvesAdvance):
     setSurfaceColors()
     addPhysicalGroups()
 
-    writeMeshFiles(bone, boneConfig, curvesArea)
+    # Write mesh files
+
+    inputPath = boneConfig.inputPath
+    outputPath = boneConfig.outputPath
+
+    tags, coords, _ = gmsh.model.mesh.getNodes(-1, -1, False)
+    allElements = gmsh.model.mesh.getElements()
+    elemTypes, elemTags, elemNodeTags = allElements
+
+    f2g.write_nodes(tags, coords, inputPath, "nodos.inp")
+    f2g.write_connectivities(elemTypes, elemTags, elemNodeTags, inputPath, "conectividades.inp")
+    f2g.write_vtk(tags, coords, allElements, inputPath, "malla.vtu")
+
+    physicalGroups_1D = gmsh.model.getPhysicalGroups(1)
+    physicalGroups_2D = gmsh.model.getPhysicalGroups(2)
+
+    f2g.writeBody(physicalGroups_2D, inputPath)
+    lines = f2g.writeBoundaries(physicalGroups_1D, inputPath)
+    all2DElements = gmsh.model.mesh.getElements(2)
+
+    listNElementLoads =[]
+
+    # Create carga and resultado folder
+    if not os.path.exists(os.path.join(outputPath, "carga")):
+        os.makedirs(os.path.join(outputPath, "carga"))
+
+    number_loads = bone.load_vars.number_loads
+    number_steps = bone.time_vars.number_steps
+
+    # Create carga and resultado PDV and VTM files
+    srcPattern = os.path.join(outputPath, 'carga', 'carga*.vtp')
+    destFile = os.path.join(outputPath, 'carga.vtm')
+    createVTMbefore(srcPattern, destFile, number_loads, 1, shift=1)
+
+    srcPattern = os.path.join(outputPath, 'carga', 'carga*.vtp')
+    destFile = os.path.join(outputPath, 'carga.pvd')
+    createPVDbefore(srcPattern, destFile, number_loads, 1, shift=1)
+
+    srcPattern = os.path.join(outputPath, 'resultado', 'analisis*.vtu')
+    destFile = os.path.join(outputPath, 'resultado.pvd')
+    createPVDbefore(srcPattern, destFile, number_loads, 1, shift=1)
+    
+    loadCurve = curvesArea[1]
+
+    h_vector, k_vector, r_vector = loadVectors(bone, loadCurve)
+
+    listNElementLoads = []
+
+    for i in range(number_loads):
+
+        h = h_vector[i]
+        k = k_vector[i]
+        r = r_vector[i]
+    
+        nElementLoads = f2g.writeLoads(boneConfig, h, k, r, "contorno2", all2DElements, i)
+        listNElementLoads.append(nElementLoads)
+
+
+    writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLoads)
+
+    f2g.findNWriteMeshAdjacencies(all2DElements, inputPath)
+    
+    f2g.writeSteps(boneConfig, number_steps, number_loads)
 
     if boneConfig.runFltk:
         gmsh.fltk.run()
+
+    if boneConfig.saveMsh:
+        gmsh.write(os.path.join(inputPath,"malla.msh"))
 
 
 def container2advanceMesh(bone, boneConfig, curvesAdvance):
@@ -245,8 +310,8 @@ def container2advanceMesh(bone, boneConfig, curvesAdvance):
     f2g.write_nodes(tags, coords, inputPath, "nodosAdvance.inp")
     f2g.write_connectivities(elemTypes, elemTags, elemNodeTags, inputPath, "conectividadesAdvance.inp")
     f2g.write_vtk(tags, coords, allElements, inputPath, "mallaAdvance.vtu")
-
-
+    if boneConfig.saveMsh:
+        gmsh.write(os.path.join(inputPath,"mallaAvance.msh"))
 
 
 def loadVectors(bone, loadCurve):
@@ -358,7 +423,7 @@ def writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLo
     a2, a3, a4, b = meshLineElements(bone.mesh_vars.number_elements)
 
     originFile = os.path.join(boneConfig.masterPath, "conec.for")
-    destinationFile = os.path.join(boneConfig.inputPath, "conec.for")
+    destinationFile = os.path.join(boneConfig.inputPath, "parametros.for")
     content = {
         'nLoads': nLoads,
         'listNElementLoads': formatedNList,
@@ -390,69 +455,6 @@ def writeParametersOI(bone, boneConfig):
     }
 
     writeOnFile(originFile, destinationFile, content)
-
-
-def writeMeshFiles(bone, boneConfig, curvesArea):
-    inputPath = boneConfig.inputPath
-    outputPath = boneConfig.outputPath
-
-    tags, coords, _ = gmsh.model.mesh.getNodes(-1, -1, False)
-    allElements = gmsh.model.mesh.getElements()
-    elemTypes, elemTags, elemNodeTags = allElements
-
-    f2g.write_nodes(tags, coords, inputPath, "nodos.inp")
-    f2g.write_connectivities(elemTypes, elemTags, elemNodeTags, inputPath, "conectividades.inp")
-    f2g.write_vtk(tags, coords, allElements, inputPath, "malla.vtu")
-
-    physicalGroups_1D = gmsh.model.getPhysicalGroups(1)
-    physicalGroups_2D = gmsh.model.getPhysicalGroups(2)
-
-    f2g.writeBody(physicalGroups_2D, inputPath)
-    lines = f2g.writeBoundaries(physicalGroups_1D, inputPath)
-    all2DElements = gmsh.model.mesh.getElements(2)
-
-    listNElementLoads =[]
-
-    # Create carga and resultado folder
-    if not os.path.exists(os.path.join(outputPath, "carga")):
-        os.makedirs(os.path.join(outputPath, "carga"))
-
-    number_loads = bone.load_vars.number_loads
-    number_steps = bone.time_vars.number_steps
-
-    # Create carga and resultado PDV and VTM files
-    srcPattern = os.path.join(outputPath, 'carga', 'carga*.vtp')
-    destFile = os.path.join(outputPath, 'carga.vtm')
-    createVTMbefore(srcPattern, destFile, number_loads, 1, shift=1)
-
-    srcPattern = os.path.join(outputPath, 'carga', 'carga*.vtp')
-    destFile = os.path.join(outputPath, 'carga.pvd')
-    createPVDbefore(srcPattern, destFile, number_loads, 1, shift=1)
-
-    srcPattern = os.path.join(outputPath, 'resultado', 'analisis*.vtu')
-    destFile = os.path.join(outputPath, 'resultado.pvd')
-    createPVDbefore(srcPattern, destFile, number_loads, 1, shift=1)
-    
-    loadCurve = curvesArea[1]
-
-    h_vector, k_vector, r_vector = loadVectors(bone, loadCurve)
-
-    listNElementLoads = []
-
-    for i in range(number_loads):
-
-        h = h_vector[i]
-        k = k_vector[i]
-        r = r_vector[i]
-    
-        nElementLoads = f2g.writeLoads(boneConfig, h, k, r, "contorno2", all2DElements, i)
-        listNElementLoads.append(nElementLoads)
-
-
-    writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLoads)
-    
-    
-    f2g.writeSteps(boneConfig, number_steps, number_loads)
 
 def createPVDbefore(srcPattern, destFile, numCombinations, numDigits, shift=0):
     # Ensure the destination directory exists

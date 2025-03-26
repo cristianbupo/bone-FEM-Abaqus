@@ -340,7 +340,7 @@ def modifySketch():
     curvesMesh, curvesArea, curvesAdvance = g2g.processSketchNurbs(sketch, boneConfig)
 
     gmsh.initialize()
-    g2g.container2gmsh(bone, boneConfig, curvesMesh, curvesArea, curvesAdvance)
+    g2g.container2gmsh(bone, boneConfig, curvesMesh, curvesArea)
     # gmsh.write(boneConfig.inputPath + '/longBone.msh')
     gmsh.finalize()
 
@@ -365,7 +365,6 @@ def copyAnalysisFiles():
         # "master/run.f90": "run.f90",
         "master/analisis.inp": jobName + ".inp",
         # "master/debug.bat": "debug.bat",
-        "master/general2DElasticDiffusion.for": "user.for",
         "master/run.ps1":  "run.ps1",
         "master/propiedades.txt": "propiedades.txt"
     }
@@ -385,7 +384,9 @@ def copyAnalysisFiles():
     # Create the jobName.bat file with the specified content
     bat_file_path = os.path.join(inputPath, jobName + ".bat")
     with open(bat_file_path, 'w') as bat_file:
-        bat_file.write(f"abaqus job={jobName} user=user.for ask_delete=OFF\n")
+        bat_file.write(f"del resultados\n")
+        bat_file.write(f"copy parametros.for ..\master\conec.for\n")
+        bat_file.write(f"abaqus job={jobName} user=..\master\general2DElasticDiffusion.for ask_delete=OFF\n")
 
     with open (os.path.join(boneConfig.inputPath,'runCommands.txt'), 'a') as file:
         file.write(f"{inputPath},{jobName}\n")

@@ -162,11 +162,11 @@
         "help": "Render the advance geometry if specified."
         },
         "inputPath": {
-        "default": "C:\\Users\\crist\\Documents\\results\\",
+        "default": "C:\\Users\\crist\\git\\abaqusFortran",
         "help": "The path to write the input files"
         },
         "outputPath": {
-        "default": "C:\\Users\\crist\\Documents\\results\\",
+        "default": "C:\\Users\\crist\\git\\abaqusFortran",
         "help": "The path to write the output files"
         },
         "logPath": {
