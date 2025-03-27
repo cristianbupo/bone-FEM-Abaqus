@@ -1,1 +1,11 @@
-stdWeight,{OIthreshold}
+stdWeight={stdWeight}
+NUMNODE={numNode}, NELEMS={nElems}, dim=2, nnod=4
+a2e={a2}, a3e={a3}, a4e={a4}, be0={b}
+nLoads={nLoads}, nResNod=6, nResElem=15
+numProps = 2, numMats = 4
+maxNElementLoads={maxNElementLoads}
+axi=0, tipo_def=1
+filasContorno1={filasContorno1}
+filasContorno2={filasContorno2}
+velocidad = {velocidad}
+nContornos = {nContornos}

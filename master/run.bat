@@ -1,3 +1,2 @@
-del resultados
-copy parametros.for ..\master\conec.for
-abaqus job={jobname} user=user.for ask_delete=OFF
+set user_file=..\..\master\general2DElasticDiffusion.for
+abaqus job=analisis user=%user_file% ask_delete=OFF

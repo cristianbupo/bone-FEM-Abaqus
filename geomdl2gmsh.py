@@ -418,19 +418,31 @@ def writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLo
     nLoads = bone.load_vars.number_loads
     nElems = len(all2DElements[1][0])
     numNode = len(tags)
-    formatedNList = f"(/{' ,'.join(map(str, listNElementLoads))}/)"
+    formatedNList = f"{' ,'.join(map(str, listNElementLoads))}"
 
     a2, a3, a4, b = meshLineElements(bone.mesh_vars.number_elements)
 
-    originFile = os.path.join(boneConfig.masterPath, "conec.for")
-    destinationFile = os.path.join(boneConfig.inputPath, "parametros.for")
+    originFile = os.path.join(boneConfig.masterPath, "parametros.txt")
+    destinationFile = os.path.join(boneConfig.inputPath, "parametros.txt")
+    
+    # Get all physical groups
+    physical_groups = gmsh.model.getPhysicalGroups()
+
+    # Filter for 1D physical entities (dimension = 1)
+    physical_1D_groups = [group for group in physical_groups if group[0] == 1]
+
+    # Count the number of 1D physical entities
+    num_1D_physical_entities = len(physical_1D_groups)
+
+    print(bone.oss_vars.stdWeight)
     content = {
+        'stdWeight': bone.oss_vars.stdWeight,
         'nLoads': nLoads,
-        'listNElementLoads': formatedNList,
         'maxNElementLoads': max(listNElementLoads),
         'numNode': numNode,
         'nElems': nElems,
         'kOI': kOI,
+        'nContornos': num_1D_physical_entities,
         'filasContorno1': (lines[0] + 5) // 6,
         'filasContorno2': (lines[1] + 5) // 6,
         'filasContorno3': (lines[2] + 5) // 6,
@@ -442,19 +454,11 @@ def writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLo
         'b': b-1
     }
 
-    writeOnFile(originFile, destinationFile, content)
-
-
-def writeParametersOI(bone, boneConfig):
-    originFile = os.path.join(boneConfig.masterPath, "parametros.txt")
-    destinationFile = os.path.join(
-        boneConfig.inputPath,
-        f"analisis{bone.simulation_vars.case_string}.txt")
-    content = {
-        'OIthreshold': bone.oss_vars.OI_threshold
-    }
+    with open(os.path.join(boneConfig.inputPath,'nFilasCargas.txt'), "w") as f:
+        f.write(formatedNList)
 
     writeOnFile(originFile, destinationFile, content)
+
 
 def createPVDbefore(srcPattern, destFile, numCombinations, numDigits, shift=0):
     # Ensure the destination directory exists

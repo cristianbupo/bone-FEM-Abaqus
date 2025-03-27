@@ -87,7 +87,7 @@
         "time_vars":{
             "number_steps": {
                 "min_value": 1,
-                "default": 1,
+                "default": 3,
                 "short_name": "ns"
             }
         },
@@ -103,6 +103,12 @@
                 "max_value": 0.85,
                 "default": 0.7,
                 "short_name": "oit"
+            },
+            "stdWeight": {
+                "min_value": 0.0,
+                "max_value": 1.0,
+                "default": 0.5,
+                "short_name": "sw"
             }
         },
         "simulation_vars": {

@@ -9,6 +9,7 @@ import os
 import gmsh
 from sketchUtils import setConstraintValue
 import numpy as np
+import argparse
 
 
 # Get the existing system PATH
@@ -382,11 +383,17 @@ def copyAnalysisFiles():
         shutil.copy(src_path, dest_path)
 
     # Create the jobName.bat file with the specified content
+    master_bat = os.path.join('master','run.bat')
+
+    with open(master_bat, 'r') as master_bat_file:
+        text = master_bat_file.read()
+    
+    text = text.format(jobName=jobName)
+
     bat_file_path = os.path.join(inputPath, jobName + ".bat")
+
     with open(bat_file_path, 'w') as bat_file:
-        bat_file.write(f"del resultados\n")
-        bat_file.write(f"copy parametros.for ..\master\conec.for\n")
-        bat_file.write(f"abaqus job={jobName} user=..\master\general2DElasticDiffusion.for ask_delete=OFF\n")
+        bat_file.write(text)
 
     with open (os.path.join(boneConfig.inputPath,'runCommands.txt'), 'a') as file:
         file.write(f"{inputPath},{jobName}\n")
@@ -411,27 +418,31 @@ def setupSimulations():
             bone.oss_vars.OI_threshold = OI_threshold_vec[i-1]
             
     copyAnalysisFiles()
-    g2g.writeParametersOI(bone, boneConfig)
 
 
 if __name__ == '__main__':
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(description="Run bone FEM Abaqus simulations.")
+    parser.add_argument(
+        '--configs',
+        nargs='+',
+        required=True,
+        help="List of configuration file paths (e.g., 'diffusionConvexSteps.json diffusionConcaveSteps.json')"
+    )
+    args = parser.parse_args()
 
-    bone, boneLimits, boneConfig = getBoneData(r'loadCases\diffusionConvex.json')
-    clear_folder(boneConfig.inputPath)
+    # Iterate over the provided configuration files
+    for config_file in args.configs:
+        print(f"Processing configuration: {config_file}")
+        bone, boneLimits, boneConfig = getBoneData(os.path.join('loadCases',config_file))
+        clear_folder(boneConfig.inputPath)
 
-    with open(os.path.join(boneConfig.inputPath,'runCommands.txt'), 'w') as file:
-        pass
+        # Create or clear the runCommands.txt file
+        with open(os.path.join(boneConfig.inputPath, 'runCommands.txt'), 'w') as file:
+            pass
 
-    modifySketch() # Modify sketch, create and write mesh
-    setupSimulations() # Set up simulations parameters
-
-    bone, boneLimits, boneConfig = getBoneData(r'loadCases\diffusionConcave.json')
-    clear_folder(boneConfig.inputPath)
-
-    with open(os.path.join(boneConfig.inputPath,'runCommands.txt'), 'w') as file:
-        pass
-
-    modifySketch() # Modify sketch, create and write mesh
-    setupSimulations() # Set up simulations parameters
+        # Run the simulation steps
+        modifySketch()  # Modify sketch, create and write mesh
+        setupSimulations()  # Set up simulation parameters
 
     
