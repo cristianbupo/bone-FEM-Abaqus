@@ -365,9 +365,10 @@ def copyAnalysisFiles():
     files_to_copy = {
         # "master/run.f90": "run.f90",
         "master/analisis.inp": jobName + ".inp",
-        # "master/debug.bat": "debug.bat",
+        "master/debug.bat": jobName + "Debug.bat",
         "master/run.ps1":  "run.ps1",
-        "master/propiedades.txt": "propiedades.txt"
+        "master/propiedades.txt": "propiedades.txt",
+        # "master/abaqus_v6.env": "abaqus_v6.env"
     }
 
     # Copy each file to the inputPath with the new name
@@ -379,7 +380,7 @@ def copyAnalysisFiles():
         # Ensure the destination directory exists
         if not os.path.exists(dest_dir):
             os.makedirs(dest_dir, exist_ok=True)
-            
+                
         shutil.copy(src_path, dest_path)
 
     # Create the jobName.bat file with the specified content
