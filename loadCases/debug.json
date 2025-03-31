@@ -80,7 +80,7 @@
         "mesh_vars": {
             "number_elements": {
                 "min_value": 20,
-                "default": 1,
+                "default": 10,
                 "short_name": "ne"
             }
         },
@@ -106,8 +106,8 @@
             },
             "stdWeight": {
                 "min_value": 0.0,
-                "max_value": 1.0,
-                "default": 0.5,
+                "max_value": 2.0,
+                "default": 1.5,
                 "short_name": "sw"
             }
         },
