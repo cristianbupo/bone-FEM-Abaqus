@@ -2,7 +2,7 @@ stdWeight={stdWeight}
 kOI={kOI}
 NUMNODE={numNode}, NELEMS={nElems}, dim=2, nnod=4
 a2e={a2}, a3e={a3}, a4e={a4}, be0={b}
-nLoads={nLoads}, nResNod=6, nResElem=16
+nLoads={nLoads}, nResNod=6, nResElem=17
 numProps = 2, numMats = 4
 maxNElementLoads={maxNElementLoads}
 axi=0, tipo_def=2
