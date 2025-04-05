@@ -369,6 +369,7 @@ def copyAnalysisFiles():
         "master/run.ps1":  "run.ps1",
         "master/propiedades.txt": "propiedades.txt",
         # "master/abaqus_v6.env": "abaqus_v6.env"
+        "master/condicionesContorno.inp": "condicionesContorno.inp"
     }
 
     # Copy each file to the inputPath with the new name

@@ -171,7 +171,7 @@ def write_vtk(nodes, coords, allElements, inputPath, filename):
 
 
 def writeLines(array, file):
-    Ncols = 6
+    Ncols = 15
     N = len(array)
     N2 = Ncols*ceil(N/Ncols)
     for elem in range(N2):
@@ -224,13 +224,7 @@ def writeBoundaries(physicalGroups, inputPath):
     contornoPath = os.path.join(inputPath, "contorno.inp")
     boundaryConditionsPath = os.path.join(inputPath, "condicionesContorno.inp")
 
-    with open(contornoPath, "w") as f, open(boundaryConditionsPath, "w") as g:
-        g.write("*Boundary\n")
-        g.write("contorno1, 11, 12, 0.0\n")
-        g.write("contorno3, 13, 13, 1.0\n")
-        g.write("contorno4, 13, 13, 0.0\n")
-        g.write("contorno3, 14, 14, 0.0\n")
-        g.write("contorno4, 14, 14, 1.0\n")
+    with open(contornoPath, "w") as f:
         for dim, tag in physicalGroups:
             name = gmsh.model.getPhysicalName(dim, tag)
             nodeTags = gmsh.model.mesh.getNodesForPhysicalGroup(dim, tag)[0]
@@ -238,10 +232,6 @@ def writeBoundaries(physicalGroups, inputPath):
             writeLines(nodeTags, f)
 
             lines.append(len(nodeTags))
-
-            # if name == "contorno1":
-                # pinTag = int(nodeTags[(len(nodeTags)+1) // 2])
-                # g.write(f"{pinTag}, 1, 1\n")
     
     return lines
 

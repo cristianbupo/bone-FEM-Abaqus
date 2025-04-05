@@ -20,5 +20,8 @@
 ** Dummy material properties
 *UEL PROPERTY,ELSET=UEL
 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+*MPC, user, mode=dof
+1, contorno3, contorno3
+1, contorno4, contorno4
 *INCLUDE, INPUT=contorno.inp
 *INCLUDE, INPUT=pasos.inp
