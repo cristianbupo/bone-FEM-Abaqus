@@ -13,15 +13,13 @@
 1., 
 *SPECIFIC HEAT 
 1., 
-*USER ELEMENT,NODES=4,TYPE=U1,PROP=4,COORDINATES=2,VAR=16
-11,12,13,14
+*USER ELEMENT,NODES=4,TYPE=U1,PROP=10,COORDINATES=2,VAR=16
+11,12,13,14,15,16,17,18,19,20
 *INCLUDE, INPUT=conectividades.inp 
 *INCLUDE, INPUT=cuerpo.inp
 ** Dummy material properties
 *UEL PROPERTY,ELSET=UEL
 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
-*MPC, user, mode=dof
-1, contorno3, contorno3
-1, contorno4, contorno4
+*INCLUDE, INPUT=restriccionesMultiPunto.inp
 *INCLUDE, INPUT=contorno.inp
 *INCLUDE, INPUT=pasos.inp

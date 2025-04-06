@@ -209,7 +209,7 @@ def container2gmsh(bone, boneConfig, curvesMesh, curvesArea):
     allElements = gmsh.model.mesh.getElements()
     elemTypes, elemTags, elemNodeTags = allElements
 
-    f2g.write_nodes(tags, coords, inputPath, "nodos.inp")
+    f2g.write_nodes(tags, coords, inputPath, "nodos.inp", "restriccionesMultipunto.inp")
     f2g.write_connectivities(elemTypes, elemTags, elemNodeTags, inputPath, "conectividades.inp")
     f2g.write_vtk(tags, coords, allElements, inputPath, "malla.vtu")
 

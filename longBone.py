@@ -346,7 +346,7 @@ def modifySketch():
     gmsh.finalize()
 
     gmsh.initialize()
-    g2g.container2advanceMesh(bone, boneConfig, curvesAdvance)
+    # g2g.container2advanceMesh(bone, boneConfig, curvesAdvance)
     # gmsh.write(boneConfig.inputPath + '/advanceMesh.msh')
     gmsh.finalize()
 
