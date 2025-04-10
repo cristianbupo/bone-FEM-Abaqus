@@ -1,0 +1,185 @@
+{
+    "bone":{
+        "geom_vars": {
+            "radius_x": {
+                "min_value": 1.1,
+                "max_value": 2.0,
+                "default": 1.65,
+                "short_name": "rx"
+            },
+            "radius_y": {
+                "min_value": 1.1,
+                "max_value": 2.0,
+                "default": 1.2,
+                "short_name": "ry"
+            },
+            "head_angle": {
+                "min_value": -20.0,
+                "max_value": 20.0,
+                "default": -15.0,
+                "short_name": "ha"
+            },
+            "bone_width": {
+                "min_value": 1.1,
+                "max_value": 3.3,
+                "default": 2.2,
+                "short_name": "bw"
+            },
+            "head_height": {
+                "min_value": 0.5,
+                "max_value": 10.0,
+                "default": 1.0,
+                "short_name": "hh"
+            },
+            "cart_thick": {
+                "type": "double",
+                "min_value": 2.5,
+                "max_value": 2.0,
+                "default": 2.0,
+                "short_name": "ct"
+            },
+            "curve_angle": {
+                "min_value": -15.0,
+                "max_value": 15.0,
+                "default": 9.0,
+                "short_name": "ca"
+            },
+            "total_advance": {
+                "min_value": 0.0,
+                "max_value": 2.0,
+                "default": 1.5,
+                "short_name": "ta"
+            }
+        },
+        "load_vars": {
+            "load_center": {
+                "min_value": -100.0,
+                "default": 0.0,
+                "short_name": "hl"
+            },
+            "load_amplitude": {
+                "min_value": 0.0,
+                "default": 6.85,
+                "short_name": "kl"
+            },
+            "load_radius": {
+                "min_value": 0.0,
+                "default": 0.81,
+                "short_name": "rl"
+            },
+            "load_extension": {
+                "default": 6.85
+            },
+            "number_loads": {
+                "default": 5
+            },
+            "total_force": {
+                "default": 7.5
+            }
+        },
+        "mesh_vars": {
+            "number_elements": {
+                "min_value": 20,
+                "default": 20,
+                "short_name": "ne"
+            }
+        },
+        "time_vars":{
+            "number_steps": {
+                "min_value": 1,
+                "default": 10,
+                "short_name": "ns"
+            }
+        },
+        "oss_vars": {
+            "kOI": {
+                "min_value": 0.0,
+                "max_value": 4.0,
+                "default": 0.3,
+                "short_name": "koi"
+            },
+            "OI_threshold": {
+                "min_value": 0.6,
+                "max_value": 0.7,
+                "default": 0.7,
+                "short_name": "oit"
+            },
+            "stdWeight": {
+                "min_value": 0.0,
+                "max_value": 2.0,
+                "default": 1.5,
+                "short_name": "sw"
+            }
+        },
+        "simulation_vars": {
+            "case_id": {
+                "default": null,
+                "short_name": "cid"
+            },
+            "case_string": {
+                "default": "",
+                "short_name": "cs"
+            },
+            "number_analyzes": {
+                "default": 1,
+                "short_name": "ns"
+            },
+            "growth_vel":{
+                "min_value": 0,
+                "max_value": 10,
+                "default": 5,
+                "short_name": "gv"
+            }
+        }
+    },
+    "boneConfig":{
+        "runFltk": {
+        "default": false,
+        "help": "Run gmsh with the generated meshes if specified."
+        },
+        "showLoad": {
+        "default": false,
+        "help": "Show the graph of the load distribution if specified."
+        },
+        "renderRaw": {
+        "default": false,
+        "help": "Render the raw curves if specified."
+        },
+        "renderMesh": {
+        "default": false,
+        "help": "Render the mesh if specified."
+        },
+        "renderArea": {
+        "default": false,
+        "help": "Render the area if specified."
+        },
+        "renderLength": {
+        "default": false,
+        "help": "Render the length if specified."
+        },
+        "renderAdvance": {
+        "default": false,
+        "help": "Render the advance geometry if specified."
+        },
+        "saveMsh":{
+        "default": true,
+        "help": "Save the mesh files if specified."
+        },
+        "inputPath": {
+        "default": "C:\\Users\\crist\\git\\abaqusFortran\\results",
+        "help": "The path to write the input files"
+        },
+        "outputPath": {
+        "default": "C:\\Users\\crist\\git\\abaqusFortran\\results",
+        "help": "The path to write the output files"
+        },
+        "logPath": {
+        "default": "currentLog",
+        "help": "The path to write the log files"
+        },
+        "masterPath": {
+        "default": "master",
+        "help": "The path where the master files are stored"
+        }
+    }
+}

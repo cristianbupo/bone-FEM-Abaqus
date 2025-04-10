@@ -413,13 +413,21 @@ def setupSimulations():
         N
     )
 
+    kOI_threshold_vec = np.linspace(
+        boneLimits.oss_vars.kOI.min_value,
+        boneLimits.oss_vars.kOI.max_value,
+        N
+    )
+
     if N > 1:
         for i in range(1, N+1):
             bone.simulation_vars.case_id = i
             bone.simulation_vars.case_string = str(i).zfill(3)
-            bone.oss_vars.OI_threshold = OI_threshold_vec[i-1]
-            
-    copyAnalysisFiles()
+            bone.oss_vars.kOI = kOI_threshold_vec[i-1]
+            copyAnalysisFiles()
+
+    else: 
+        copyAnalysisFiles()
 
 
 if __name__ == '__main__':
