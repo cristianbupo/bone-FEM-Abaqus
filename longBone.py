@@ -103,223 +103,17 @@ def clear_folder(folder):
                 print(f'Failed to delete {item_path}. Reason: {e}')
 
 
-def singleAnalysis():
-    print("Running single analysis")
-
-    setattr(boneConfig, 'deleteOutput', True)
-    setattr(boneConfig, 'runAbq', True)
-    # setattr(boneConfig, 'runFltk', True)
-    setattr(bone.mesh_vars, 'number_elements', 10)
-    setattr(bone.geom_vars, 'bone_width', 2.2)
-    setattr(bone.geom_vars, 'head_height', 3.0)
-
-    # Output concave single load case
-    folder = r'C:\\Users\\crist\\Documents\\results\\singleAnalysis'
-    setattr(boneConfig, 'inputPath', folder)
-    setattr(boneConfig, 'outputPath', folder)
-
-    setattr(bone.geom_vars, 'radius_x', 1.4)
-    setattr(bone.geom_vars, 'radius_y', 1.5)
-    setattr(bone.geom_vars, 'head_angle', 25.0)
-    setattr(bone.geom_vars, 'cart_thick', 2.5)
-    setattr(bone.geom_vars, 'curve_angle', 0.0)
-    setattr(bone.geom_vars, 'head_height', 1)
-
-    setattr(bone.load_vars, 'number_loads', 5)
-    setattr(bone.time_vars, 'number_steps', 10)
-    copyAnalysisFiles(boneConfig, boneLimits, bone)
-
-
-def singleAnalysis2():
-    # setattr(boneConfig, 'runFltk', True)
-    # setattr(boneConfig, 'writeVTK', True)
-
-    setattr(boneConfig, 'deleteOutput', True)
-    setattr(boneConfig, 'runAbq', True)
-    setattr(bone.mesh_vars, 'number_elements', 100)
-    setattr(bone.geom_vars, 'bone_width', 2.2)
-    setattr(bone.geom_vars, 'head_height', 3.0)
-
-    # Output concave single load case
-    folder = r'C:\\Users\\crist\\Documents\\results\\singleAnalysis'
-    setattr(boneConfig, 'inputPath', folder)
-    setattr(boneConfig, 'outputPath', folder)
-    setattr(bone.geom_vars, 'radius_x', 1.65)
-    setattr(bone.geom_vars, 'radius_y', 1.2)
-    setattr(bone.geom_vars, 'head_angle', -15.0)
-    setattr(bone.geom_vars, 'cart_thick', 2.0)
-    setattr(bone.geom_vars, 'curve_angle', 9.0)
-    setattr(bone.load_vars, 'number_loads', 5)
-    copyAnalysisFiles(boneConfig, boneLimits, bone)
-
-
-def multipleAnalysis():
-    # setattr(boneConfig, 'runFltk', True)
-    # setattr(boneConfig, 'writeVTK', True)
-
-    setattr(boneConfig, 'deleteOutput', True)
-    setattr(boneConfig, 'runAbq', True)
-    setattr(bone.mesh_vars, 'number_elements', 15)
-    setattr(bone.geom_vars, 'bone_width', 2.2)
-    setattr(bone.geom_vars, 'head_height', 3.0)
-
-    # Output concave single load case
-    folder = r'C:\\Users\\crist\\Documents\\results\\concaveCase\\singleLoad'
-    setattr(boneConfig, 'inputPath', folder)
-    setattr(boneConfig, 'outputPath', folder)
-    setattr(bone.geom_vars, 'radius_x', 1.65)
-    setattr(bone.geom_vars, 'radius_y', 1.2)
-    setattr(bone.geom_vars, 'head_angle', -15.0)
-    setattr(bone.geom_vars, 'cart_thick', 2.0)
-    setattr(bone.geom_vars, 'curve_angle', 9.0)
-    setattr(bone.load_vars, 'number_loads', 5)
-    copyAnalysisFiles(boneConfig, boneLimits, bone)
-
-    # Output concave double load case
-    folder = r'C:\\Users\\crist\\Documents\\results\\concaveCase\\doubleLoad'
-    setattr(boneConfig, 'inputPath', folder)
-    setattr(boneConfig, 'outputPath', folder)
-    setattr(bone.load_vars, 'number_loads', 6)
-    copyAnalysisFiles(boneConfig, boneLimits, bone)
-
-    # Output convex single load case
-    folder = r'C:\\Users\\crist\\Documents\\results\\convexCase\\singleLoad'
-    setattr(boneConfig, 'inputPath', folder)
-    setattr(boneConfig, 'outputPath', folder)
-
-    setattr(bone.geom_vars, 'radius_x', 1.4)
-    setattr(bone.geom_vars, 'radius_y', 1.5)
-    setattr(bone.geom_vars, 'head_angle', 25.0)
-    setattr(bone.geom_vars, 'cart_thick', 2.5)
-    setattr(bone.geom_vars, 'curve_angle', 0.0)
-    setattr(bone.load_vars, 'number_loads', 5)
-    copyAnalysisFiles(boneConfig, boneLimits, bone)
-
-    # Output convex double load case
-    folder = r'C:\\Users\\crist\\Documents\\results\\convexCase\\doubleLoad'
-    setattr(boneConfig, 'inputPath', folder)
-    setattr(boneConfig, 'outputPath', folder)
-    setattr(bone.load_vars, 'number_loads', 6)
-    copyAnalysisFiles(boneConfig, boneLimits, bone)
-
-def sensitivityAnalisys():
-    setattr(boneConfig, 'deleteOutput', True)
-    setattr(boneConfig, 'runAbq', True)
-    # setattr(boneConfig, 'runFltk', True)
-    setattr(bone.mesh_vars, 'number_elements', 20)
-    setattr(bone.geom_vars, 'bone_width', 2.2)
-    setattr(bone.geom_vars, 'head_height', 3.0)
-
-    setattr(bone.geom_vars, 'radius_x', 1.4)
-    setattr(bone.geom_vars, 'radius_y', 1.5)
-    setattr(bone.geom_vars, 'head_angle', 25.0)
-    setattr(bone.geom_vars, 'cart_thick', 2.5)
-    setattr(bone.geom_vars, 'curve_angle', 0.0)
-    setattr(bone.geom_vars, 'head_height', 1)
-
-    setattr(bone.load_vars, 'number_loads', 5)
-    setattr(bone.time_vars, 'number_steps', 10)
-
-    folder = r'C:\\Users\\crist\\Documents\\results\\singleAnalysis'
-
-    setattr(boneConfig, 'inputPath', folder)
-    setattr(boneConfig, 'outputPath', folder)
-
-    clear_folder(boneConfig.inputPath)
-    
-    print(boneConfig.inputPath)
-    
-    N = 10
-    OI_threshold_vec = np.linspace(0.75, 0.85, N)
-
-    for i in range(1, N+1):
-        bone.simulation_vars.case_id = i
-        bone.simulation_vars.case_string = str(i).zfill(3)
-        bone.oss_vars.OI_threshold = OI_threshold_vec[i-1]
-        copyAnalysisFiles(boneConfig, boneLimits, bone)
-        g2g.writeParametersOI(bone, boneConfig)
-
-
-def sensitivityAnalysis2():
-
-    setattr(boneConfig, 'deleteOutput', True)
-    setattr(boneConfig, 'runAbq', True)
-    # setattr(boneConfig, 'runFltk', True)
-    setattr(bone.mesh_vars, 'number_elements', 20)
-    setattr(bone.geom_vars, 'bone_width', 2.2)
-    setattr(bone.geom_vars, 'head_height', 3.0)
-
-    setattr(bone.geom_vars, 'radius_x', 1.4)
-    setattr(bone.geom_vars, 'radius_y', 1.5)
-    setattr(bone.geom_vars, 'head_angle', 25.0)
-    setattr(bone.geom_vars, 'cart_thick', 2.5)
-    setattr(bone.geom_vars, 'curve_angle', 0.0)
-    setattr(bone.geom_vars, 'head_height', 1)
-
-    setattr(bone.load_vars, 'number_loads', 5)
-    setattr(bone.time_vars, 'number_steps', 10)
-
-    folder = r'C:\\Users\\crist\\Documents\\results\\singleAnalysis'
-
-    setattr(boneConfig, 'inputPath', folder)
-    setattr(boneConfig, 'outputPath', folder)
-
-    clear_folder(boneConfig.inputPath)
-    
-    print(boneConfig.inputPath)
-
-    N = 10
-    OI_threshold_vec = np.linspace(0.75, 0.85, N)
-
-    for i in range(1, N+1):
-        bone.simulation_vars.case_id = i
-        bone.simulation_vars.case_string = str(i).zfill(3)
-        bone.oss_vars.OI_threshold = OI_threshold_vec[i-1]
-        copyAnalysisFiles(boneConfig, boneLimits, bone)
-        g2g.writeParametersOI(bone, boneConfig)
-
-
-def concaveGeometry():
-
-    # Set up concave geometry
-
-    setattr(bone.geom_vars, 'bone_width', 2.2)
-    setattr(bone.geom_vars, 'head_height', 3.0)
-    setattr(bone.geom_vars, 'radius_x', 1.65)
-    setattr(bone.geom_vars, 'radius_y', 1.2)
-    setattr(bone.geom_vars, 'head_angle', -15.0)
-    setattr(bone.geom_vars, 'cart_thick', 2.0)
-    setattr(bone.geom_vars, 'curve_angle', 9.0)
-    setattr(bone.load_vars, 'number_loads', 5)
-
-
-def analisysConfig(folder):
-
-    # Change analysis parameters and clear folder
-
-    setattr(boneConfig, 'deleteOutput', True)
-    setattr(boneConfig, 'runAbq', True)
-    # setattr(boneConfig, 'runFltk', True)
-    setattr(bone.mesh_vars, 'number_elements', 20)
-    setattr(bone.load_vars, 'number_loads', 5) # Number of loads in a single step
-    setattr(bone.time_vars, 'number_steps', 10) # Number of steps in a single simulation
-    setattr(bone.simulation_vars, 'number_analyzes', 10) # Number of simulations
-    setattr(boneConfig, 'inputPath', folder)
-    setattr(boneConfig, 'outputPath', folder)
-
-    setattr(boneLimits.oss_vars.OI_threshold, 'min', 0.75)
-    setattr(boneLimits.oss_vars.OI_threshold, 'max', 0.85)
-
-    clear_folder(boneConfig.inputPath)
-
-
 def modifySketch():
 
     # Modify sketch
     # Create and write mesh
 
     Gui.setupWithoutGUI()  # Initialize FreeCAD without GUI
-    fileName = 'CADs/longBone.FCStd'
+#    if boneConfig.capsule:
+    fileName = os.path.join('CADs', 'longBone.FCStd')
+#    else:
+#        fileName = os.path.join('CADs', 'longBoneCapsule.FCStd')
+
     doc = App.openDocument(fileName)
     sketch = doc.getObject('Sketch')
 
@@ -439,6 +233,13 @@ if __name__ == '__main__':
         required=True,
         help="List of configuration file paths (e.g., 'diffusionConvexSteps.json diffusionConcaveSteps.json')"
     )
+
+    # parser.add_argument(
+    #     '--capsule',
+    #     action='store_true',
+    #     help="If set, the model will be enclosed in a capsule"
+    # )
+
     args = parser.parse_args()
 
     # Iterate over the provided configuration files

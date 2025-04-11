@@ -4,9 +4,9 @@ from numpy import pi
 import FreeCAD as App
 import json
 
-from PySide6.QtWidgets import *
-from PySide6.QtCore import *
-from PySide6.QtWidgets import QVBoxLayout, QWidget
+from PySide2.QtWidgets import *
+from PySide2.QtCore import *
+from PySide2.QtWidgets import QVBoxLayout, QWidget
 
 n = 5
 min_space = 0  # Minimum space to add when reaching min or max
@@ -26,7 +26,10 @@ class AnimationSliderWindow(QWidget):
 
         # Create a slider for each item in the dictionary
         for var_name, var_info in variables.items():
-            min_val, max_val = var_info["limits"]
+            initial_val = var_info["min_value"]
+            final_val = var_info["max_value"]
+            min_val = min(initial_val, final_val)
+            max_val = max(initial_val, final_val)
             self.createSlider(layout, var_name, min_val, max_val)
 
         self.setLayout(layout)
@@ -212,7 +215,7 @@ if __name__ == "__main__":
     os.chdir(macros_dir)
 
     # Load dictionary from the JSON file
-    with open('../../combined_vars.json', 'r') as f:
+    with open('../../loadCases/longBone.json', 'r') as f:
         variables = json.load(f)['geom_vars']
 
     # Remove entries where "ignore" is true

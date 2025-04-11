@@ -658,7 +658,9 @@ def processSketchNurbs(local_sketch, boneConfig):
 
     curvesMesh0 = mergeContainers(curves2a, curves2b)
     curvesMesh0 = mergeContainers(curvesMesh0, curves1, selectCurves=[0, 2])
-    curvesMesh0 = mergeContainers(curvesMesh0, curves0, selectCurves=[2, 3, 4, 5, 6, 7])
+    curvesMesh0 = mergeContainers(curvesMesh0, curves0, selectCurves=[2, 3, 4, 5, 6, 7,
+                                                                      9, 10, 11, 12, 13, 14,
+                                                                      15, 16, 17, 18, 19, 20])
     curvesArea = mergeContainers(curves1, curves0, selectCurves=[1, 7])
 
     # curvesMesh0[13] is the curve to divide and delete
@@ -670,7 +672,9 @@ def processSketchNurbs(local_sketch, boneConfig):
     curvesMesh0 = mergeContainers(curvesBottom,
                                   curvesMesh0,
                                   selectCurves=[0, 1, 2, 3, 4, 5, 6,
-                                                7, 8, 9, 10, 11, 12])
+                                                7, 8, 9, 10, 11, 12,
+                                                14, 15, 16, 17, 18, 19,
+                                                20, 21, 22, 23, 24, 25])
 
     curvesLength = splitSymmetric(curves0[0], 5/16)
 
@@ -714,6 +718,7 @@ def processSketchNurbs(local_sketch, boneConfig):
         if flag:
             print(f"Rendering {i}: {key}")
             drawContainer(container)
+            plt.title(f"Container: {key}")
             plt.show()
 
             i += 1
