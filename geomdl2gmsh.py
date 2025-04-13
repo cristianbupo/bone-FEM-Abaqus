@@ -7,7 +7,7 @@ import xml.etree.ElementTree as ET
 import matplotlib.pyplot as plt
 
 
-def createTransfiniteSurface(edges, meshSize, direction="Left", ignorePoint=0):
+def createTransfiniteSurface(edges, meshSize, reverse=False, direction="Right", ignorePoint=0):
     adjacencies = createTransfiniteLine(edges, meshSize)
     nEdges = len(edges)
     transfinitePoints = []
@@ -25,6 +25,9 @@ def createTransfiniteSurface(edges, meshSize, direction="Left", ignorePoint=0):
         elif isinstance(ignorePoint, list):
             for ip in sorted(ignorePoint, reverse=True):
                 transfinitePoints.pop(ip)
+
+    if reverse:
+        edges = [-edge for edge in edges] 
 
     loop = gmsh.model.occ.addCurveLoop(edges)
     surface = gmsh.model.occ.addPlaneSurface([loop])
@@ -81,9 +84,6 @@ def findT(curve, point):
     if i == maxiter:
         print("Max iterations reached")
         print("Iterations=", i)
-    else:
-        print("Converged in ", i, " iterations")
-        print(f"Current distance: {np.sqrt(sqrdist):.2f}")
 
     return t
 
@@ -196,9 +196,9 @@ def container2gmsh(bone, boneConfig, curvesMesh, curvesArea):
 
     gmsh.model.mesh.renumberNodes()
     renumberElements()
-
-    setSurfaceColors()
     addPhysicalGroups()
+    setSurfaceColors()
+    
 
     # Write mesh files
 
@@ -212,12 +212,13 @@ def container2gmsh(bone, boneConfig, curvesMesh, curvesArea):
     f2g.write_nodes(tags, coords, inputPath, "nodos.inp", "restriccionesMultipunto.inp")
     f2g.write_connectivities(elemTypes, elemTags, elemNodeTags, inputPath, "conectividades.inp")
     f2g.write_vtk(tags, coords, allElements, inputPath, "malla.vtu")
-
-    physicalGroups_1D = gmsh.model.getPhysicalGroups(1)
+    
+    # physicalGroups_1D = gmsh.model.getPhysicalGroups(1)
     physicalGroups_2D = gmsh.model.getPhysicalGroups(2)
+    physicalGroups = gmsh.model.getPhysicalGroups()
 
     f2g.writeBody(physicalGroups_2D, inputPath)
-    lines = f2g.writeBoundaries(physicalGroups_1D, inputPath)
+    lines = f2g.writeBoundaries(physicalGroups, inputPath)
     all2DElements = gmsh.model.mesh.getElements(2)
 
     listNElementLoads =[]
@@ -274,7 +275,7 @@ def container2gmsh(bone, boneConfig, curvesMesh, curvesArea):
 def container2advanceMesh(bone, boneConfig, curvesAdvance):
     numberElements = bone.mesh_vars.number_elements
 
-    a2, a3, _, _ = meshLineElements(numberElements)
+    a2, a3, _, _, _= meshLineElements(numberElements)
 
     horizontalElements = a2 + a3 + a2 - 2
     verticalElements = int(np.round(bone.geom_vars.total_advance // 0.1)) # each element is approximately 0.1 mm
@@ -295,7 +296,10 @@ def container2advanceMesh(bone, boneConfig, curvesAdvance):
 
     createTransfiniteSurfaces(parameters)
 
+    gmsh.model.mesh.reverse([(2,7), (2,9)])
+
     gmsh.model.mesh.generate(2)
+    
 
     if boneConfig.runFltk:
         gmsh.fltk.run()
@@ -420,7 +424,7 @@ def writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLo
     numNode = len(tags)
     formatedNList = f"{' ,'.join(map(str, listNElementLoads))}"
 
-    a2, a3, a4, b = meshLineElements(bone.mesh_vars.number_elements)
+    a2, a3, a4, b, c = meshLineElements(bone.mesh_vars.number_elements)
 
     originFile = os.path.join(boneConfig.masterPath, "parametros.txt")
     destinationFile = os.path.join(boneConfig.inputPath, "parametros.txt")
@@ -434,7 +438,6 @@ def writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLo
     # Count the number of 1D physical entities
     num_1D_physical_entities = len(physical_1D_groups)
 
-    print(bone.oss_vars.stdWeight)
     content = {
         'stdWeight': bone.oss_vars.stdWeight,
         'nLoads': nLoads,
@@ -559,17 +562,25 @@ def meshLineElements(numberElements):
     a3 = 2 * numberElements + 1
     a4 = 2 * numberElements + 1
     b = numberElements + 1
-    return a2, a3, a4, b
+    c = 2 * numberElements + 1
+    return a2, a3, a4, b, c
 
 def createTrasnfiniteParameters(numberElements, pixelInfo=None):
-    a2, a3, a4, b = meshLineElements(numberElements)
+    a2, a3, a4, b, c = meshLineElements(numberElements)
 
     parameters = [
         ([1, 2, 10, 5, 4, 3, 9], [a3, a3, b, a2, a3, a2, b], [1, 4, 5]),
         ([4, 13, 11, 12], [a3, a4, a3, a4]),
         ([3, 12, 14, 6], [a2, a4, a2, a4]),
         ([5, 8, 15, 13], [a2, a4, a2, a4]),
-        ([11, 15, 7, 14], [a3, a2, a3, a2])
+        ([11, 15, 7, 14], [a3, a2, a3, a2]),
+        ([19, 26, 17, 8], [c, a4, c, a4]),
+        ([18, 6, 16, 22], [c, a4, c, a4], True),
+        ([21, 27, 19, 10], [c, b, c, b]),
+        ([20, 9, 18, 24], [c, b, c, b], True),
+        ([7, 17, 23, 16], [a3, c, a3, c]),
+        ([25, 21, 2, 1, 20], [2*a3-1, c, a3, a3, c], [3])
+
     ]
 
     if pixelInfo is not None:
@@ -602,7 +613,11 @@ def createTrasnfiniteParameters(numberElements, pixelInfo=None):
 def createTransfiniteSurfaces(parameters):
     for param in parameters:
         if len(param) == 3:
-            createTransfiniteSurface(param[0], param[1], ignorePoint=param[2])
+            if isinstance(param[2], bool):
+                createTransfiniteSurface(param[0], param[1], reverse=param[2])      
+            else:
+                createTransfiniteSurface(param[0], param[1], ignorePoint=param[2])
+
         else:
             createTransfiniteSurface(param[0], param[1])
 
@@ -618,15 +633,26 @@ def renumberElements():
 
 
 def setSurfaceColors():
-    surfaces = gmsh.model.getEntities(2)
-    for surface in surfaces:
-        gmsh.model.setColor([surface], 64, 104, 177)
-    gmsh.model.setColor([(2, 1)], 206, 166, 104)
+
+    physicalGroups = gmsh.model.getPhysicalGroups(2)
+    colors = ([206, 166, 104], [64, 104, 177],[240, 100, 100])
+    for i, physicalSurface in enumerate(physicalGroups):
+        dim = physicalSurface[0]
+        tag = physicalSurface[1]
+        r = colors[i][0]
+        g = colors[i][1]
+        b = colors[i][2]
+        surfaces = gmsh.model.getEntitiesForPhysicalGroup(dim,tag)
+
+        for surface in surfaces:
+            gmsh.model.setColor([(2, surface)], r, g, b)
 
 
 def addPhysicalGroups():
     gmsh.model.addPhysicalGroup(2, [1], -1, "Hueso")
-    gmsh.model.addPhysicalGroup(2, [2, 3, 4, 5], -1, "Cartilago")
+    gmsh.model.addPhysicalGroup(2, range(2,6), -1, "Cartilago")
+    gmsh.model.addPhysicalGroup(2, range(6,12), -1, "Capsula")
+    gmsh.model.addPhysicalGroup(1, range(22,28), -1, "contorno0")
     gmsh.model.addPhysicalGroup(1, [1, 2], -1, "contorno1")
     gmsh.model.addPhysicalGroup(1, [6, 7, 8], -1, "contorno2")
     gmsh.model.addPhysicalGroup(1, [3, 4, 5], -1, "contorno3")
@@ -658,9 +684,7 @@ def processSketchNurbs(local_sketch, boneConfig):
 
     curvesMesh0 = mergeContainers(curves2a, curves2b)
     curvesMesh0 = mergeContainers(curvesMesh0, curves1, selectCurves=[0, 2])
-    curvesMesh0 = mergeContainers(curvesMesh0, curves0, selectCurves=[2, 3, 4, 5, 6, 7,
-                                                                      9, 10, 11, 12, 13, 14,
-                                                                      15, 16, 17, 18, 19, 20])
+    curvesMesh0 = mergeContainers(curvesMesh0, curves0, selectCurves=[i for i in range(2, 21) if i != 8])
     curvesArea = mergeContainers(curves1, curves0, selectCurves=[1, 7])
 
     # curvesMesh0[13] is the curve to divide and delete
@@ -671,10 +695,7 @@ def processSketchNurbs(local_sketch, boneConfig):
 
     curvesMesh0 = mergeContainers(curvesBottom,
                                   curvesMesh0,
-                                  selectCurves=[0, 1, 2, 3, 4, 5, 6,
-                                                7, 8, 9, 10, 11, 12,
-                                                14, 15, 16, 17, 18, 19,
-                                                20, 21, 22, 23, 24, 25])
+                                  selectCurves=[i for i in range(0, 26) if i != 13])
 
     curvesLength = splitSymmetric(curves0[0], 5/16)
 
@@ -685,9 +706,6 @@ def processSketchNurbs(local_sketch, boneConfig):
     curvesAdvance0.add(curves0[8])
 
     curvesAdvance1 = splitTwice(curves0[0], borderPoints(curves0[8]))
-    
-    print("Border points:")
-    print(borderPoints(curves0[1]))
     curveAdvance2 = splitOnce(curvesAdvance1[0], borderPoints(curves0[1])[0])[1]
     curveAdvance3 = splitOnce(curvesAdvance1[2], borderPoints(curves0[1])[1])[0]
 
@@ -714,9 +732,7 @@ def processSketchNurbs(local_sketch, boneConfig):
 
     i = 1
     for key, (flag, container) in render_flags.items():
-        print(f"Flag: {flag}, Container: {key}")
         if flag:
-            print(f"Rendering {i}: {key}")
             drawContainer(container)
             plt.title(f"Container: {key}")
             plt.show()

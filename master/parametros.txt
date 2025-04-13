@@ -3,7 +3,7 @@ kOI={kOI}
 NUMNODE={numNode}, NELEMS={nElems}, dim=2, nnod=4
 a2e={a2}, a3e={a3}, a4e={a4}, be0={b}
 nLoads={nLoads}, nResNod=7, nResElem=17
-numProps = 2, numMats = 4
+numProps = 2, numMats = 5
 maxNElementLoads={maxNElementLoads}
 axi=0, tipo_def=2
 filasContorno1={filasContorno1}

@@ -4,19 +4,19 @@
             "radius_x": {
                 "min_value": 1.1,
                 "max_value": 2.0,
-                "default": 1.65,
+                "default": 1.4,
                 "short_name": "rx"
             },
             "radius_y": {
                 "min_value": 1.1,
                 "max_value": 2.0,
-                "default": 1.2,
+                "default": 1.5,
                 "short_name": "ry"
             },
             "head_angle": {
                 "min_value": -20.0,
                 "max_value": 20.0,
-                "default": -15.0,
+                "default": 25.0,
                 "short_name": "ha"
             },
             "bone_width": {
@@ -35,13 +35,13 @@
                 "type": "double",
                 "min_value": 2.5,
                 "max_value": 2.0,
-                "default": 2.0,
+                "default": 2.5,
                 "short_name": "ct"
             },
             "curve_angle": {
                 "min_value": -15.0,
                 "max_value": 15.0,
-                "default": 9.0,
+                "default": 0.0,
                 "short_name": "ca"
             },
             "total_advance": {
@@ -80,14 +80,14 @@
         "mesh_vars": {
             "number_elements": {
                 "min_value": 20,
-                "default": 10,
+                "default": 20,
                 "short_name": "ne"
             }
         },
         "time_vars":{
             "number_steps": {
                 "min_value": 1,
-                "default": 3,
+                "default": 10,
                 "short_name": "ns"
             }
         },
@@ -99,15 +99,15 @@
                 "short_name": "koi"
             },
             "OI_threshold": {
-                "min_value": 0.6,
-                "max_value": 0.7,
+                "min_value": 0.75,
+                "max_value": 0.85,
                 "default": 0.7,
                 "short_name": "oit"
             },
             "stdWeight": {
                 "min_value": 0.0,
                 "max_value": 2.0,
-                "default": 1.5,
+                "default": 1.25,
                 "short_name": "sw"
             }
         },
@@ -134,7 +134,7 @@
     },
     "boneConfig":{
         "runFltk": {
-        "default": true,
+        "default": false,
         "help": "Run gmsh with the generated meshes if specified."
         },
         "showLoad": {
@@ -164,10 +164,6 @@
         "saveMsh":{
         "default": true,
         "help": "Save the mesh files if specified."
-        },
-        "capsule": {
-        "default": false,
-        "help": "Use the capsule geometry if specified."
         },
         "inputPath": {
         "default": "C:\\Users\\crist\\git\\abaqusFortran\\results",

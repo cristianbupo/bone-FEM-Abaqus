@@ -80,14 +80,14 @@
         "mesh_vars": {
             "number_elements": {
                 "min_value": 20,
-                "default": 10,
+                "default": 20,
                 "short_name": "ne"
             }
         },
         "time_vars":{
             "number_steps": {
                 "min_value": 1,
-                "default": 3,
+                "default": 10,
                 "short_name": "ns"
             }
         },
@@ -134,7 +134,7 @@
     },
     "boneConfig":{
         "runFltk": {
-        "default": true,
+        "default": false,
         "help": "Run gmsh with the generated meshes if specified."
         },
         "showLoad": {
@@ -164,10 +164,6 @@
         "saveMsh":{
         "default": true,
         "help": "Save the mesh files if specified."
-        },
-        "capsule": {
-        "default": false,
-        "help": "Use the capsule geometry if specified."
         },
         "inputPath": {
         "default": "C:\\Users\\crist\\git\\abaqusFortran\\results",

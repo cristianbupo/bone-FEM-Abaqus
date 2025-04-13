@@ -229,12 +229,13 @@ def writeBoundaries(physicalGroups, inputPath):
 
     with open(contornoPath, "w") as f:
         for dim, tag in physicalGroups:
-            name = gmsh.model.getPhysicalName(dim, tag)
-            nodeTags = gmsh.model.mesh.getNodesForPhysicalGroup(dim, tag)[0]
-            f.write("*NSET,NSET="+name+"\n")
-            writeLines(nodeTags, f)
+            if dim < 3:
+                name = gmsh.model.getPhysicalName(dim, tag)
+                nodeTags = gmsh.model.mesh.getNodesForPhysicalGroup(dim, tag)[0]
+                f.write("*NSET,NSET="+name+"\n")
+                writeLines(nodeTags, f)
 
-            lines.append(len(nodeTags))
+                lines.append(len(nodeTags))
     
     return lines
 
