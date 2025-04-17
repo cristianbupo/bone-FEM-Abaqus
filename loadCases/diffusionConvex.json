@@ -159,6 +159,10 @@
         "default": true,
         "help": "Save the mesh files if specified."
         },
+        "capsule": {
+        "default": false,
+        "help": "Use the capsule geometry if specified."
+        },
         "inputPath": {
         "default": "C:\\Users\\crist\\git\\abaqusFortran\\results",
         "help": "The path to write the input files"

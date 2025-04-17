@@ -130,6 +130,14 @@ def differentPoints(curveA1, curveA2, curveB, curveC):
     return curves
 
 
+def extractCurves(container, selectCurves=None):
+    curves = multi.CurveContainer()
+    for i, curve in enumerate(container):
+        if i in selectCurves:
+            curves.add(curve)
+    return curves
+
+
 def mergeContainers(container1, container2, selectCurves=None):
     if selectCurves is not None:
         for i in selectCurves:
@@ -191,15 +199,15 @@ def container2gmsh(bone, boneConfig, curvesMesh, curvesArea):
     gmsh.model.occ.remove(gmsh.model.occ.getEntities(0), True)
 
     createTransfiniteSurfaces(parameters)
+    
+    addPhysicalGroups(boneConfig)
 
     gmsh.model.mesh.generate(2)
 
     gmsh.model.mesh.renumberNodes()
     renumberElements()
-    addPhysicalGroups()
     setSurfaceColors()
     
-
     # Write mesh files
 
     inputPath = boneConfig.inputPath
@@ -648,11 +656,22 @@ def setSurfaceColors():
             gmsh.model.setColor([(2, surface)], r, g, b)
 
 
-def addPhysicalGroups():
+def addPhysicalGroups(boneConfig):
     gmsh.model.addPhysicalGroup(2, [1], -1, "Hueso")
     gmsh.model.addPhysicalGroup(2, range(2,6), -1, "Cartilago")
-    gmsh.model.addPhysicalGroup(2, range(6,12), -1, "Capsula")
-    gmsh.model.addPhysicalGroup(1, range(22,28), -1, "contorno0")
+
+    r1 = range(6, 12)
+    r2 = range(22,28)
+
+    if boneConfig.capsule:
+        gmsh.model.addPhysicalGroup(2, r1, -1, "Capsula")
+        gmsh.model.addPhysicalGroup(1, r2, -1, "contorno0")
+    else:
+        gmsh.model.removeEntities([(2, i) for i in r1])
+        gmsh.model.removeEntities([(1, i) for i in r2])
+        gmsh.model.removeEntities([(1, i) for i in range(16,22)])
+        gmsh.model.removeEntities([(0, i) for i in range(45,51)])
+
     gmsh.model.addPhysicalGroup(1, [1, 2], -1, "contorno1")
     gmsh.model.addPhysicalGroup(1, [6, 7, 8], -1, "contorno2")
     gmsh.model.addPhysicalGroup(1, [3, 4, 5], -1, "contorno3")

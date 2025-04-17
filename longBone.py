@@ -157,7 +157,7 @@ def copyAnalysisFiles():
     # Define the source files and their destination filenames
     jobName = f"analisis{bone.simulation_vars.case_string}"
     files_to_copy = {
-        # "master/run.f90": "run.f90",
+        #"master/run.bat": jobName + ".bat",
         "master/analisis.inp": jobName + ".inp",
         "master/debug.bat": jobName + "Debug.bat",
         "master/run.ps1":  "run.ps1",
@@ -178,21 +178,31 @@ def copyAnalysisFiles():
                 
         shutil.copy(src_path, dest_path)
 
-    # Create the jobName.bat file with the specified content
-    master_bat = os.path.join('master','run.bat')
+    formatFile(
+        os.path.join('master','condicionesContorno.inp'),
+        os.path.join(boneConfig.inputPath, 'condicionesContorno.inp'),
+        '**'
+    )
 
-    with open(master_bat, 'r') as master_bat_file:
-        text = master_bat_file.read()
-    
-    text = text.format(jobName=jobName)
-
-    bat_file_path = os.path.join(inputPath, jobName + ".bat")
-
-    with open(bat_file_path, 'w') as bat_file:
-        bat_file.write(text)
+    formatFile(
+        os.path.join('master','run.bat'),
+        os.path.join(boneConfig.inputPath, jobName + ".bat"),
+        jobName
+    )
 
     with open (os.path.join(boneConfig.inputPath,'runCommands.txt'), 'a') as file:
         file.write(f"{inputPath},{jobName}\n")
+
+
+def formatFile(inputFile, outputFile, fillText):
+    with open(inputFile, 'r') as f:
+        text = f.read()
+
+    text = text.format(fillText)
+
+    with open(outputFile, 'w') as g:
+        g.write(text)
+
 
 
 def setupSimulations():
