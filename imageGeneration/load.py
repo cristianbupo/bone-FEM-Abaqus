@@ -1,12 +1,12 @@
 import sys
-sys.path.append('/home/cristian/git/bone-FEM')
+sys.path.append('../bone-FEM-Abaqus')
 
-from pathUtils import set_freecad_paths
-set_freecad_paths()
+import FreeCADPath
 import sys
 import FreeCAD as App
-import sketchProcessing as sp
-import longbone as lb
+import geomdl2gmsh as g2g
+import FreeCAD2gmsh as f2g
+import longBone as lb
 import gmsh
 import matplotlib.pyplot as plt
 import numpy as np
@@ -151,16 +151,18 @@ sketch = doc.getObject('Sketch')
 
 sketch = App.ActiveDocument.getObject('Sketch')
 
-bone, boneConfig = lb.getBoneData('loadCases/longbone.json')
+bone, _, boneConfig = lb.getBoneData('loadCases/longbone.json')
 
-curvesMesh, curvesArea, curves0 = sp.processSketchNurbs(sketch, boneConfig)
-# sp.drawContainer(curvesMesh)
-# sp.drawContainer(curvesArea, controlPol=True)
-# sp.drawContainer(curves0)
+curves0 = f2g.getBSplineGeom(sketch, 1000)
 
-curvesDraw = sp.extractCurves(curves0, [0, 1, 7])
+curvesMesh, _, _ = g2g.processSketchNurbs(sketch, boneConfig)
+# g2g.drawContainer(curvesMesh)
+# g2g.drawContainer(curvesArea, controlPol=True)
+# g2g.drawContainer(curves0)
 
-fig, ax = sp.drawContainer(curvesDraw, controlPol=True)
+curvesDraw = g2g.extractCurves(curves0, [0, 1, 7])
+
+fig, ax = g2g.drawContainer(curvesDraw, controlPol=True)
 
 bigCurve = curvesDraw[0]
 bigCurveCtrl = bigCurve.ctrlpts
@@ -208,6 +210,6 @@ plt.show()
 #             format='svg', dpi=1200) #, transparent=True) Delete background on inkscape
 
 gmsh.initialize()
-sp.container2gmsh(bone, curvesMesh)
+g2g.container2gmsh(bone, curvesMesh)
 gmsh.finalize()
 

@@ -144,7 +144,7 @@ class Dimension:
             raise ValueError("Invalid dimension type. Use 'horizontal', 'vertical', or 'auto'.")
 
 
-fileName='CADs/longBone.FCStd'
+fileName='CADs/longBoneDraw.FCStd'
 doc = App.openDocument(fileName)
 sketch = doc.getObject('Sketch')
 
