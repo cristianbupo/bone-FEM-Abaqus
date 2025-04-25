@@ -216,7 +216,7 @@ if __name__ == "__main__":
 
     # Load dictionary from the JSON file
     with open('../../loadCases/longBone.json', 'r') as f:
-        variables = json.load(f)['geom_vars']
+        variables = json.load(f)['bone']['geom_vars']
 
     # Remove entries where "ignore" is true
     variables = {k: v for k, v in variables.items() if not v.get('ignore', False)}

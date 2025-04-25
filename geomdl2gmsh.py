@@ -430,7 +430,7 @@ def writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLo
     nLoads = bone.load_vars.number_loads
     nElems = len(all2DElements[1][0])
     numNode = len(tags)
-    formatedNList = f"{' ,'.join(map(str, listNElementLoads))}"
+    formattedNList = f"{' ,'.join(map(str, listNElementLoads))}"
 
     a2, a3, a4, b, c = meshLineElements(bone.mesh_vars.number_elements)
 
@@ -466,7 +466,7 @@ def writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLo
     }
 
     with open(os.path.join(boneConfig.inputPath,'nFilasCargas.txt'), "w") as f:
-        f.write(formatedNList)
+        f.write(formattedNList)
 
     writeOnFile(originFile, destinationFile, content)
 

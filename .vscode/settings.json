@@ -13,8 +13,8 @@
     "cSpell.ignorePaths": [
         "${workspaceFolder:mainThesisDocument}/thesisCristianBustamante.tex",
         "${workspaceFolder:mainThesisDocument}/.vscode/settings.json",
-        "${workspaceFolder:mainThesisDocument}/**/*.py",  // Ignore all Python files
-        "${workspaceFolder:mainThesisDocument}/**/*.for"  // Ignore all Fortran files
+        "*.py",  // Ignore all Python files
+        "*.for"  // Ignore all Fortran files
     ],
     "cSpell.ignoreWords": [
         "labelfont",
