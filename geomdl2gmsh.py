@@ -183,6 +183,7 @@ def pixelateBorder(entity):
 def container2gmsh(bone, boneConfig, curvesMesh, curvesArea):
 
     # Main mesh
+    gmsh.model.add("Main model")
 
     numberElements = bone.mesh_vars.number_elements
 
@@ -279,14 +280,28 @@ def container2gmsh(bone, boneConfig, curvesMesh, curvesArea):
     if boneConfig.saveMsh:
         gmsh.write(os.path.join(inputPath,"malla.msh"))
 
+    return all2DElements, gmsh.model.mesh.getNodes()
+
 
 def container2advanceMesh(bone, boneConfig, curvesAdvance):
-    numberElements = bone.mesh_vars.number_elements
+    # numberElements = bone.mesh_vars.number_elements
 
-    a2, a3, _, _, _= meshLineElements(numberElements)
+    # a2, a3, _, _, _= meshLineElements(numberElements)
 
-    horizontalElements = a2 + a3 + a2 - 2
-    verticalElements = int(np.round(bone.geom_vars.total_advance // 0.1)) # each element is approximately 0.1 mm
+    gmsh.model.add("Secondary model")
+
+    plate_1 = bone.geom_vars.plate_1
+    plate_2 = bone.geom_vars.plate_2
+    cart_thick = bone.geom_vars.cart_thick
+
+    hElems = 9
+    cutVal = 0.025
+    vElems1 = int(np.round(plate_1 // cutVal)) # each element is approximately at cutVal
+    h = cart_thick - plate_1 - plate_2
+    vElems2 = int(np.round(h // cutVal)) # each element is approximately at cutVal
+    
+    print((plate_1, plate_2, cart_thick, h))
+
 
     pointsSet = getUniqueControlPoints(curvesAdvance)
     pointTags = addPointsToModel(pointsSet)
@@ -296,18 +311,26 @@ def container2advanceMesh(bone, boneConfig, curvesAdvance):
     setGmshOptions()
 
     parameters = [
-        ([1, 2, 3, 4], [horizontalElements, verticalElements, horizontalElements, verticalElements]),
+        ([2, 3, 4, 1], [vElems1, hElems, vElems1, hElems]),
+        ([5, 7, 6, 3], [vElems2, hElems, vElems2, hElems])
     ]
 
     for param in parameters:
         createTransfiniteLine(param[0], param[1])
 
+    gmsh.model.occ.remove(gmsh.model.occ.getEntities(0), True)
+
     createTransfiniteSurfaces(parameters)
 
-    gmsh.model.mesh.reverse([(2,7), (2,9)])
-
     gmsh.model.mesh.generate(2)
+
+    surfaces=gmsh.model.getEntities(2)
+    for surface in surfaces:
+        gmsh.model.mesh.reverse([surface])
+
     
+    gmsh.model.mesh.renumberNodes()
+    renumberElements()
 
     if boneConfig.runFltk:
         gmsh.fltk.run()
@@ -324,6 +347,8 @@ def container2advanceMesh(bone, boneConfig, curvesAdvance):
     f2g.write_vtk(tags, coords, allElements, inputPath, "mallaAdvance.vtu")
     if boneConfig.saveMsh:
         gmsh.write(os.path.join(inputPath,"mallaAvance.msh"))
+
+    return (gmsh.model.mesh.getElements(2), gmsh.model.mesh.getNodes())
 
 
 def loadVectors(bone, loadCurve):
@@ -479,7 +504,7 @@ def createPVDbefore(srcPattern, destFile, numCombinations, numDigits, shift=0):
     vtpFiles = []
     # Find all .vtp files matching the source pattern
     for i in range(numCombinations):
-        vtpFile = srcPattern.replace('*', f"{i+shift:0{numDigits}d}")
+        vtpFile = srcPattern.replace('*', f"{i:0{numDigits}d}")
         vtpFiles.append(vtpFile)
 
     # Create the root element
@@ -506,7 +531,7 @@ def createVTMbefore(srcPattern, destFile, numCombinations, numDigits, shift = 0)
     vtpFiles = []
     # Find all .vtp files matching the source pattern
     for i in range(numCombinations):
-        vtpFile = srcPattern.replace('*', f"{i+shift:0{numDigits}d}")
+        vtpFile = srcPattern.replace('*', f"{i:0{numDigits}d}")
         vtpFiles.append(vtpFile)
 
     # Create the root element
@@ -689,6 +714,12 @@ def splitSymmetric(curve, t):
     return curves
 
 
+def divideExternalByLevel(externalCurve, inferiorCutCurve, superiorCutCurve):
+    con1 = splitTwice(externalCurve, borderPoints(superiorCutCurve))
+    curve1 = splitOnce(con1[0], borderPoints(inferiorCutCurve)[0])[1]
+    curve2 = splitOnce(con1[2], borderPoints(inferiorCutCurve)[1])[0]
+    return curve1, curve2
+
 def processSketchNurbs(local_sketch, boneConfig):
     renderRaw = boneConfig.renderRaw
     renderArea = boneConfig.renderArea
@@ -720,25 +751,17 @@ def processSketchNurbs(local_sketch, boneConfig):
 
     # Advance mesh
 
-    curvesAdvance0 = multi.CurveContainer()
-    curvesAdvance0.add(curves0[1])
-    curvesAdvance0.add(curves0[8])
-
-    curvesAdvance1 = splitTwice(curves0[0], borderPoints(curves0[8]))
-    curveAdvance2 = splitOnce(curvesAdvance1[0], borderPoints(curves0[1])[0])[1]
-    curveAdvance3 = splitOnce(curvesAdvance1[2], borderPoints(curves0[1])[1])[0]
-
-    curvesAdvance1.add(curveAdvance2)
-    curvesAdvance1.add(curveAdvance3)
-    # curvesAdvance = mergeContainers(curvesAdvance0, curvesAdvance1)
-    # curvesAdvance.add(curveAdvance2)
+    curveAdvance1, curveAdvance2 = divideExternalByLevel(curves0[0], curves0[1], curves0[8])
+    curveAdvance3, curveAdvance4= divideExternalByLevel(curves0[0], curves0[8], curves0[21])
 
     curvesAdvance = multi.CurveContainer()
-    curvesAdvance.add(curvesAdvance0[0])
-    curvesAdvance.add(curvesAdvance1[4])
-    curvesAdvance.add(curvesAdvance0[1])
-    curvesAdvance.add(curvesAdvance1[3])
-
+    curvesAdvance.add(curves0[1])
+    curvesAdvance.add(curveAdvance1)
+    curvesAdvance.add(curves0[8])
+    curvesAdvance.add(curveAdvance2)
+    curvesAdvance.add(curveAdvance3)
+    curvesAdvance.add(curveAdvance4)
+    curvesAdvance.add(curves0[21])
 
     render_flags = {
         'renderRaw': (renderRaw, curves0),

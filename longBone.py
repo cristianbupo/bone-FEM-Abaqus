@@ -103,7 +103,7 @@ def clear_folder(folder):
                 print(f'Failed to delete {item_path}. Reason: {e}')
 
 
-def modifySketch():
+def modifySketch(defaultGeometry=False):
 
     # Modify sketch
     # Create and write mesh
@@ -117,17 +117,25 @@ def modifySketch():
     doc = App.openDocument(fileName)
     sketch = doc.getObject('Sketch')
 
-    for key, value in bone.geom_vars:
-        min_value = getattr(boneLimits.geom_vars, key).min_value
-        max_value = getattr(boneLimits.geom_vars, key).max_value
-        setConstraintValue(sketch, key, value, min_value, max_value)
-        current_value = sketch.getDatum(key)
+    print(defaultGeometry)
+    if defaultGeometry:
+        for key, value in bone.geom_vars:
+            current_value = sketch.getDatum(key).Value
+            setattr(bone.geom_vars, key, current_value)
 
-        if current_value != value:
-            print(f"Value for {key} was not set correctly. Expected {value}, "
-                  f"but got {current_value}.")
-        else:
-            print(f"Value for {key} was set correctly: {value}")
+            print(f"Value for {key} was set to {current_value}")
+    else:
+        for key, value in bone.geom_vars:
+            min_value = getattr(boneLimits.geom_vars, key).min_value
+            max_value = getattr(boneLimits.geom_vars, key).max_value
+            setConstraintValue(sketch, key, value, min_value, max_value)
+            current_value = sketch.getDatum(key)
+
+            if current_value != value:
+                print(f"Value for {key} was not set correctly. Expected {value}, "
+                    f"but got {current_value}.")
+            else:
+                print(f"Value for {key} was set correctly: {value}")
 
     # Save CAD file
     doc.saveAs(boneConfig.inputPath + '/longBone.FCStd')
@@ -135,16 +143,123 @@ def modifySketch():
     curvesMesh, curvesArea, curvesAdvance = g2g.processSketchNurbs(sketch, boneConfig)
 
     gmsh.initialize()
-    g2g.container2gmsh(bone, boneConfig, curvesMesh, curvesArea)
-    # gmsh.write(boneConfig.inputPath + '/longBone.msh')
-    gmsh.finalize()
+    elem1, nod1 = g2g.container2gmsh(bone, boneConfig, curvesMesh, curvesArea)
+    gmsh.write(boneConfig.inputPath + '/longBone.msh')
 
-    gmsh.initialize()
-    # g2g.container2advanceMesh(bone, boneConfig, curvesAdvance)
-    # gmsh.write(boneConfig.inputPath + '/advanceMesh.msh')
+    elem2, nod2 = g2g.container2advanceMesh(bone, boneConfig, curvesAdvance)
+    gmsh.write(boneConfig.inputPath + '/advanceMesh.msh')
+
+    intersectMeshes(bone, boneConfig, elem1, nod1, elem2, nod2)
+
     gmsh.finalize()
 
     return curvesArea
+
+
+def intersectMeshes(bone, boneConfig, elem1, nod1, elem2, nod2):
+
+    # n_e = bone.mesh_vars.number_elements
+    # a2, a3, _, _, _ = g2g.meshLineElements(n_e)
+    
+    # elemType1 = elem1[0][0]
+    # elemTags1 = elem1[1][0]
+    # elemCon1 = elem1[2][0]
+    # nodeTags1 = nod1[0]
+    # nodeCoords1 = nod1[1]
+
+    # elemType2 = elem2[0][0]
+    # elemTags2 = elem2[1][0]
+    # elemCon2 = elem2[2][0]
+    # nodeTags2 = nod2[0]
+    # nodeCoords2 = nod2[1]
+
+    # Create separate views for node and element data
+    node_view_tag = gmsh.view.add("Node_Data")
+    gmsh.view.addModelData(node_view_tag, 0, "Secondary model", "NodeData", nod2[0], [[tag] for tag in nod2[0]])
+
+    element_view_tag = gmsh.view.add("Element_Data")
+    gmsh.view.addModelData(element_view_tag, 0, "Secondary model", "ElementData", elem2[1][0], [[tag] for tag in elem2[1][0]])
+
+    centroids = elementsCentroids(elem1, nod1)
+
+    centroidsx = [[centroid[0]] for centroid in centroids]
+    centroidsy = [[centroid[1]] for centroid in centroids]
+
+    centroids_x_view_tag = gmsh.view.add("Centroids X")
+    gmsh.view.addModelData(centroids_x_view_tag, 0, "Main model", "ElementData", elem1[1][0], centroidsx)
+
+    centroids_y_view_tag = gmsh.view.add("Centroids Y")
+    gmsh.view.addModelData(centroids_y_view_tag, 0, "Main model", "ElementData", elem1[1][0], centroidsy)
+
+    output_file = boneConfig.inputPath + "/Combined_Data.pos"
+    gmsh.view.write(node_view_tag, output_file)
+    gmsh.view.write(element_view_tag, output_file, append=True)
+    gmsh.view.write(centroids_x_view_tag, output_file, append=True)
+    gmsh.view.write(centroids_y_view_tag, output_file, append=True)
+    
+
+def elementsCentroids(elem, nod):
+    """
+    Calculate the centroids of the elements.
+    For quadrilateral elements, the centroid is calculated using the intersection
+    of the diagonals formed by the centroids of the triangles derived from the quad.
+    """
+    elemType = elem[0][0]
+    elemTags = elem[1][0]
+    elemCon = elem[2][0]
+    nodeCoords = nod[1]
+
+    centroids = []
+
+    for i in range(len(elemTags)):
+        start = (elemType + 1) * i
+        end = start + elemType + 1
+        nodes = elemCon[start:end]
+        coords = [nodeCoords[int(3 * (node - 1)):int(3 * (node - 1) + 3)] for node in nodes]
+
+        # Step 1: Divide the quad into 4 triangles
+        triangles = [
+            [coords[0], coords[1], coords[2]],  # Triangle 1
+            [coords[0], coords[3], coords[2]],  # Triangle 2
+            [coords[1], coords[2], coords[3]],  # Triangle 3
+            [coords[0], coords[1], coords[3]],  # Triangle 4
+        ]
+
+        # Step 2: Calculate centroids of the triangles
+        triangle_centroids = []
+        for tri in triangles:
+            cx = sum([point[0] for point in tri]) / 3
+            cy = sum([point[1] for point in tri]) / 3
+            triangle_centroids.append((cx, cy))
+
+        # Step 3: Calculate the intersection of the diagonals
+        centroid = calculateIntersection(
+            triangle_centroids[0], triangle_centroids[1],
+            triangle_centroids[2], triangle_centroids[3]
+        )
+
+        centroids.append(centroid)
+
+    return centroids
+
+
+def calculateIntersection(p1, p2, p3, p4):
+    """
+    Calculate the intersection point of two lines formed by points (p1, p2) and (p3, p4).
+    Returns the intersection point as (x, y) or None if the lines are parallel or coincident.
+    """
+    x1, y1 = p1
+    x2, y2 = p2
+    x3, y3 = p3
+    x4, y4 = p4
+
+    # Line intersection formula
+    denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
+
+    ix = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / denom
+    iy = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / denom
+
+    return (ix, iy)
 
 
 def copyAnalysisFiles():
@@ -243,6 +358,11 @@ if __name__ == '__main__':
         required=True,
         help="List of configuration file paths (e.g., 'diffusionConvexSteps.json diffusionConcaveSteps.json')"
     )
+    parser.add_argument(
+        '--defaultGeometry',
+        action='store_true',
+        help='If set, it uses the saved geometry'
+    )
 
     # parser.add_argument(
     #     '--capsule',
@@ -263,7 +383,7 @@ if __name__ == '__main__':
             pass
 
         # Run the simulation steps
-        modifySketch()  # Modify sketch, create and write mesh
+        modifySketch(defaultGeometry=args.defaultGeometry)  # Modify sketch, create and write mesh
         setupSimulations()  # Set up simulation parameters
 
     

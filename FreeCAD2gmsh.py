@@ -105,16 +105,21 @@ def appendEntity(e, m):
 # Writing INP
 
 
-def write_nodes(nodes, coords, inputPath, filename1, filename2):
+def write_nodes(nodes, coords, inputPath, filename1, filename2=None):
     numNode = len(nodes)
     nodosPath = os.path.join(inputPath, filename1)
-    restriccionesPath = os.path.join(inputPath, filename2)
-    with open(nodosPath, "w") as f, open(restriccionesPath, "w") as g:
+    
+    with open(nodosPath, "w") as f:
         f.write("*NODE,NSET=N2\n")
-        g.write("*MPC, user, mode=dof\n")
         for n in range(numNode):
             f.write(f"{nodes[n]}, {coords[3 * n]}, {coords[3 * n + 1]}\n")
-            g.write(f"{nodes[n]}, {nodes[n]}, {nodes[n]}\n")
+
+    if (filename2 != None):
+        restriccionesPath = os.path.join(inputPath, filename2)
+        with open(restriccionesPath, "w") as g:
+            g.write("*MPC, user, mode=dof\n")
+            for n in range(numNode):
+                g.write(f"{nodes[n]}, {nodes[n]}, {nodes[n]}\n")
 
 
 def write_connectivities(elemTypes, elemTags, elemNodeTags, inputPath, filename):
