@@ -10,7 +10,7 @@ import gmsh
 from sketchUtils import setConstraintValue
 import numpy as np
 import argparse
-
+from collections import defaultdict, deque
 
 # Get the existing system PATH
 env = os.environ.copy()
@@ -161,18 +161,12 @@ def intersectMeshes(bone, boneConfig, elem1, nod1, elem2, nod2):
     # n_e = bone.mesh_vars.number_elements
     # a2, a3, _, _, _ = g2g.meshLineElements(n_e)
     
-    # elemType1 = elem1[0][0]
-    # elemTags1 = elem1[1][0]
-    # elemCon1 = elem1[2][0]
-    # nodeTags1 = nod1[0]
-    # nodeCoords1 = nod1[1]
-
-    # elemType2 = elem2[0][0]
-    # elemTags2 = elem2[1][0]
-    # elemCon2 = elem2[2][0]
-    # nodeTags2 = nod2[0]
-    # nodeCoords2 = nod2[1]
-
+    # elemType = elem[0][0]
+    # elemTags = elem[1][0]
+    # elemCon = elem[2][0]
+    # nodeTags = nod[0]
+    # nodeCoords = nod[1]
+    
     # Create separate views for node and element data
     node_view_tag = gmsh.view.add("Node_Data")
     gmsh.view.addModelData(node_view_tag, 0, "Secondary model", "NodeData", nod2[0], [[tag] for tag in nod2[0]])
@@ -180,7 +174,9 @@ def intersectMeshes(bone, boneConfig, elem1, nod1, elem2, nod2):
     element_view_tag = gmsh.view.add("Element_Data")
     gmsh.view.addModelData(element_view_tag, 0, "Secondary model", "ElementData", elem2[1][0], [[tag] for tag in elem2[1][0]])
 
+    print("Started to calculate centroids")
     centroids = elementsCentroids(elem1, nod1)
+    print("Finished calculating centroids")
 
     centroidsx = [[centroid[0]] for centroid in centroids]
     centroidsy = [[centroid[1]] for centroid in centroids]
@@ -196,7 +192,347 @@ def intersectMeshes(bone, boneConfig, elem1, nod1, elem2, nod2):
     gmsh.view.write(element_view_tag, output_file, append=True)
     gmsh.view.write(centroids_x_view_tag, output_file, append=True)
     gmsh.view.write(centroids_y_view_tag, output_file, append=True)
+
     
+    node_matrix, elem_matrix = organizeMeshByConnectivity(elem2)
+    
+    # Save node matrix
+    np.savetxt(boneConfig.inputPath + "/nodes.csv", node_matrix, fmt='%d', delimiter=",", comments='')
+
+    # Save element matrix
+    np.savetxt(boneConfig.inputPath + "/elements.csv", elem_matrix, fmt='%d', delimiter=",", comments='')
+
+    midIndex = int(node_matrix.shape[1]-1)//2
+
+    # Verify the middle line is correct-----
+    middleLine, middleCoords = getMiddleLine(elem2, nod2)
+    middleLine.reverse()
+    middleCoords.reverse()
+
+    if  middleLine != node_matrix[:,midIndex].tolist():
+        print("Middle line is not correct")
+    else:
+        print("Middle line is correct")
+
+    referenceLine = node_matrix[:,midIndex].tolist()
+    referenceCoords = [nod2[1][3*(node-1)+1] for node in referenceLine]
+
+    maxLength = referenceCoords[0] - referenceCoords[-1]
+
+    plate_1 = bone.geom_vars.plate_1
+    plate_2 = bone.geom_vars.plate_2
+    cart_thick = bone.geom_vars.cart_thick
+    max_length = cart_thick - plate_2
+
+    zonesLimits = [0.0, 0.25, 0.35, 0.6, max_length]+referenceCoords[-1]
+    
+    closest_indexes = []
+    for limit in zonesLimits:
+        # Find the index of the closest value in referenceCoords
+        closest_index = np.argmin(np.abs(np.array(referenceCoords) - limit))
+        closest_indexes.append(closest_index)
+
+    print("Closest indexes:", closest_indexes)
+    
+    extracted_rows = node_matrix[closest_indexes, :]
+    
+    np.savetxt(boneConfig.inputPath + "/extracted_rows.csv", extracted_rows, fmt='%d', delimiter=",", comments='')
+
+    # Create a new view for extracted rows
+    extracted_rows_view_tag = gmsh.view.add("Extracted_Rows")
+
+    # Prepare the data for the extracted rows
+    extracted_rows_data = [[1 if node in extracted_rows else 0] for node in node_matrix.flatten()]
+
+    # Add the extracted rows data to the view
+    gmsh.view.addModelData(
+        extracted_rows_view_tag,
+        0,
+        "Secondary model",
+        "NodeData",
+        node_matrix.flatten(),
+        extracted_rows_data
+    )
+
+    # Write the extracted rows data to the output file
+    gmsh.view.write(extracted_rows_view_tag, output_file, append=True)
+
+    # centroids contains the centroids of the elements in elem1
+    # centroids = elementsCentroids(elem1, nod1)
+
+    # centroidsx = [[centroid[0]] for centroid in centroids]
+    # centroidsy = [[centroid[1]] for centroid in centroids]
+
+    print("Started to check if the elements are below the line")
+    is_below_list = [[] for _ in range(len(elem1[1][0]))]  # Initialize all elements as unmarked ([])
+
+    # Iterate over each row in extracted_rows
+    for row_index in range(len(extracted_rows)):
+        coordinatesRow = get_coordinates_from_extracted_row(row_index, extracted_rows, nod2)
+
+        # Mark elements below the current row
+        for i in range(len(elem1[1][0])):
+            if is_below_list[i] == []: # Mark only unmarked elements
+                centroid = centroids[i]
+                x = centroid[0]
+                y = centroid[1]
+
+                # Check if the point is below the line formed by the current row
+                is_below = is_point_below_line(x, y, coordinatesRow)
+
+                if is_below:  
+                    is_below_list[i] = row_index  # Mark with the current row index
+
+    # Mark remaining unmarked elements with the next number
+    next_number = len(extracted_rows)
+    for i in range(len(is_below_list)):
+        if is_below_list[i] == []:  # If the element is still unmarked
+            is_below_list[i] = next_number
+
+    # Create a Gmsh view for the marked elements
+    is_below_view_tag = gmsh.view.add("Is_Below_Line")
+    gmsh.view.addModelData(
+        is_below_view_tag,
+        0,
+        "Main model",
+        "ElementData",
+        elem1[1][0],
+        [[value] for value in is_below_list]
+    )
+
+    # Write the marked elements data to the output file
+    gmsh.view.write(is_below_view_tag, output_file, append=True)
+
+    tipoCartilagoPath = os.path.join(boneConfig.inputPath, 'tipoCartilago.inp')
+    with open(tipoCartilagoPath, "w") as g:
+        g.write('Element Tag, Cartilage\n')
+        for i in range(len(elem1[1][0])):
+            g.write(f'{elem1[1][0][i]}, {is_below_list[i]}\n')
+
+
+
+def get_coordinates_from_extracted_row(row_index, extracted_rows, nod):
+    """
+    Extract the coordinates of nodes from a specific row of the extracted_rows matrix.
+
+    Args:
+        row_index (int): The index of the row in the extracted_rows matrix.
+        extracted_rows (np.ndarray): A 2D array where each row contains node IDs.
+        nod (list): A list where nod[1] contains the flattened node coordinates.
+
+    Returns:
+        list: A list of tuples containing the coordinates (x, y, z) of the nodes in the specified row.
+    """
+    if row_index < 0 or row_index >= extracted_rows.shape[0]:
+        raise IndexError("Row index is out of bounds for the extracted_rows matrix.")
+
+    # Get the node IDs from the specified row
+    node_ids = extracted_rows[row_index]
+
+    # Retrieve the coordinates for each node ID
+    coordinates = []
+    for node_id in node_ids:
+        # Node IDs are 1-based, so adjust for 0-based indexing in the nod array
+        x = nod[1][3 * (node_id - 1)]
+        y = nod[1][3 * (node_id - 1) + 1]
+        z = nod[1][3 * (node_id - 1) + 2]
+        coordinates.append((x, y, z))
+
+    return coordinates
+
+
+def is_point_below_line(x, y, coordinatesRow):
+    """
+    Detect if a point (x, y) lies below the line created by a row of coordinatesRow.
+    If x is outside the range of the line, assume an infinite horizontal line from the nearest point.
+
+    Args:
+        x (float): x-coordinate of the point.
+        y (float): y-coordinate of the point.
+        coordinatesRow (np.ndarray): 2D array where each row represents a point (x, y).
+
+    Returns:
+        bool: True if the point lies below the line, False otherwise.
+    """
+    # Ensure coordinatesRow has at least two points to form a line
+    if len(coordinatesRow) < 2:
+        raise ValueError("coordinatesRow must contain at least two points to form a line.")
+
+    # Sort coordinatesRow by x-coordinate to ensure proper line formation
+    coordinatesRow = sorted(coordinatesRow, key=lambda point: point[0])
+    
+    # Iterate through consecutive points in coordinatesRow to find the segment containing x
+    for i in range(len(coordinatesRow) - 1):
+        x1, y1, _ = coordinatesRow[i]
+        x2, y2, _ = coordinatesRow[i + 1]
+
+        # Check if x lies between x1 and x2
+        if x1 <= x <= x2 or x2 <= x <= x1:
+            # Calculate the y-value on the line at x using linear interpolation
+            y_on_line = y1 + (y2 - y1) * (x - x1) / (x2 - x1)
+            return y < y_on_line  # True if the point is below the line
+
+    # If x is outside the range, assume an infinite horizontal line from the nearest point
+    if x < coordinatesRow[0][0]:  # Left of the first point
+        return y < coordinatesRow[0][1]
+    elif x > coordinatesRow[-1][0]:  # Right of the last point
+        return y < coordinatesRow[-1][1]
+
+    return False
+
+
+def findClosestIndexes(referenceCoords, zonesLimits):
+    closest_indexes = []
+    for limit in zonesLimits:
+        # Find the index of the closest value in referenceCoords
+        closest_index = np.argmin(np.abs(np.array(referenceCoords) - limit))
+        closest_indexes.append(closest_index)
+    return closest_indexes
+
+
+def getMiddleLine(elem, nod):
+    elemType = elem[0][0]
+    # elemTags = elem[1][0]
+    # elemCon = elem[2][0]
+    nodeTags = nod[0]
+    nodeCoords = nod[1]
+
+    middleLine = []
+    middleLineCoords = []
+    for i in range(len(nodeTags)):
+        if abs(nodeCoords[3*i]) < 1e-6:
+            middleLine.append(nodeTags[i])
+            middleLineCoords.append(nodeCoords[3*i+1])
+    pass
+    pass
+
+    # Sort nodeTags and nodeCoords according to nodeCoords
+    sorted_pairs = sorted(zip(middleLine, middleLineCoords), key=lambda x: x[1])  # Sort by nodeCoords
+    middleLine2, middleLineCoords2 = zip(*sorted_pairs)  # Unzip the sorted pairs back into separate lists
+
+    # Convert back to lists if needed
+    middleLine = list(middleLine2)
+    middleLineCoords = list(middleLineCoords2)
+    
+    return middleLine, middleLineCoords
+
+# ----------------------------------------------------------------------
+# elem  : gmsh "Elements" block, shaped (something, 1, 4) :
+#         elem[1][0]  – element tags
+#         elem[2][0]  – connectivity flattened (4 nodes per quad)
+# ----------------------------------------------------------------------
+def organizeMeshByConnectivity(elem):
+    # ------------------------------------------------------------------ #
+    # 1.  helpers                                                        #
+    # ------------------------------------------------------------------ #
+    elemTags = elem[1][0]                # (n_elem,)
+    elemCon  = elem[2][0]                # (4*n_elem,)
+
+    # element → [n1,n2,n3,n4]
+    elem2nodes = {tag: elemCon[i*4:(i+1)*4] for i, tag in enumerate(elemTags)}
+
+    # node → [e1,e2,…]   (needed to find neighbours)
+    node2elems = defaultdict(list)
+    for e, nds in elem2nodes.items():
+        for n in nds:
+            node2elems[n].append(e)
+
+    # neighbour list : two quads share **exactly one edge** (two nodes)
+    neigh = defaultdict(list)
+    for e, nds in elem2nodes.items():
+        for n in nds:
+            for m in node2elems[n]:
+                if m != e and len(set(nds) & set(elem2nodes[m])) == 2:
+                    neigh[e].append(m)
+
+    # ------------------------------------------------------------------ #
+    # 2.  breadth-first traversal – build sparse (i,j) ↦ elemTag map     #
+    # ------------------------------------------------------------------ #
+    elem_matrix_dict = {}
+    q        = deque([(min(elemTags), 0, 0)])   # start in lower-left quad
+    visited  = set()
+
+    while q:
+        e, i, j = q.popleft()
+        if e in visited:
+            continue
+        visited.add(e)
+        elem_matrix_dict[(i, j)] = e
+
+        n1, n2, n3, n4 = elem2nodes[e]
+
+        for m in neigh[e]:
+            if m in visited:
+                continue
+            shared = frozenset(elem2nodes[e]) & frozenset(elem2nodes[m])
+
+            if shared == frozenset({n1, n2}):      # bottom edge
+                q.append((m, i+1, j))
+            elif shared == frozenset({n2, n3}):    # right edge
+                q.append((m, i,   j+1))
+            elif shared == frozenset({n3, n4}):    # top edge
+                q.append((m, i-1, j))
+            elif shared == frozenset({n4, n1}):    # left edge
+                q.append((m, i,   j-1))
+
+    # dense element matrix ---------------------------------------------
+    rows = [ij[0] for ij in elem_matrix_dict]
+    cols = [ij[1] for ij in elem_matrix_dict]
+    rmin, rmax = min(rows), max(rows)
+    cmin, cmax = min(cols), max(cols)
+
+    elem_matrix = np.full((rmax-rmin+1, cmax-cmin+1), -1, dtype=int)
+    for (i, j), tag in elem_matrix_dict.items():
+        elem_matrix[i - rmin, j - cmin] = tag
+
+    # ------------------------------------------------------------------ #
+    # 3.  node matrix – first pass (may miss the very top boundary)      #
+    # ------------------------------------------------------------------ #
+    node_matrix = np.full((elem_matrix.shape[0]+1,
+                           elem_matrix.shape[1]+1), -1, dtype=int)
+
+    for i in range(elem_matrix.shape[0]):
+        for j in range(elem_matrix.shape[1]):
+            e = elem_matrix[i, j]
+            if e == -1:
+                continue
+            n1, n2, n3, n4 = elem2nodes[e]
+            node_matrix[i,   j]   = n1
+            node_matrix[i,   j+1] = n2
+            node_matrix[i+1, j+1] = n3
+            node_matrix[i+1, j]   = n4
+
+    # ------------------------------------------------------------------ #
+    # 4.  insert missing TOP boundary row                                #
+    # ------------------------------------------------------------------ #
+    boundary_nodes = {n for n, els in node2elems.items() if len(els) == 1}
+    have_top_row  = node_matrix[0, 0] in boundary_nodes
+
+    if not have_top_row:
+        top_nodes = []                            # will hold  (n_cols + 1) nodes
+        for j, e in enumerate(elem_matrix[0]):    # first element-row
+            n1, n2, n3, n4 = elem2nodes[e]
+            if j == 0:
+                top_nodes.append(n4)              # first corner
+            top_nodes.append(n3)                  # right corner of this quad
+
+        node_matrix = np.vstack([np.array(top_nodes, dtype=int),
+                                 node_matrix])    # add at the top
+
+    # ------------------------------------------------------------------ #
+    # 5.  drop duplicate rows (fixes “swapped last two rows”)            #
+    # ------------------------------------------------------------------ #
+    unique = []
+    seen   = set()
+    for r in node_matrix:
+        t = tuple(r)
+        if t not in seen:
+            unique.append(r)
+            seen.add(t)
+    node_matrix = np.vstack(unique)
+
+    return node_matrix, elem_matrix
+
 
 def elementsCentroids(elem, nod):
     """

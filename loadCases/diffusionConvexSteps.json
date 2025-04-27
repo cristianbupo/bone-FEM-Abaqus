@@ -53,7 +53,7 @@
             "plate_2": {
                 "min_value": 0.0,
                 "max_value": 2.0,
-                "default": 0.5,
+                "default": 0.2,
                 "short_name": "ta"
             }
         },

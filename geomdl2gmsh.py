@@ -294,7 +294,8 @@ def container2advanceMesh(bone, boneConfig, curvesAdvance):
     plate_2 = bone.geom_vars.plate_2
     cart_thick = bone.geom_vars.cart_thick
 
-    hElems = 9
+    halfHelems = 6
+    hElems = 2 * halfHelems + 1 
     cutVal = 0.025
     vElems1 = int(np.round(plate_1 // cutVal)) # each element is approximately at cutVal
     h = cart_thick - plate_1 - plate_2
@@ -348,7 +349,7 @@ def container2advanceMesh(bone, boneConfig, curvesAdvance):
     if boneConfig.saveMsh:
         gmsh.write(os.path.join(inputPath,"mallaAvance.msh"))
 
-    return (gmsh.model.mesh.getElements(2), gmsh.model.mesh.getNodes())
+    return gmsh.model.mesh.getElements(2), gmsh.model.mesh.getNodes()
 
 
 def loadVectors(bone, loadCurve):
