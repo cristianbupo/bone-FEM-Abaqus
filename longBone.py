@@ -642,7 +642,7 @@ def copyAnalysisFiles():
         "master/analisis.inp": jobName + ".inp",
         "master/debug.bat": jobName + "Debug.bat",
         "master/run.ps1":  "run.ps1",
-        "master/propiedades.txt": "propiedades.txt",
+        "master/propiedades.csv": "propiedades.csv",
         # "master/abaqus_v6.env": "abaqus_v6.env"
         "master/condicionesContorno.inp": "condicionesContorno.inp"
     }
