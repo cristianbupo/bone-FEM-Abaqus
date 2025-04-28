@@ -226,7 +226,7 @@ def container2gmsh(bone, boneConfig, curvesMesh, curvesArea):
     physicalGroups_2D = gmsh.model.getPhysicalGroups(2)
     physicalGroups = gmsh.model.getPhysicalGroups()
 
-    f2g.writeBody(physicalGroups_2D, inputPath)
+    # f2g.writeBody(physicalGroups_2D, inputPath)
     lines = f2g.writeBoundaries(physicalGroups, inputPath)
     all2DElements = gmsh.model.mesh.getElements(2)
 

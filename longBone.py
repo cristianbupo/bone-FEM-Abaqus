@@ -263,8 +263,11 @@ def intersectMeshes(bone, boneConfig, elem1, nod1, elem2, nod2):
     # centroidsx = [[centroid[0]] for centroid in centroids]
     # centroidsy = [[centroid[1]] for centroid in centroids]
 
-    print("Started to check if the elements are below the line")
-    is_below_list = [[] for _ in range(len(elem1[1][0]))]  # Initialize all elements as unmarked ([])
+    print("Started to check if the elements and nodes are below the line")
+
+    # Initialize lists for marking elements and nodes
+    is_below_list_elements = [[] for _ in range(len(elem1[1][0]))]  # For elements
+    is_below_list_nodes = [[] for _ in range(len(nod1[0]))]  # For nodes
 
     # Iterate over each row in extracted_rows
     for row_index in range(len(extracted_rows)):
@@ -272,44 +275,71 @@ def intersectMeshes(bone, boneConfig, elem1, nod1, elem2, nod2):
 
         # Mark elements below the current row
         for i in range(len(elem1[1][0])):
-            if is_below_list[i] == []: # Mark only unmarked elements
+            if is_below_list_elements[i] == []:  # Mark only unmarked elements
                 centroid = centroids[i]
                 x = centroid[0]
                 y = centroid[1]
 
-                # Check if the point is below the line formed by the current row
+                # Check if the element's centroid is below the line
                 is_below = is_point_below_line(x, y, coordinatesRow)
 
-                if is_below:  
-                    is_below_list[i] = row_index  # Mark with the current row index
+                if is_below:
+                    is_below_list_elements[i] = row_index  # Mark with the current row index
 
-    # Mark remaining unmarked elements with the next number
+                # Assign the element's nodes to the nodes list
+                element_nodes = elem1[2][0][4 * i:4 * (i + 1)]  # Get the 4 nodes of the element
+                for node in element_nodes:
+                    # if is_below_list_nodes[int(node) - 1] == []:  # Mark only unmarked nodes
+                    is_below_list_nodes[int(node) - 1] = row_index 
+    
+    # Mark remaining unmarked elements and nodes with the next number
     next_number = len(extracted_rows)
-    for i in range(len(is_below_list)):
-        if is_below_list[i] == []:  # If the element is still unmarked
-            is_below_list[i] = next_number
+    for i in range(len(is_below_list_elements)):
+        if is_below_list_elements[i] == []:  # If the element is still unmarked
+            is_below_list_elements[i] = next_number
+            element_nodes = elem1[2][0][4 * i:4 * (i + 1)]
+            for node in element_nodes:
+                is_below_list_nodes[int(node) - 1] = next_number
 
     # Create a Gmsh view for the marked elements
-    is_below_view_tag = gmsh.view.add("Is_Below_Line")
+    is_below_view_tag_elements = gmsh.view.add("Is_Below_Line_Elements")
     gmsh.view.addModelData(
-        is_below_view_tag,
+        is_below_view_tag_elements,
         0,
         "Main model",
         "ElementData",
         elem1[1][0],
-        [[value] for value in is_below_list]
+        [[value] for value in is_below_list_elements]
     )
 
-    # Write the marked elements data to the output file
-    gmsh.view.write(is_below_view_tag, output_file, append=True)
+    # Create a Gmsh view for the marked nodes
+    is_below_view_tag_nodes = gmsh.view.add("Is_Below_Line_Nodes")
+    gmsh.view.addModelData(
+        is_below_view_tag_nodes,
+        0,
+        "Main model",
+        "NodeData",
+        nod1[0],
+        [[value] for value in is_below_list_nodes]
+    )
 
-    tipoCartilagoPath = os.path.join(boneConfig.inputPath, 'tipoCartilago.inp')
-    with open(tipoCartilagoPath, "w") as g:
-        g.write('Element Tag, Cartilage\n')
+    # Write the marked elements and nodes data to the output file
+    gmsh.view.write(is_below_view_tag_elements, output_file, append=True)
+    gmsh.view.write(is_below_view_tag_nodes, output_file, append=True)
+
+    # Save the node markings to a file
+    tipoCartilagoNodesPath = os.path.join(boneConfig.inputPath, 'gruposFisicosN.txt')
+    with open(tipoCartilagoNodesPath, "w") as g:
+        g.write('Node Tag, Physical Group Tag\n')
+        for i in range(len(nod1[0])):
+            g.write(f'{nod1[0][i]}, {is_below_list_nodes[i]}\n')
+
+    # Save the element markings to a file
+    tipoCartilagoElementsPath = os.path.join(boneConfig.inputPath, 'gruposFisicos.txt')
+    with open(tipoCartilagoElementsPath, "w") as g:
+        g.write('Element Tag, Physical Group Tag\n')
         for i in range(len(elem1[1][0])):
-            g.write(f'{elem1[1][0][i]}, {is_below_list[i]}\n')
-
-
+            g.write(f'{elem1[1][0][i]}, {is_below_list_elements[i]}\n')
 
 def get_coordinates_from_extracted_row(row_index, extracted_rows, nod):
     """

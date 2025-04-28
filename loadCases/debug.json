@@ -77,7 +77,7 @@
                 "default": 6.85
             },
             "number_loads": {
-                "default": 5
+                "default": 1
             },
             "total_force": {
                 "default": 7.5
@@ -93,7 +93,7 @@
         "time_vars":{
             "number_steps": {
                 "min_value": 1,
-                "default": 3,
+                "default": 1,
                 "short_name": "ns"
             }
         },
