@@ -227,7 +227,7 @@ def container2gmsh(bone, boneConfig, curvesMesh, curvesArea):
     physicalGroups = gmsh.model.getPhysicalGroups()
 
     # f2g.writeBody(physicalGroups_2D, inputPath)
-    lines = f2g.writeBoundaries(physicalGroups, inputPath)
+    contourLines = f2g.writeBoundaries(physicalGroups, inputPath)
     all2DElements = gmsh.model.mesh.getElements(2)
 
     listNElementLoads =[]
@@ -256,6 +256,9 @@ def container2gmsh(bone, boneConfig, curvesMesh, curvesArea):
 
     h_vector, k_vector, r_vector = loadVectors(bone, loadCurve)
 
+    with open(os.path.join(inputPath, "carga.inp"), "a") as g:
+        g.write("\n")
+    
     listNElementLoads = []
 
     for i in range(number_loads):
@@ -264,11 +267,20 @@ def container2gmsh(bone, boneConfig, curvesMesh, curvesArea):
         k = k_vector[i]
         r = r_vector[i]
     
-        nElementLoads = f2g.writeLoads(boneConfig, h, k, r, "contorno2", all2DElements, i)
+        nElementLoads = f2g.writeLoads(boneConfig, h, k, r, "contorno4", all2DElements, i)
         listNElementLoads.append(nElementLoads)
 
+    formattedNList = "**"+f"{','.join(map(str, listNElementLoads))}"
 
-    writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLoads)
+    with open(os.path.join(inputPath, "carga.inp"), "r") as g:
+        lines = g.readlines()
+
+    lines[0] = formattedNList + "\n"
+    
+    with open(os.path.join(inputPath, "carga.inp"), "w") as g:
+        g.writelines(lines)
+
+    writeParameters(bone, boneConfig, tags, all2DElements, contourLines)
 
     f2g.findNWriteMeshAdjacencies(all2DElements, inputPath)
     
@@ -450,13 +462,13 @@ def writeOnFile(originFile, destinationFile, content):
         f.write(f_longBone_content.format(**content))
 
 
-def writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLoads):
+def writeParameters(bone, boneConfig, tags, all2DElements, lines):
     kOI = bone.oss_vars.kOI
 
     nLoads = bone.load_vars.number_loads
     nElems = len(all2DElements[1][0])
     numNode = len(tags)
-    formattedNList = f"{' ,'.join(map(str, listNElementLoads))}"
+    
 
     a2, a3, a4, b, c = meshLineElements(bone.mesh_vars.number_elements)
 
@@ -474,8 +486,6 @@ def writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLo
 
     content = {
         'stdWeight': bone.oss_vars.stdWeight,
-        'nLoads': nLoads,
-        'maxNElementLoads': max(listNElementLoads),
         'numNode': numNode,
         'nElems': nElems,
         'kOI': kOI,
@@ -490,9 +500,6 @@ def writeParameters(bone, boneConfig, tags, all2DElements, lines, listNElementLo
         'a4': a4-1,
         'b': b-1
     }
-
-    with open(os.path.join(boneConfig.inputPath,'nFilasCargas.txt'), "w") as f:
-        f.write(formattedNList)
 
     writeOnFile(originFile, destinationFile, content)
 
@@ -699,9 +706,9 @@ def addPhysicalGroups(boneConfig):
         gmsh.model.removeEntities([(0, i) for i in range(45,51)])
 
     gmsh.model.addPhysicalGroup(1, [1, 2], -1, "contorno1")
-    gmsh.model.addPhysicalGroup(1, [6, 7, 8], -1, "contorno2")
-    gmsh.model.addPhysicalGroup(1, [3, 4, 5], -1, "contorno3")
-    gmsh.model.addPhysicalGroup(1, [7], -1, "contorno4")
+    gmsh.model.addPhysicalGroup(1, [3, 4, 5], -1, "contorno2")
+    gmsh.model.addPhysicalGroup(1, [7], -1, "contorno3")
+    gmsh.model.addPhysicalGroup(1, [6, 7, 8], -1, "contorno4")
     gmsh.model.addPhysicalGroup(0, [2], -1, "pin")
 
 

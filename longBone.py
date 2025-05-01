@@ -224,7 +224,7 @@ def intersectMeshes(bone, boneConfig, elem1, nod1, elem2, nod2):
     cart_thick = bone.geom_vars.cart_thick
     max_length = cart_thick - plate_2
 
-    zonesLimits = [0.0, 0.25, 0.35, 0.6, max_length]+referenceCoords[-1]
+    zonesLimits = [0.0, 0.3, 0.45, 0.75, max_length]+referenceCoords[-1]
     
     closest_indexes = []
     for limit in zonesLimits:
@@ -666,10 +666,16 @@ def copyAnalysisFiles():
     )
 
     formatFile(
-        os.path.join('master','run.bat'),
-        os.path.join(boneConfig.inputPath, jobName + ".bat"),
+        os.path.join('master','runMaster.bat'),
+        os.path.join(boneConfig.inputPath, jobName + "Master.bat"),
         jobName
     )
+
+    # formatFile(
+    #     os.path.join('master','runSimple.bat'),
+    #     os.path.join(boneConfig.inputPath, jobName + "Simple.bat"),
+    #     jobName
+    # )
 
     with open (os.path.join(boneConfig.inputPath,'runCommands.txt'), 'a') as file:
         file.write(f"{inputPath},{jobName}\n")
