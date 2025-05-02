@@ -1,0 +1,12 @@
+stdWeight=0.0
+kOI=0.0
+NUMNODE=85, NELEMS=84, dim=1, nnod=2
+a2e=1, a3e=1, a4e=1, be0=1
+nLoads=1, nResNod=7, nResElem=17
+numProps = 9, numMats = 6
+maxNElementLoads=1
+axi=0, tipo_def=2
+filasContorno1=1
+filasContorno2=1
+velocidad = 0.0
+nContornos = 3

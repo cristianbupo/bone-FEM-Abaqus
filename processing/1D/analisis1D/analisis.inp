@@ -1,0 +1,25 @@
+*Heading
+** Job name: InputFileTemplate
+*Preprint, echo=NO, model=NO, history=NO, contact=NO
+************************************************************************
+** PARTS
+**
+*INCLUDE, INPUT=nodos.inp 
+**
+*MATERIAL, NAME=dummyMat
+*CONDUCTIVITY 
+1., 
+*DENSITY 
+1., 
+*SPECIFIC HEAT 
+1., 
+*USER ELEMENT,NODES=2,TYPE=U1,PROP=3,COORDINATES=1,VAR=16
+11,12,13
+*INCLUDE, INPUT=conectividades.inp 
+** *INCLUDE, INPUT=cuerpo.inp
+** Dummy material properties
+*UEL PROPERTY,ELSET=UEL
+0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+** *INCLUDE, INPUT=restriccionesMultiPunto.inp
+*INCLUDE, INPUT=contorno.inp
+*INCLUDE, INPUT=pasos.inp

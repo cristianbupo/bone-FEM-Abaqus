@@ -1,0 +1,16 @@
+** ----------------------------------------------------------------
+** STEPS
+*STEP, NAME=STEP-0
+** RESTART, WRITE, FREQ=0
+*HEATTRANSFER, END=PERIOD
+0.5,0.5,,,1.E-10 
+** BOUNDARY CONDITIONS
+*INCLUDE, INPUT=condicionesContorno.inp
+** OUTPUT REQUESTS
+*NODE PRINT,FREQ=1 
+NT,  
+*NODE FILE,FREQ=1 
+NT,  
+*OUTPUT,FIELD,FREQ=1 
+NT, 
+*ENDSTEP

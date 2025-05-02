@@ -1,0 +1,9 @@
+NUMNODE={numNode}, NELEMS={nElems}, dim=2, nnod=4
+nResNod=7, nResElem=17
+numProps = {numProps}, numMats = {numMats}
+axi=0, tipo_def=2
+stdWeight={stdWeight}
+kOI={kOI}
+ndofdiff={ndofdiff}
+
+

@@ -32,3 +32,27 @@ __pycache__/*
 *.dll
 *.so
 *.dylib
+
+# Ignore everything
+*
+
+# Do not ignore directories, so we can include specific files later
+!*/
+
+# Do not ignore .for, .bat, and .inp files
+!*.for
+!*.bat
+!*.ps1
+!*.bat
+!*.txt
+!*.inp
+!*.py
+!*.json
+!*.FCStd
+!*.xml
+!*.csv
+
+
+# Ignore local conec.for used during Abaqus runs
+master/conec.for
+temp
