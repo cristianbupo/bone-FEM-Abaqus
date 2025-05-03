@@ -143,20 +143,23 @@ def modifySketch(defaultGeometry=False):
     curvesMesh, curvesArea, curvesAdvance = g2g.processSketchNurbs(sketch, boneConfig)
 
     gmsh.initialize()
-    elem1, nod1 = g2g.container2gmsh(bone, boneConfig, curvesMesh, curvesArea)
+    elem1, nod1, adjacencyArray = g2g.container2gmsh(bone, boneConfig, curvesMesh)
+    g2g.writeContainer(bone, boneConfig, curvesArea, elem1, adjacencyArray)
+    
     gmsh.write(boneConfig.inputPath + '/longBone.msh')
 
     elem2, nod2 = g2g.container2advanceMesh(bone, boneConfig, curvesAdvance)
     gmsh.write(boneConfig.inputPath + '/advanceMesh.msh')
 
-    intersectMeshes(bone, boneConfig, elem1, nod1, elem2, nod2)
+    midTuple = intersectMeshes(bone, elem1, nod1, elem2, nod2, adjacencyArray)
+    writeIntersectionData(elem1, nod1, elem2, nod2, *midTuple)
 
     gmsh.finalize()
 
     return curvesArea
 
 
-def intersectMeshes(bone, boneConfig, elem1, nod1, elem2, nod2):
+def intersectMeshes(bone, elem1, nod1, elem2, nod2, adjacencyArray):
 
     # n_e = bone.mesh_vars.number_elements
     # a2, a3, _, _, _ = g2g.meshLineElements(n_e)
@@ -166,41 +169,16 @@ def intersectMeshes(bone, boneConfig, elem1, nod1, elem2, nod2):
     # elemCon = elem[2][0]
     # nodeTags = nod[0]
     # nodeCoords = nod[1]
-    
-    # Create separate views for node and element data
-    node_view_tag = gmsh.view.add("Node_Data")
-    gmsh.view.addModelData(node_view_tag, 0, "Secondary model", "NodeData", nod2[0], [[tag] for tag in nod2[0]])
-
-    element_view_tag = gmsh.view.add("Element_Data")
-    gmsh.view.addModelData(element_view_tag, 0, "Secondary model", "ElementData", elem2[1][0], [[tag] for tag in elem2[1][0]])
-
-    print("Started to calculate centroids")
-    centroids = elementsCentroids(elem1, nod1)
-    print("Finished calculating centroids")
-
-    centroidsx = [[centroid[0]] for centroid in centroids]
-    centroidsy = [[centroid[1]] for centroid in centroids]
-
-    centroids_x_view_tag = gmsh.view.add("Centroids X")
-    gmsh.view.addModelData(centroids_x_view_tag, 0, "Main model", "ElementData", elem1[1][0], centroidsx)
-
-    centroids_y_view_tag = gmsh.view.add("Centroids Y")
-    gmsh.view.addModelData(centroids_y_view_tag, 0, "Main model", "ElementData", elem1[1][0], centroidsy)
-
-    output_file = boneConfig.inputPath + "/Combined_Data.pos"
-    gmsh.view.write(node_view_tag, output_file)
-    gmsh.view.write(element_view_tag, output_file, append=True)
-    gmsh.view.write(centroids_x_view_tag, output_file, append=True)
-    gmsh.view.write(centroids_y_view_tag, output_file, append=True)
-
-    
-    node_matrix, elem_matrix = organizeMeshByConnectivity(elem2)
+ 
+    # node_matrix, elem_matrix = organizeMeshByConnectivity(elem2)
     
     # Save node matrix
-    np.savetxt(boneConfig.inputPath + "/nodes.csv", node_matrix, fmt='%d', delimiter=",", comments='')
+    # np.savetxt(boneConfig.inputPath + "/nodes.csv", node_matrix, fmt='%d', delimiter=",", comments='')
 
     # Save element matrix
-    np.savetxt(boneConfig.inputPath + "/elements.csv", elem_matrix, fmt='%d', delimiter=",", comments='')
+    # np.savetxt(boneConfig.inputPath + "/elements.csv", elem_matrix, fmt='%d', delimiter=",", comments='')
+
+    node_matrix, _ = organizeMeshByConnectivity(elem2)
 
     midIndex = int(node_matrix.shape[1]-1)//2
 
@@ -217,9 +195,9 @@ def intersectMeshes(bone, boneConfig, elem1, nod1, elem2, nod2):
     referenceLine = node_matrix[:,midIndex].tolist()
     referenceCoords = [nod2[1][3*(node-1)+1] for node in referenceLine]
 
-    maxLength = referenceCoords[0] - referenceCoords[-1]
+    # maxLength = referenceCoords[0] - referenceCoords[-1]
 
-    plate_1 = bone.geom_vars.plate_1
+    # plate_1 = bone.geom_vars.plate_1
     plate_2 = bone.geom_vars.plate_2
     cart_thick = bone.geom_vars.cart_thick
     max_length = cart_thick - plate_2
@@ -231,43 +209,16 @@ def intersectMeshes(bone, boneConfig, elem1, nod1, elem2, nod2):
         # Find the index of the closest value in referenceCoords
         closest_index = np.argmin(np.abs(np.array(referenceCoords) - limit))
         closest_indexes.append(closest_index)
-
-    print("Closest indexes:", closest_indexes)
     
     extracted_rows = node_matrix[closest_indexes, :]
     
-    np.savetxt(boneConfig.inputPath + "/extracted_rows.csv", extracted_rows, fmt='%d', delimiter=",", comments='')
-
-    # Create a new view for extracted rows
-    extracted_rows_view_tag = gmsh.view.add("Extracted_Rows")
-
-    # Prepare the data for the extracted rows
-    extracted_rows_data = [[1 if node in extracted_rows else 0] for node in node_matrix.flatten()]
-
-    # Add the extracted rows data to the view
-    gmsh.view.addModelData(
-        extracted_rows_view_tag,
-        0,
-        "Secondary model",
-        "NodeData",
-        node_matrix.flatten(),
-        extracted_rows_data
-    )
-
-    # Write the extracted rows data to the output file
-    gmsh.view.write(extracted_rows_view_tag, output_file, append=True)
-
-    # centroids contains the centroids of the elements in elem1
-    # centroids = elementsCentroids(elem1, nod1)
-
-    # centroidsx = [[centroid[0]] for centroid in centroids]
-    # centroidsy = [[centroid[1]] for centroid in centroids]
-
-    print("Started to check if the elements and nodes are below the line")
+    # np.savetxt(boneConfig.inputPath + "/extracted_rows.csv", extracted_rows, fmt='%d', delimiter=",", comments='')
 
     # Initialize lists for marking elements and nodes
     is_below_list_elements = [[] for _ in range(len(elem1[1][0]))]  # For elements
     is_below_list_nodes = [[] for _ in range(len(nod1[0]))]  # For nodes
+
+    centroids = elementsCentroids(elem1, nod1)
 
     # Iterate over each row in extracted_rows
     for row_index in range(len(extracted_rows)):
@@ -301,31 +252,98 @@ def intersectMeshes(bone, boneConfig, elem1, nod1, elem2, nod2):
             for node in element_nodes:
                 is_below_list_nodes[int(node) - 1] = next_number
 
-    # Create a Gmsh view for the marked elements
+    # ---------------------------------------------------------------
+    # Build a unique node → group map for interface (shared) nodes
+    # ---------------------------------------------------------------
+    node_group_map = {}                  # nodeTag → canonical group id
+
+    for row in adjacencyArray:
+        elem_id      = row[0]
+        group_a      = is_below_list_elements[elem_id - 1]
+        elem_nodes_a = elem1[2][0][4*(elem_id-1):4*elem_id]
+
+        # walk through the 4 faces
+        for adj_elem_id in row[1:]:
+            if adj_elem_id == 0:
+                continue                # boundary face – skip
+
+            group_b      = is_below_list_elements[adj_elem_id - 1]
+            if group_a == group_b:
+                continue                # same physical region – no interface here
+
+            elem_nodes_b = elem1[2][0][4*(adj_elem_id-1):4*adj_elem_id]
+            shared_nodes = get_shared_nodes(elem_nodes_a, elem_nodes_b)
+
+            # assign every shared node to *one* canonical group
+            canonical_group = min(group_a, group_b)   # deterministic choice
+            for n in shared_nodes:
+                node_group_map.setdefault(n, canonical_group)
+                # if the node was seen before with a different group, overwrite
+                if node_group_map[n] != canonical_group:
+                    node_group_map[n] = canonical_group
+
+    # ---------------------------------------------------------------
+    # Rebuild nodes_by_group with no duplicates
+    # ---------------------------------------------------------------
+    nodes_by_group = defaultdict(list)
+    for node, g in node_group_map.items():
+        nodes_by_group[g].append(node)
+
+    # Remove empty entries from nodes_by_group (if any were added by mistake)
+    nodes_by_group = {group: nodes for group, nodes in nodes_by_group.items() if nodes}
+
+    # Step 2: Calculate node_marks based on nodes_by_group
+    node_marks = [0] * len(nod1[0])  # Same size as the number of nodes
+
+    for group, nodes in nodes_by_group.items():
+        for node in nodes:
+            node_index = int(node) - 1
+            node_marks[node_index] = max(node_marks[node_index], group)  # Prioritize non-zero marks
+    
+    return (extracted_rows, node_matrix, centroids,
+            is_below_list_elements,is_below_list_nodes, node_marks, nodes_by_group)
+
+
+def writeIntersectionData(elem1, nod1, elem2, nod2, extracted_rows,
+                          node_matrix, centroids, is_below_list_elements,
+                          is_below_list_nodes, node_marks, nodes_by_group):
+    # Create the output directory
+    output_file = boneConfig.inputPath + "/Combined_Data.pos"
+
+     # Create views
+    extracted_rows_view_tag = gmsh.view.add("Extracted_Rows")
+    node_view_tag = gmsh.view.add("Node_Data")
+    element_view_tag = gmsh.view.add("Element_Data")
+    centroids_x_view_tag = gmsh.view.add("Centroids X")
+    centroids_y_view_tag = gmsh.view.add("Centroids Y")
     is_below_view_tag_elements = gmsh.view.add("Is_Below_Line_Elements")
-    gmsh.view.addModelData(
-        is_below_view_tag_elements,
-        0,
-        "Main model",
-        "ElementData",
-        elem1[1][0],
-        [[value] for value in is_below_list_elements]
-    )
-
-    # Create a Gmsh view for the marked nodes
     is_below_view_tag_nodes = gmsh.view.add("Is_Below_Line_Nodes")
-    gmsh.view.addModelData(
-        is_below_view_tag_nodes,
-        0,
-        "Main model",
-        "NodeData",
-        nod1[0],
-        [[value] for value in is_below_list_nodes]
-    )
+    marked_nodes_view_tag = gmsh.view.add("Marked_Nodes")
 
-    # Write the marked elements and nodes data to the output file
+    # Prepare data
+    extracted_rows_data = [[1 if node in extracted_rows else 0] for node in node_matrix.flatten()]
+    centroidsx = [[centroid[0]] for centroid in centroids]
+    centroidsy = [[centroid[1]] for centroid in centroids]
+
+    # Add data to views
+    gmsh.view.addModelData(extracted_rows_view_tag, 0, "Secondary model", "NodeData", node_matrix.flatten(), extracted_rows_data)
+    gmsh.view.addModelData(node_view_tag, 0, "Secondary model", "NodeData", nod2[0], [[tag] for tag in nod2[0]])
+    gmsh.view.addModelData(element_view_tag, 0, "Secondary model", "ElementData", elem2[1][0], [[tag] for tag in elem2[1][0]])
+    gmsh.view.addModelData(centroids_x_view_tag, 0, "Main model", "ElementData", elem1[1][0], centroidsx)
+    gmsh.view.addModelData(centroids_y_view_tag, 0, "Main model", "ElementData", elem1[1][0], centroidsy)
+    gmsh.view.addModelData(is_below_view_tag_elements, 0, "Main model", "ElementData", elem1[1][0], [[value] for value in is_below_list_elements])
+    gmsh.view.addModelData(is_below_view_tag_nodes, 0, "Main model", "NodeData", nod1[0], [[value] for value in is_below_list_nodes])
+    gmsh.view.addModelData(marked_nodes_view_tag, 0, "Main model", "NodeData", nod1[0], [[value] for value in node_marks])
+
+    # Write the views to the output file
+    gmsh.view.write(extracted_rows_view_tag, output_file, append=True)
+    gmsh.view.write(node_view_tag, output_file)
+    gmsh.view.write(element_view_tag, output_file, append=True)
+    gmsh.view.write(centroids_x_view_tag, output_file, append=True)
+    gmsh.view.write(centroids_y_view_tag, output_file, append=True)
     gmsh.view.write(is_below_view_tag_elements, output_file, append=True)
     gmsh.view.write(is_below_view_tag_nodes, output_file, append=True)
+    gmsh.view.write(marked_nodes_view_tag, output_file, append=True)
 
     # Save the node markings to a file
     tipoCartilagoNodesPath = os.path.join(boneConfig.inputPath, 'gruposFisicosN.txt')
@@ -340,6 +358,29 @@ def intersectMeshes(bone, boneConfig, elem1, nod1, elem2, nod2):
         g.write('Element Tag, Physical Group Tag\n')
         for i in range(len(elem1[1][0])):
             g.write(f'{elem1[1][0][i]}, {is_below_list_elements[i]}\n')
+
+    contornoPath = os.path.join(boneConfig.inputPath, "contorno.inp")
+
+    with open(contornoPath, "a") as f:
+        for index, nodeTags in nodes_by_group.items():
+            name = f"linea{index}"
+            f.write("*NSET,NSET="+name+"\n")
+            f2g.writeLines(nodeTags, f)
+
+
+def get_shared_nodes(nodes1, nodes2):
+    """
+    Get the shared nodes between two elements.
+
+    Args:
+        nodes1 (list): List of node IDs for the first element.
+        nodes2 (list): List of node IDs for the second element.
+
+    Returns:
+        list: List of shared node IDs.
+    """
+    return list(set(nodes1) & set(nodes2))
+
 
 def get_coordinates_from_extracted_row(row_index, extracted_rows, nod):
     """
@@ -644,7 +685,8 @@ def copyAnalysisFiles():
         "master/run.ps1":  "run.ps1",
         "master/propiedades.csv": "propiedades.csv",
         # "master/abaqus_v6.env": "abaqus_v6.env"
-        "master/condicionesContorno.inp": "condicionesContorno.inp"
+        "master/condicionesContorno1.inp": "condicionesContorno1.inp",
+        "master/condicionesContorno2.inp": "condicionesContorno2.inp"
     }
 
     # Copy each file to the inputPath with the new name
@@ -659,11 +701,11 @@ def copyAnalysisFiles():
                 
         shutil.copy(src_path, dest_path)
 
-    formatFile(
-        os.path.join('master','condicionesContorno.inp'),
-        os.path.join(boneConfig.inputPath, 'condicionesContorno.inp'),
-        '**'
-    )
+    # formatFile(
+    #    os.path.join('master','condicionesContorno.inp'),
+    #    os.path.join(boneConfig.inputPath, 'condicionesContorno.inp'),
+    #    '**'
+    # )
 
     formatFile(
         os.path.join('master','runMaster.bat'),

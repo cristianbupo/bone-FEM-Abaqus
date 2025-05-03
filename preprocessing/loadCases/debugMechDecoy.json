@@ -53,7 +53,7 @@
             "plate_2": {
                 "min_value": 0.0,
                 "max_value": 2.0,
-                "default": 0.5,
+                "default": 0.1,
                 "short_name": "ta"
             }
         },
@@ -113,7 +113,7 @@
             "stdWeight": {
                 "min_value": 0.0,
                 "max_value": 2.0,
-                "default": 0.65,
+                "default": 0.680264865,
                 "short_name": "sw"
             }
         },
@@ -144,7 +144,7 @@
         "help": "The name of the mode to be used: original or new"
         },
         "runFltk": {
-        "default": true,
+        "default": false,
         "help": "Run gmsh with the generated meshes if specified."
         },
         "showLoad": {

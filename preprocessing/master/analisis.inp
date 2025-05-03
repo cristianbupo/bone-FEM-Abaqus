@@ -20,6 +20,6 @@
 ** Dummy material properties
 *UEL PROPERTY,ELSET=UEL
 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
-** *INCLUDE, INPUT=restriccionesMultiPunto.inp
+*INCLUDE, INPUT=restriccionesMultiPunto.inp
 *INCLUDE, INPUT=contorno.inp
 *INCLUDE, INPUT=pasos.inp

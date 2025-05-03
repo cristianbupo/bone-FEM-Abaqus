@@ -180,7 +180,7 @@ def pixelateBorder(entity):
     return elementaryLineTags, elementaryNodeTags
 
 
-def container2gmsh(bone, boneConfig, curvesMesh, curvesArea):
+def container2gmsh(bone, boneConfig, curvesMesh):
 
     # Main mesh
     gmsh.model.add("Main model")
@@ -208,7 +208,14 @@ def container2gmsh(bone, boneConfig, curvesMesh, curvesArea):
     gmsh.model.mesh.renumberNodes()
     renumberElements()
     setSurfaceColors()
+
+    all2DElements = gmsh.model.mesh.getElements(2)
+    adjacencyArray = f2g.findMeshAdjacencies(all2DElements)
+
+    return all2DElements, gmsh.model.mesh.getNodes(), adjacencyArray
     
+    
+def writeContainer(bone, boneConfig, curvesArea, all2DElements, adjacencyArray):   
     # Write mesh files
 
     inputPath = boneConfig.inputPath
@@ -221,14 +228,6 @@ def container2gmsh(bone, boneConfig, curvesMesh, curvesArea):
     f2g.write_nodes(tags, coords, inputPath, "nodos.inp", "restriccionesMultipunto.inp")
     f2g.write_connectivities(elemTypes, elemTags, elemNodeTags, inputPath, "conectividades.inp")
     f2g.write_vtk(tags, coords, allElements, inputPath, "malla.vtu")
-    
-    # physicalGroups_1D = gmsh.model.getPhysicalGroups(1)
-    physicalGroups_2D = gmsh.model.getPhysicalGroups(2)
-    physicalGroups = gmsh.model.getPhysicalGroups()
-
-    # f2g.writeBody(physicalGroups_2D, inputPath)
-    contourLines = f2g.writeBoundaries(physicalGroups, inputPath)
-    all2DElements = gmsh.model.mesh.getElements(2)
 
     listNElementLoads =[]
 
@@ -280,9 +279,11 @@ def container2gmsh(bone, boneConfig, curvesMesh, curvesArea):
     with open(os.path.join(inputPath, "carga.inp"), "w") as g:
         g.writelines(lines)
 
-    writeParameters(bone, boneConfig, tags, all2DElements, contourLines)
+    f2g.writeMeshAdjacencies(adjacencyArray, inputPath)
 
-    f2g.findNWriteMeshAdjacencies(all2DElements, inputPath)
+    physicalGroups = gmsh.model.getPhysicalGroups()
+    contourLines = f2g.writeBoundaries(physicalGroups, inputPath)
+    writeParameters(bone, boneConfig, tags, all2DElements, contourLines)
     
     f2g.writeSteps(boneConfig, number_steps, number_loads)
 
@@ -291,8 +292,6 @@ def container2gmsh(bone, boneConfig, curvesMesh, curvesArea):
 
     if boneConfig.saveMsh:
         gmsh.write(os.path.join(inputPath,"malla.msh"))
-
-    return all2DElements, gmsh.model.mesh.getNodes()
 
 
 def container2advanceMesh(bone, boneConfig, curvesAdvance):

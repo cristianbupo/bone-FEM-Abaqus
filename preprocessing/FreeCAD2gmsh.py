@@ -379,7 +379,7 @@ def findConectivityInfoPhysical(physicalName, all2DElements):
     return pContourElements, pElemTags, pElemNodeTags, pLoadFaces, pNodCoords, pElemLengths
 
 
-def findNWriteMeshAdjacencies(all2DElements, inputPath):
+def findMeshAdjacencies(all2DElements):
     allElemTags = all2DElements[1][0]
     allElemNodeTags = all2DElements[2][0]
     nElem = len(allElemTags)
@@ -390,50 +390,57 @@ def findNWriteMeshAdjacencies(all2DElements, inputPath):
     quads = [allElemNodeTags[i:i+4] for i in range(0, len(allElemNodeTags), 4)]
 
     # Initialize adjacency array (nElem x 5)
-    adjacency_array = np.zeros((nElem, 5), dtype=int)
-    adjacency_array[:, 0] = np.arange(1, nElem + 1)  # First column: element IDs
+    adjacencyArray = np.zeros((nElem, 5), dtype=int)
+    adjacencyArray[:, 0] = np.arange(1, nElem + 1)  # First column: element IDs
 
     # Build edge: list of elements sharing that edge
-    edge_to_elems = {}
+    edge2elems = {}
 
-    def ordered_edge(n1, n2):
+    def orderedEdge(n1, n2):
         return tuple(sorted((n1, n2)))
 
     for eid, quad in enumerate(quads, start=1):  # Element IDs start at 1
         edges = [
-            ordered_edge(quad[0], quad[1]),
-            ordered_edge(quad[1], quad[2]),
-            ordered_edge(quad[2], quad[3]),
-            ordered_edge(quad[3], quad[0])
+            orderedEdge(quad[0], quad[1]),
+            orderedEdge(quad[1], quad[2]),
+            orderedEdge(quad[2], quad[3]),
+            orderedEdge(quad[3], quad[0])
         ]
         for edge in edges:
-            if edge not in edge_to_elems:
-                edge_to_elems[edge] = []
-            edge_to_elems[edge].append(eid)
+            if edge not in edge2elems:
+                edge2elems[edge] = []
+            edge2elems[edge].append(eid)
 
     # Build element: neighbor per face
     for eid, quad in enumerate(quads, start=1):
         edges = [
-            ordered_edge(quad[0], quad[1]),
-            ordered_edge(quad[1], quad[2]),
-            ordered_edge(quad[2], quad[3]),
-            ordered_edge(quad[3], quad[0])
+            orderedEdge(quad[0], quad[1]),
+            orderedEdge(quad[1], quad[2]),
+            orderedEdge(quad[2], quad[3]),
+            orderedEdge(quad[3], quad[0])
         ]
         neighbors = []
         for edge in edges:
-            elems = edge_to_elems[edge]
+            elems = edge2elems[edge]
             neighbor = [e for e in elems if e != eid]
             if neighbor:
                 neighbors.append(neighbor[0])
             else:
                 neighbors.append(0)  # Boundary face
-        adjacency_array[eid - 1, 1:] = neighbors  # Fill connectivity columns
+        adjacencyArray[eid - 1, 1:] = neighbors  # Fill connectivity columns
 
+    return adjacencyArray
+
+
+def writeMeshAdjacencies(adjacencyArray, inputPath):
     # Write connectivity to file
     with open(os.path.join(inputPath, "adyacenciaElementos.inp"), "w") as f:
         f.write("elem, face1, face2, face3, face4\n")
-        for row in adjacency_array:
+        for row in adjacencyArray:
             f.write(", ".join(map(str, row)) + "\n")
+
+    return adjacencyArray
+    
 
 
 def writeLoads(boneConfig, h, k, r, physicalName, all2DElements, loadIndex):
@@ -544,14 +551,14 @@ def writeSteps(boneConfig, nSteps, nLoads):
     with open(pasosPath, "w") as g:
         if (boneConfig.mode == "original"):
             for i in range(nSteps):
-                formatted_content = paso_content.format(nStep=i,nLoads=nLoads)
+                formatted_content = paso_content.format(nStep=i,nLoads=nLoads,i=1)
                 g.write(formatted_content)
         elif (boneConfig.mode == "new"):
             for i in range(2):
                 if i == 0:
-                    formatted_content = paso_content.format(nStep=i,nLoads=nLoads)
+                    formatted_content = paso_content.format(nStep=i,nLoads=nLoads,i=i+1)
                 else:
-                    formatted_content = paso_content.format(nStep=i, nLoads=nSteps)
+                    formatted_content = paso_content.format(nStep=i, nLoads=nSteps,i=i+1)
                 g.write(formatted_content)
         else:
             raise ValueError("Invalid mode. Use 'original' or 'new'.")
