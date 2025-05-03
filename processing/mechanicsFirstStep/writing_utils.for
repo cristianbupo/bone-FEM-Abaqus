@@ -36,7 +36,7 @@
       write(16,'(a30)') '<PointData Vectors="''U'', ''C''">'
       call writeDataArrayReal('U', mNod(:, 1:dim), NUMNODE, dim)
       call writeDataArrayReal('C', mNod(:, 1+dim:ndofdiff+dim), NUMNODE, ndofdiff)
-      ! call writeDataArrayReal('BorderNode', mNod(:, 6), NUMNODE, 1)
+      call writeDataArrayInt('Region', grupoFisicoN(:, 2), NUMNODE, 1)
       write(16,'(a12)') '</PointData>'
 
 !     CellData
@@ -48,7 +48,7 @@
          call writeDataArrayReal('S_Hyd', mElem(:, 10), NELEMS, 1)
          call writeDataArrayReal('S_Oct', mElem(:, 11), NELEMS, 1)
          call writeDataArrayReal('MG', mElem(:, 12), NELEMS, 1)
-         call writeDataArrayReal('C', mElem(:, 13:16), NELEMS, ndofdiff)
+         call writeDataArrayReal('C', mElem(:, 13:17), NELEMS, ndofdiff)
          ! call writeDataArrayReal('BG', mElem(:, 15), NELEMS, 1)
          ! call writeDataArrayReal('CMI', mElem(:, 16), NELEMS, 1)
          ! call writeDataArrayReal('BorderElement', mElem(:, 17), NELEMS, 1)
@@ -302,8 +302,8 @@
       call GETOUTDIR(JOBDIR,LENJOBDIR)
       call GETJOBNAME(JOBNAME,LENJOBNAME)
 !     Cálculo de los esfuerzos y las deformaciones
+      call outsigma()
       if (KSTEP.eq.1) then
-         call outsigma()
          call accumulateResults(KINC)
       end if
       write(incString, '(I3.3)') KINC

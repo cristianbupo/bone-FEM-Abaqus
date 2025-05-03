@@ -746,6 +746,7 @@ def addPhysicalGroups(boneConfig):
     gmsh.model.addPhysicalGroup(1, [3, 4, 5], -1, "contorno2")
     gmsh.model.addPhysicalGroup(1, [7], -1, "contorno3")
     gmsh.model.addPhysicalGroup(1, [6, 7, 8], -1, "contorno4")
+    gmsh.model.addPhysicalGroup(1, [9, 10], -1, "contorno5")
     gmsh.model.addPhysicalGroup(0, [2], -1, "pin")
 
 

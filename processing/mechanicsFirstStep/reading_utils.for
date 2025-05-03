@@ -571,23 +571,21 @@
          call read_file_integer(jobdir,'conectividades.inp','*ELEMENT,TYPE=U1,ELSET=UEL',conectividades,NELEMS,nnod+1)
       ! call read_file_integer(jobdir,'adyacenciaElementos.inp','elem, face1, face2, face3, face4',adyacencias,NELEMS,nnod+1)
 !
-      else if (LOP.eq.1) then ! Variables llamadas al comienzo de cada paso
+      else if (LOP.eq.1) then ! Variables llamadas al comienzo de cada incremento
          call GETOUTDIR(JOBDIR,LENJOBDIR)
          if (KSTEP.eq.1) then
             call read_loads(jobdir,'carga.inp',KINC,elementFaces,elementLoads,maxNElementLoads,2,1)
-         end if
-      ! else if (LOP.eq.6) then
-         !
-         ! Calculo de la condición de actualización de propiedades
-         ! CMICriteria(:) = cumulativeResElem(:, 12)
-
-         ! call calculateCMIthreshold()
-         
-         ! Actualización de propiedades
-         ! call updateProps()
-
-         ! Inicialización de resultados
-         ! call initialize_results()
+         elseif (KSTEP.eq.2) then
+            if (KINC.eq.1) then
+               CMICriteria(:) = cumulativeResElem(:, 12) !MG
+               call calculateCMIthreshold() 
+               call updateProps() !Keep inside if statement to avoid reupdate
+            else
+               CMICriteria(:) = resElem(:, 15) !C3
+               call calculateCMIthreshold()
+               call updateProps() !Keep inside if statement to avoid reupdate
+            end if
+         endif
       end if
       return
       end

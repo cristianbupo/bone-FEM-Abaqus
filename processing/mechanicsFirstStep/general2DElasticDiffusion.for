@@ -431,7 +431,7 @@
 !
       use reading_utils
       logical :: update(nelems)
-      integer :: i, grupoFisicoActual
+      integer :: i, j, k, grupoFisicoActual
       integer :: newGroup(nelems)
 !
 !     Actualización de propiedades
@@ -460,7 +460,11 @@
 
       do i=1,NELEMS
          if (update(i)) then
-            grupoFisico(i,2) = newGroup(i)
+            grupoFisico(i,2) = newGroup(i)   
+            do j = 1, nnod
+               k = conectividades(i, j+1)
+               grupoFisicoN(k,2) = newGroup(i)
+            end do
          end if
       enddo
 
@@ -1502,23 +1506,31 @@
      1 TIME(2),TEMP(NT,N),FIELD(NF,NT,N),LTRAN(N),TRAN(3,3,N)
 
       real :: factor
+      logical :: condition
+      integer :: grupo
 
+      grupo = grupoFisicoN(JTYPE,2)+1
+
+      condition = (KSTEP .gt. 1) .and. (grupo == 2)
+
+
+      ! print *, 'MPC CALLED:', JTYPE, grupo, KSTEP, condition
 !      user coding to define UE, A, JDOF, and, optionally, LMPC
-      IF (.false.) THEN
+      IF (condition) THEN
          JDOF(2) = 20 ! Make unit variable the independent degree of freedom
          A(1) = 1.0d0 ! Coefficient for unit variable
-         JDOF(1) = 13 ! Make C1 the dependent degree of freedom
-         factor = 2.0d0
+         JDOF(1) = 15 ! Make C1 the dependent degree of freedom
+         factor = 1.0d0
          A(2) = -factor ! Coefficient for C2
          UE = factor*U(20,1)
    
-      ELSEIF (.false.) THEN
-         JDOF(2) = 13 ! Make C1 the independent degree of freedom
-         A(1) = 1.0d0 ! Coefficient for C1
-         JDOF(1) = 14 ! Make C2 the dependent degree of freedom
-         factor = 1.0d0
-         A(2) = -factor ! Coefficient for C2
-         UE = factor*U(13,1)
+      ! ELSEIF (.false.) THEN
+      !    JDOF(2) = 13 ! Make C1 the independent degree of freedom
+      !    A(1) = 1.0d0 ! Coefficient for C1
+      !    JDOF(1) = 14 ! Make C2 the dependent degree of freedom
+      !    factor = 1.0d0
+      !    A(2) = -factor ! Coefficient for C2
+      !    UE = factor*U(13,1)
       ELSE
          LMPC = 0
       ENDIF
