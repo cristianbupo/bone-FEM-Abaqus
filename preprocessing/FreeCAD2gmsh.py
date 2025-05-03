@@ -547,11 +547,11 @@ def writeSteps(boneConfig, nSteps, nLoads):
                 formatted_content = paso_content.format(nStep=i,nLoads=nLoads)
                 g.write(formatted_content)
         elif (boneConfig.mode == "new"):
-            for i in range(nSteps):
+            for i in range(2):
                 if i == 0:
                     formatted_content = paso_content.format(nStep=i,nLoads=nLoads)
                 else:
-                    formatted_content = paso_content.format(nStep=i, nLoads=1)
+                    formatted_content = paso_content.format(nStep=i, nLoads=nSteps)
                 g.write(formatted_content)
         else:
             raise ValueError("Invalid mode. Use 'original' or 'new'.")
