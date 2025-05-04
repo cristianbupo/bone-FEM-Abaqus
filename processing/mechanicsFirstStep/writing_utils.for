@@ -37,6 +37,7 @@
       call writeDataArrayReal('U', mNod(:, 1:dim), NUMNODE, dim)
       call writeDataArrayReal('C', mNod(:, 1+dim:ndofdiff+dim), NUMNODE, ndofdiff)
       call writeDataArrayInt('Region', grupoFisicoN(:, 2), NUMNODE, 1)
+      call writeDataArrayReal('BorderNode', borderVectorNod, NUMNODE, 1)
       write(16,'(a12)') '</PointData>'
 
 !     CellData
@@ -51,7 +52,7 @@
          call writeDataArrayReal('C', mElem(:, 13:17), NELEMS, ndofdiff)
          ! call writeDataArrayReal('BG', mElem(:, 15), NELEMS, 1)
          ! call writeDataArrayReal('CMI', mElem(:, 16), NELEMS, 1)
-         ! call writeDataArrayReal('BorderElement', mElem(:, 17), NELEMS, 1)
+         call writeDataArrayReal('BorderElement', borderVectorElem, NELEMS, 1)
       end if
       call writeDataArrayInt('Region', grupoFisico(:, 2), NELEMS, 1)
       call writeProps()

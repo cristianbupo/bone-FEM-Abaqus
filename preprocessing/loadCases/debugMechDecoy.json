@@ -113,7 +113,7 @@
             "stdWeight": {
                 "min_value": 0.0,
                 "max_value": 2.0,
-                "default": 0.680264865,
+                "default": 1.5,
                 "short_name": "sw"
             }
         },

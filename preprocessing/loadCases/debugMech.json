@@ -16,7 +16,7 @@
             "head_angle": {
                 "min_value": -20.0,
                 "max_value": 20.0,
-                "default": -15.0,
+                "default": 20.0,
                 "short_name": "ha"
             },
             "bone_width": {
@@ -86,7 +86,7 @@
         "mesh_vars": {
             "number_elements": {
                 "min_value": 20,
-                "default": 20,
+                "default": 25,
                 "short_name": "ne"
             }
         },
@@ -113,7 +113,7 @@
             "stdWeight": {
                 "min_value": 0.0,
                 "max_value": 2.0,
-                "default": 0.680264865,
+                "default": 1.5,
                 "short_name": "sw"
             }
         },

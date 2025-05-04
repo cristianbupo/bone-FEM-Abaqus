@@ -366,7 +366,7 @@
       use reading_utils
       include 'ABA_PARAM.INC'
 !
-      integer  i,j,k,jelem,nCart
+      integer  i,j,k,jelem,nCart,grupoFisicoActual
       real*8   x,minx,CMIcurrent
 
       CMIavg = 0.0
@@ -375,7 +375,8 @@
       nCart = 0
 
       do jelem=1,NELEMS
-         if (grupoFisico(jelem,2) .gt. 0) then
+         grupoFisicoActual = grupoFisico(jelem,2)
+         if ((grupoFisicoActual .ge. 2) .and. (grupoFisicoActual .le. 6)) then
             CMIcurrent = CMICriteria(jelem)
             CMIavg = CMIavg + CMIcurrent
             nCart = nCart + 1
@@ -390,18 +391,19 @@
                
             enddo
 
-            if (minx < 1.0d-5) then
-               if (CMIcurrent>CMImax) then
-                  CMImax = CMIcurrent
-               endif
+            !if (minx < 1.0d-5) then
+            if (CMIcurrent>CMImax) then
+               CMImax = CMIcurrent
             endif
+            !endif
          endif
       enddo
 
       CMIavg = CMIavg / DBLE(nCart)
 
       do jelem=1,NELEMS
-         if (grupoFisico(i,2) .gt. 0) then
+         grupoFisicoActual = grupoFisico(jelem,2)
+         if ((grupoFisicoActual .ge. 2) .and. (grupoFisicoActual .le. 6)) then
             CMIstd = CMIstd + (CMICriteria(jelem) - CMIavg)**2
          endif
       enddo
@@ -411,6 +413,7 @@
       CMIThreshold = CMIavg + stdWeight * CMIstd
 
       print *, ''
+      print *, 'nCart:', nCart
       print *, 'CMIavg:', CMIavg
       print *, 'CMIstd:', CMIstd
       print *, 'CMImax:', CMImax
@@ -445,14 +448,14 @@
       do i=1,NELEMS
          grupoFisicoActual = grupoFisico(i,2)
 
-         if (grupoFisicoActual.gt.1) then
+         if (grupoFisicoActual==5) then
             if (CMICriteria(i) >= CMIThreshold) then
                update(i) = .true.
-               newGroup(i) = 1
+               newGroup(i) = 8
             end if
-         else if (grupoFisicoActual==1) then
+         else if (grupoFisicoActual==8) then
             update(i) = .true.
-            newGroup(i) = 0
+            newGroup(i) = 7
          endif
       enddo
 
@@ -594,19 +597,21 @@
             fil = fil + dim
             col = col + dim
 
-            do i=1,2
-               filg = fil + (i-1)
-               colg = col + (i-1)
-               ! Ensamble del vector de reaccion
-               p(filg,1) = p(filg,1) - h(i)*Reac(1,k1) ! revisar
-               ! Ensamble de la matriz de rigidez difusiva
-               m_k(filg,colg) = m_k(filg,colg) - D(i)*Kdiff(k1,k2)
-               m_k(filg,colg) = m_k(filg,colg) + g(i)*Masa(k1,k2)
-            enddo
+            if (grupo .le. 7) then
+               do i=1,2
+                  filg = fil + (i-1)
+                  colg = col + (i-1)
+                  ! Ensamble del vector de reaccion
+                  p(filg,1) = p(filg,1) - h(i)*Reac(1,k1) ! revisar
+                  ! Ensamble de la matriz de rigidez difusiva
+                  m_k(filg,colg) = m_k(filg,colg) - D(i)*Kdiff(k1,k2)
+                  m_k(filg,colg) = m_k(filg,colg) + g(i)*Masa(k1,k2)
+               enddo
 
-            ! Ensamble de las matrices de masa
-            m_k(fil,col+1) = m_k(fil,col+1) + f(1)*Masa(k1,k2) 
-            m_k(fil+1,col) = m_k(fil+1,col) + f(2)*Masa(k1,k2)
+               ! Ensamble de las matrices de masa
+               m_k(fil,col+1) = m_k(fil,col+1) + f(1)*Masa(k1,k2) 
+               m_k(fil+1,col) = m_k(fil+1,col) + f(2)*Masa(k1,k2)
+            endif
 
             ! Actualizacion de los indices 
             filg = fil + 2
@@ -1440,26 +1445,28 @@
 !
 !
 !----------------------------------------------------------------------------
-      subroutine detectBorders(borderVectorElem,borderVectorNod)
+      subroutine detectBorders(localVectorElem,localVectorNod)
 !
       use reading_utils
 !
       logical :: belongsToLimit, condition
+      logical :: nodoBorde(NUMNODE,1), elementoBorde(NELEMS,1)
       integer :: limitGroup, limitElement, index1, index2
-      real*8 :: borderVectorElem(NELEMS,1), borderVectorNod(NUMNODE,1)
+      real*8 :: localVectorElem(NELEMS,1), localVectorNod(NUMNODE,1)
+      real*8 :: grupoActual
       integer :: i,j
 
       nodoBorde = .false.
       elementoBorde = .false.
       
       do i=1,NELEMS
+         grupoActual = grupoFisico(i,2) + 1
          belongsToLimit = .false.
-         
-         if (grupoFisico(i,2) == 2) then
+         if (grupoActual == 8 .or. grupoActual == 9) then
             do j=1,nnod
                limitElement = adyacencias(i,j+1)
-               limitGroup = grupoFisico(limitElement,2)
-               condition = (limitGroup /= 2) .and. (limitElement/= 0) .and. (limitGroup /= 1)
+               limitGroup = grupoFisico(limitElement,2) + 1
+               condition = (limitGroup /= 8) .and. (limitGroup/= 9) .and. (limitElement/= 0) .and. (limitGroup /= 1)
                
                if (condition) then
                   index1 = conectividades(i,j+1)
@@ -1467,7 +1474,6 @@
                   nodoBorde(index1,1) = nodoBorde(index1,1) .or. condition
                   nodoBorde(index2,1) = nodoBorde(index2,1) .or. condition
                end if
-
                belongsToLimit = belongsToLimit .or. condition
 
             enddo
@@ -1476,18 +1482,18 @@
          elementoBorde(i,1) = belongsToLimit
 
          if (belongsToLimit) then
-            borderVectorElem(i, 1) = 1.0d0
+            localVectorElem(i, 1) = 1.0d0
          else
-            borderVectorElem(i, 1) = 0.0d0
+            localVectorElem(i, 1) = 0.0d0
          end if
 
       end do
 
       do i = 1, NUMNODE
          if (nodoBorde(i,1)) then
-            borderVectorNod(i, 1) = 1.0d0
+            localVectorNod(i, 1) = 1.0d0
          else
-            borderVectorNod(i, 1) = 0.0d0
+            localVectorNod(i, 1) = 0.0d0
          end if
       end do
       
@@ -1511,8 +1517,8 @@
 
       grupo = grupoFisicoN(JTYPE,2)+1
 
-      condition = (KSTEP .gt. 1) .and. (grupo == 2)
-      condition2 = (grupo == 5) .or. (grupo == 7)
+      condition = (KSTEP .gt. 1) .and.(borderVectorNod(JTYPE) .gt. 0.0d0)
+      ! condition2 = (grupo == 5) .or. (grupo == 7)
       
 
 
@@ -1526,13 +1532,13 @@
          A(2) = -factor ! Dependent variable coefficient
          UE = factor*U(20,1)
    
-      ELSEIF (condition2) THEN
-         JDOF(2) = 20 ! Independent degree of freedom
-         A(1) = 1.0d0 ! Independent variable coefficient
-         JDOF(1) = 15 ! Dependent degree of freedom
-         factor = 0.0d0
-         A(2) = -factor ! Dependent variable coefficient
-         UE = factor*U(20,1)
+      ! ELSEIF (condition2) THEN
+      !    JDOF(2) = 20 ! Independent degree of freedom
+      !    A(1) = 1.0d0 ! Independent variable coefficient
+      !    JDOF(1) = 15 ! Dependent degree of freedom
+      !    factor = 0.0d0
+      !    A(2) = -factor ! Dependent variable coefficient
+      !    UE = factor*U(20,1)
       ELSE
          LMPC = 0
       ENDIF

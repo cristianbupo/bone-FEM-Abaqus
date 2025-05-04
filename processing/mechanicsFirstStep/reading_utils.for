@@ -23,12 +23,11 @@
       integer, allocatable :: adyacencias(:,:)
       integer, allocatable :: grupoFisico(:,:)
       integer, allocatable :: grupoFisicoN(:,:)
-      logical, allocatable :: nodoBorde(:,:)
-      logical, allocatable :: elementoBorde(:,:)
       real*8, allocatable :: propiedades(:,:)
       real*8, allocatable :: resNod(:,:), resElem(:,:)
       real*8, allocatable :: cumulativeResNod(:,:), cumulativeResElem(:,:)
       real*8, allocatable :: CMICriteria(:)
+      real*8, allocatable :: borderVectorElem(:),borderVectorNod(:)
 
       contains
 
@@ -43,14 +42,14 @@
          allocate(adyacencias(NELEMS, nnod+1))
          allocate(grupoFisico(NELEMS, 2))
          allocate(grupoFisicoN(NUMNODE, 2))
-         allocate(nodoBorde(NUMNODE,1))
-         allocate(elementoBorde(NELEMS,1))
          allocate(propiedades(numMats, numProps))
          allocate(resNod(NUMNODE, nResNod))
          allocate(resElem(NELEMS, nResElem))
          allocate(cumulativeResNod(NUMNODE, nResNod))
          allocate(cumulativeResElem(NELEMS, nResElem))
          allocate(CMICriteria(NELEMS))
+         allocate(borderVectorElem(NELEMS))
+         allocate(borderVectorNod(NUMNODE))
 
       end subroutine allocate_arrays
 
@@ -65,8 +64,6 @@
          adyacencias = 0
          grupoFisico = 0
          grupoFisicoN = 0
-         nodoBorde = .false.
-         elementoBorde = .false.
          propiedades = 0.d0
       end subroutine initialize_arrays
 
@@ -80,6 +77,8 @@
          cumulativeResNod = 0.d0
          cumulativeResElem = 0.d0
          CMICriteria = 0.d0
+         borderVectorElem = 0.d0
+         borderVectorNod = 0.d0
          elementLoads = 0.d0
          elementFaces = 0
       end subroutine initialize_results
@@ -569,7 +568,7 @@
          call read_file_integer(jobdir,'gruposFisicosN.txt','Node Tag, Physical Group Tag',grupoFisicoN,NUMNODE,2)
          call read_file_real(jobdir,'nodos.inp','*NODE,NSET=N2',nodes,NUMNODE,dim,gap=1)
          call read_file_integer(jobdir,'conectividades.inp','*ELEMENT,TYPE=U1,ELSET=UEL',conectividades,NELEMS,nnod+1)
-      ! call read_file_integer(jobdir,'adyacenciaElementos.inp','elem, face1, face2, face3, face4',adyacencias,NELEMS,nnod+1)
+         call read_file_integer(jobdir,'adyacenciaElementos.inp','elem, face1, face2, face3, face4',adyacencias,NELEMS,nnod+1)
 !
       else if (LOP.eq.1) then ! Variables llamadas al comienzo de cada incremento
          call GETOUTDIR(JOBDIR,LENJOBDIR)
@@ -580,10 +579,12 @@
                CMICriteria(:) = cumulativeResElem(:, 12) !MG
                call calculateCMIthreshold() 
                call updateProps() !Keep inside if statement to avoid reupdate
+               call detectBorders(borderVectorElem,borderVectorNod)
             else
                CMICriteria(:) = resElem(:, 15) !C3
                call calculateCMIthreshold()
                call updateProps() !Keep inside if statement to avoid reupdate
+               call detectBorders(borderVectorElem,borderVectorNod)
             end if
          endif
       end if
