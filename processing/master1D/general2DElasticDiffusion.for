@@ -21,7 +21,6 @@
 !                          analisis.inp       ==> script de ABAQUS
 !                          conec.txt          ==> variables globales
 !-------------------------------------------------------------------------------------------
-      include 'debug_utils.for'
       include 'reading_utils.for'
       include 'writing_utils.for'
 
@@ -137,44 +136,44 @@
          Be(4,col)  = shp(1,n1)
       enddo  
       !
-      return
-      end
-!---------------------------------------------------------------------------------------------
-!----------------------------------------------------------------------Matrices_de_calculo1D--
-!
-!     Devuelve las matrices de calculo requeridas en los analisis escalares en 1D
-!
-!---------------------------------------------------------------------------------------------
-      subroutine Matrices_de_calculo1D(shp, N, Ne, B, Be)
-!
-      use reading_utils
-!
-      integer n1, col
-      real*8, intent(in) :: shp(2, nnod)
-      real*8, intent(out) :: N(1, nnod), Ne(1, nnod), B(1, nnod), Be(2, nnod)
-!
-!     Puesta a cero
-      N  = 0.d0
-      Ne = 0.d0
-      B  = 0.d0
-      Be = 0.d0
-!
-!     Inicializacion
-      do n1 = 1, nnod
-         col = n1
-!
-!        Funciones de forma para descripcion de variable escalar
-         N(1, n1) = shp(1, n1)
-!
-!        Funciones de forma para descripcion de variable vectorial (simple en 1D)
-         Ne(1, col) = shp(1, n1)
-!
-!        Funciones de forma derivadas en el espacio para variable escalar
-         B(1, n1) = shp(2, n1)
-!
-!        Funciones de forma derivadas para el caso elastico en 1D
-         Be(1, col) = shp(2, n1)  ! Derivada respecto a x
-         Be(2, col) = shp(1, n1)  ! Valor de la funcion de forma
+            return
+            end
+      !---------------------------------------------------------------------------------------------
+      !----------------------------------------------------------------------Matrices_de_calculo1D--
+      !
+      !     Devuelve las matrices de calculo requeridas en los analisis escalares en 1D
+      !
+      !---------------------------------------------------------------------------------------------
+            subroutine Matrices_de_calculo1D(shp, N, Ne, B, Be)
+      !
+            use reading_utils
+      !
+            integer n1, col
+            real*8, intent(in) :: shp(2, nnod)
+            real*8, intent(out) :: N(1, nnod), Ne(1, nnod), B(1, nnod), Be(2, nnod)
+      !
+      !     Puesta a cero
+            N  = 0.d0
+            Ne = 0.d0
+            B  = 0.d0
+            Be = 0.d0
+      !
+      !     Inicializacion
+            do n1 = 1, nnod
+               col = n1
+      !
+      !        Funciones de forma para descripcion de variable escalar
+               N(1, n1) = shp(1, n1)
+      !
+      !        Funciones de forma para descripcion de variable vectorial (simple en 1D)
+               Ne(1, col) = shp(1, n1)
+      !
+      !        Funciones de forma derivadas en el espacio para variable escalar
+               B(1, n1) = shp(2, n1)
+      !
+      !        Funciones de forma derivadas para el caso elastico en 1D
+               Be(1, col) = shp(2, n1)  ! Derivada respecto a x
+               Be(2, col) = shp(1, n1)  ! Valor de la funcion de forma
       enddo  
 !
       return
@@ -366,45 +365,26 @@
       use reading_utils
       include 'ABA_PARAM.INC'
 !
-      integer  i,j,k,jelem,nCart,grupoFisicoActual
-      real*8   x,minx,CMIcurrent
+      integer    i,j,nCart
+
+      real*8     CMIavg,CMIstd
 
       CMIavg = 0.0
       CMIstd = 0.0
-      CMImax = -huge(1.0d0)
       nCart = 0
 
-      do jelem=1,NELEMS
-         grupoFisicoActual = grupoFisico(jelem,2)
-         if ((grupoFisicoActual .ge. 2) .and. (grupoFisicoActual .le. 6)) then
-            CMIcurrent = CMICriteria(jelem)
-            CMIavg = CMIavg + CMIcurrent
+      do i=1,NELEMS
+         if (grupoFisico(i,2) == 2) then
+            CMIavg = CMIavg + CMICriteria(i)
             nCart = nCart + 1
-
-            minx = huge(1.0d0)
-            do j = 1, nnod
-               k = conectividades(jelem, j+1)
-               x = abs(nodes(k,1))
-               if (x < minx) then
-                  minx = x
-               endif
-               
-            enddo
-
-            !if (minx < 1.0d-5) then
-            if (CMIcurrent>CMImax) then
-               CMImax = CMIcurrent
-            endif
-            !endif
          endif
       enddo
 
       CMIavg = CMIavg / DBLE(nCart)
 
-      do jelem=1,NELEMS
-         grupoFisicoActual = grupoFisico(jelem,2)
-         if ((grupoFisicoActual .ge. 2) .and. (grupoFisicoActual .le. 6)) then
-            CMIstd = CMIstd + (CMICriteria(jelem) - CMIavg)**2
+      do i=1,NELEMS
+         if (grupoFisico(i,2) == 2) then
+            CMIstd = CMIstd + (CMICriteria(i) - CMIavg)**2
          endif
       enddo
 
@@ -413,14 +393,51 @@
       CMIThreshold = CMIavg + stdWeight * CMIstd
 
       print *, ''
-      print *, 'nCart:', nCart
       print *, 'CMIavg:', CMIavg
       print *, 'CMIstd:', CMIstd
-      print *, 'CMImax:', CMImax
       print *, 'CMIthreshold:', CMIThreshold
+      print *, ''
 
       return
       end
+!------------------------------------------------------------------------------------------
+!---------------------------------------------------------------------------neighborOss---
+!       Funcion neighborOss
+!
+!
+!       Funcion que regresa el número de elementos vecinos que cumplen la condición de
+!       cambio de propiedad.
+!       Se utiliza para determinar si un elemento es candidato a cambiar de propiedad.
+!       Se utiliza en la función updateProps.
+!
+!
+!--------------------------------------------------------------------------------------------
+
+      SUBROUTINE neighborOss(i, n, candidates)
+         USE reading_utils
+         INTEGER, INTENT(IN) :: i
+         INTEGER, INTENT(OUT) :: n, candidates(nnod)
+         INTEGER :: j, k, limitGroup, limitElement
+         LOGICAL :: localChange
+     
+         j = 1
+         k = 1
+         n = 0
+         candidates = -1  ! Default value if no candidates is found
+     
+         DO WHILE (j <= nnod)
+             limitElement = adyacencias(i, j + 1)
+             limitGroup = grupoFisico(limitElement, 2)
+             localChange = CMICriteria(limitElement) >= CMIThreshold
+             IF (localChange .OR. limitGroup >= 4) THEN
+                 n = n + 1
+             ELSE
+                 candidates(k) = limitElement
+                 k = k + 1
+             ENDIF
+             j = j + 1
+         END DO
+      END SUBROUTINE neighborOss
 !---------------------------------------------------------------------------------------------
 !-------------------------------------------------------------updateProps-----------
 !
@@ -434,7 +451,8 @@
 !
       use reading_utils
       logical :: update(nelems)
-      integer :: i, grupoFisicoActual
+      integer :: i, grupoFisicoActual, n, n1, n2
+      integer :: candidates(nnod), candidates1(nnod), candidates2(nnod)
       integer :: newGroup(nelems)
 !
 !     Actualización de propiedades
@@ -442,21 +460,37 @@
       update = .false.
       newGroup = 0
 
-      print *, 'Updating properties...'
-
       ! Decidir si se va a cambiar la propiedad
+      print *, '***************************************************************'
       do i=1,NELEMS
          grupoFisicoActual = grupoFisico(i,2)
 
-         if (grupoFisicoActual.gt.1) then
+         call neighborOss(i, n, candidates)
+
+         if (grupoFisicoActual==4) then
+            update(i) = .true.
+            newGroup(i) = 5
+         endif
+         if (grupoFisicoActual==2) then
             if (CMICriteria(i) >= CMIThreshold) then
                update(i) = .true.
-               newGroup(i) = 1
+               newGroup(i) = 4
+            else
+               if (n>=3) then
+                  update(i) = .true.
+                  newGroup(i) = 4
+               else if (n == 2) then
+                  call neighborOss(candidates(1), n1, candidates1)
+                  call neighborOss(candidates(2), n2, candidates2)
+                  if (n1 == 3 .and. n2 == 3) then
+                     print *, 'Found this case!!! Element:', i
+                     update(i) = .true.
+                     newGroup(i) = 4
+                  end if
+               end if
             end if
-         else if (grupoFisicoActual==1) then
-            update(i) = .true.
-            newGroup(i) = 0
-         endif
+         end if
+
       enddo
 
       ! Cambiar la propiedad
@@ -468,7 +502,7 @@
       enddo
 
       return
-      end subroutine updateProps
+      end
 !---------------------------------------------------------------------------------------------
 !-------------------------------------------------------------ENSAMBLE-----------
 !
@@ -498,11 +532,12 @@
 !
 !     Generales
       integer k1,k2,k3,cc,ff,fil,col,tipo,colg,filg,colp,filp
-      integer ndofnod
+      integer ndofnod,ndofdiff
       real*8  paux(ndofel),Kelast(dim*nnod,dim*nnod)
       real*8  Kdiff(nnod,nnod)
       real*8  Masa(nnod,nnod)
-      real*8  Mec(dim*nnod)
+      real*8  Def(dim*nnod)
+      real*8  Dif(2)
       real*8  Reac(1,nnod)
       real*8 , allocatable :: myU(:,:), myDU(:,:)
 !
@@ -513,19 +548,15 @@
       real*8  force, fx, fy
 !
       integer  grupo
-      real*8  E, nu, D(2), f(2), g(2), h(2)
+      real*8  E, nu, D, f(2), g(2), h(2)
 
       logical :: found
 !     Inicializacion de matrices y variables
       m_k   =   0.d0
       p     =   0.d0
       ndofnod = ndofel/nnod 
-      paux = 0.d0
-      Kelast = 0.d0
-      Kdiff = 0.d0
-      Masa = 0.d0
-      Mec = 0.d0
-      Reac = 0.d0
+      ndofdiff = 2
+!
 !     
       allocate(myU(ndofnod,nnod), myDU(ndofnod,nnod))
 
@@ -535,33 +566,36 @@
       endif
 !
 !    Inicializacion de los residuos
-      do i=1,nnod
-         do j=1,ndofnod
-            myU(j,i) = u(ndofnod*(i-1)+j)
-            myDU(j,i) = du(ndofnod*(i-1)+j,1)
-         enddo
-	   enddo
+      ! do i=1,nnod
+      !    du1(i) = du(5*(i-1)+1,1)
+      !    du2(i) = du(5*(i-1)+2,1)
+      !    du3(i) = du(5*(i-1)+3,1)
+      !    du4(i) = du(5*(i-1)+4,1)
+      !    du5(i) = du(5*(i-1)+5,1)
+      !    u1(i)  = u(5*(i-1)+1)
+      !    u2(i)  = u(5*(i-1)+2)
+      !    u3(i)  = u(5*(i-1)+3)
+      !    u4(i)  = u(5*(i-1)+4)
+      !    u5(i)  = u(5*(i-1)+5)
+	   ! enddo
 !
 !     Ensamblar la matriz de rigidez elastica en la matriz tangente global
 !     Llamado de la matriz de rigidez para la expansion
-      
+      call matriz_rigidez_el(u,ndofel,de,x,jelem,time(2),Kelast)
       call matriz_rigidez_dif(u,ndofel,de,x,jelem,time(2),Kdiff)
       call matriz_masa(u,ndofel,de,x,jelem,time(2),Masa)
       call vector_reaccion(u,ndofel,de,x,jelem,time(2),Reac)
-      call matriz_rigidez_el(u,ndofel,de,x,jelem,time(2),Kelast)
-      call carga_distribuida(i, x, KINC, jelem, Mec)
 
       grupo = grupoFisico(jelem,2)+1
       E  = propiedades(grupo,1)
       nu = propiedades(grupo,2)
-      D(1)  = propiedades(grupo,3)
-      D(2)  = propiedades(grupo,4)
-      f(1) = propiedades(grupo,5)
-      f(2) = propiedades(grupo,6)
-      g(1) = propiedades(grupo,7)
-      g(2) = propiedades(grupo,8)
-      h(1) = propiedades(grupo,9)
-      h(2) = propiedades(grupo,10)
+      D  = propiedades(grupo,3)
+      f(1) = propiedades(grupo,4)
+      f(2) = propiedades(grupo,5)
+      g(1) = propiedades(grupo,6)
+      g(2) = propiedades(grupo,7)
+      h(1) = propiedades(grupo,8)
+      h(2) = propiedades(grupo,9)
 !
 !      print '(F6.1, 1X, F6.1, 1X, F6.1, 1X, F6.1,'//
 !     & '1X, F6.1, 1X, F6.1, 1X, F6.1, 1X, F6.1, 1X, F6.1)'
@@ -580,7 +614,7 @@
                filg = fil+(i-1)
                filp = ff +(i-1)
                ! Ensamble del vector de carga
-               p(filg,1) = p(filg,1) + Mec(filp)
+               ! p(filg,1) = p(filg,1) + Mec(filp)  
                do j=1,dim
                   colg = col+(j-1)
                   colp = cc +(j-1)
@@ -597,20 +631,15 @@
             m_k(fil,col+1) = m_k(fil,col+1) + f(1)*Masa(k1,k2) 
             m_k(fil+1,col) = m_k(fil+1,col) + f(2)*Masa(k1,k2)
 
-            do i=1,2
+            do i=1,ndofdiff
                filg = fil + (i-1)
                colg = col + (i-1)
                ! Ensamble del vector de reaccion
                p(filg,1) = p(filg,1) - h(i)*Reac(1,k1) ! revisar
                ! Ensamble de la matriz de rigidez difusiva
-               m_k(filg,colg) = m_k(filg,colg) - D(i)*Kdiff(k1,k2)
+               m_k(filg,colg) = m_k(filg,colg) - D*Kdiff(k1,k2)
                m_k(filg,colg) = m_k(filg,colg) + g(i)*Masa(k1,k2)
             enddo
-
-            ! Actualizacion de los indices 
-            filg = fil + 2
-            colg = col + 2
-            m_k(filg,colg) = m_k(filg,colg) - Kdiff(k1,k2)
 
          enddo
       enddo
@@ -622,35 +651,7 @@
       do k1=1,ndofel
          p(k1,1) = p(k1,1) - paux(k1)
       enddo
-!      
-      return
-      end
-!------------------------------------------------------------------------------------------
-!-------------------------------------------------------------carga_distribuida-----------
 !
-!      Funcion carga_distribuida
-!
-!
-!      Funcion que regresa la carga distribuida en el elemento
-!      Se utiliza para el analisis elastico
-!
-!-----------------------------------------------------------------------------------------
-      subroutine carga_distribuida(i, x, KINC, jelem, vec)
-      
-      use reading_utils
-
-      logical :: found
-      integer :: n1, n2, i, KINC, jelem
-      real*8 :: x1(2), x2(2), mag, vec(dim*nnod), x(dim,nnod)
-      real*8 :: force, fx, fy
-
-      vec = 0.0d0
-!     TODO: Use a similar approach to KDLOAD, NDLOAD and ADLMAG to load elements
-!     DO KDLOAD = 1, NDLOAD
-!         n1 = JDLTYP(KDLOAD,1) ! Cara de la carga distribuida
-!         mag = ADLMAG(KDLOAD,1) ! Magnitud de la carga distribuida
-!     ENDDO
-
 !     Insercion de carga distribuida
       found = .false.
 
@@ -661,6 +662,11 @@
          end if
       enddo
 
+!     TODO: Use a similar approach to KDLOAD, NDLOAD and ADLMAG to load elements
+!     DO KDLOAD = 1, NDLOAD
+!         n1 = JDLTYP(KDLOAD,1) ! Cara de la carga distribuida
+!         mag = ADLMAG(KDLOAD,1) ! Magnitud de la carga distribuida
+!     ENDDO
 
       if (found) then ! Works just for 1 load per element
          n1 = elementFaces(i, 2) ! Cara de la carga distribuida
@@ -670,18 +676,20 @@
          x1 = x(:,n1)
          x2 = x(:,n2)
 
+!         len = sqrt((x2(1)-x1(1))**2 + (x2(2)-x1(2))**2)
+!         angulo = atan2(x2(2)-x1(2), x2(1)-x1(1))
          force = mag/2 ! *len
          fx = -force*(x2(2)-x1(2)) !/len
          fy = force*(x2(1)-x1(1)) !/len
 
-         vec(2*n1-1) = fx
-         vec(2*n1) = fy
-         vec(2*n2-1) = fx
-         vec(2*n2) = fy
+         p(ndofnod*(n1-1)+1, 1) = p(ndofnod*(n1-1)+1, 1) + fx
+         p(ndofnod*(n1-1)+2, 1) = p(ndofnod*(n1-1)+2, 1) + fy
+         p(ndofnod*(n2-1)+1, 1) = p(ndofnod*(n2-1)+1, 1) + fx
+         p(ndofnod*(n2-1)+2, 1) = p(ndofnod*(n2-1)+2, 1) + fy
       end if
-
-      end subroutine carga_distribuida
-
+      
+      return
+      end
 !------------------------------------------------------------------------------------------
 !----------------------------------------------------------------matriz_rigidez_el---------
 !
@@ -1158,7 +1166,7 @@
 !     Definicion del tensor de constantes elasticas
       Dmat   = 0.d0
 !
-      grupo  = grupoFisico(jelem,2)+1
+      grupo = grupoFisico(jelem,2)+1
       E      = propiedades(grupo,1)
       nu     = propiedades(grupo,2)
 !
@@ -1248,7 +1256,7 @@
          include 'ABA_PARAM.INC'
       
          integer :: jelem, j, k, grupo
-         real*8  :: xjac, radio, centro
+         real*8  :: a, b, xjac, radio, centro
          real*8  :: EsMax, EsMin, sigma_zz, Esf_VM, Esf_Hid, thao_oct, OI
          real*8  :: E, nu, BG, CMI
          real*8  :: x(dim, nnod)                   ! nodal coordinates
@@ -1258,7 +1266,7 @@
          real*8  :: DESP2D(2*nnod)                ! displacements
          real*8  :: Dmat2(3, 3)
          real*8  :: DEFORM(3), ESF(3)
-         real*8  :: CEN(ndofdiff)
+         real*8  :: CEN(2)
    
          ! integer :: jelem, j, k
          ! real*8  :: x(1, nnod)              ! Nodal coordinates (only x)
@@ -1274,6 +1282,8 @@
          
          if (dim == 2) then
             resElem = 0.0d0
+      
+            a = 0.0d0 ;  b = 0.0d0
          
             do jelem = 1, NELEMS
                ! Reset per element
@@ -1284,25 +1294,20 @@
          
                do j = 1, nnod
                   k = conectividades(jelem, j+1)
-                  do i = 1,dim
-                     x(i,j) = nodes(k,i)
-                  end do
-
-                  do i = 1,ndofdiff
-                     CEN(i) = CEN(i) + Nm(1,j)*resNod(k,ndofdiff+i-1)
-                  end do
+                  x(1,j) = nodes(k,1)
+                  x(2,j) = nodes(k,2)
                end do
          
-               call f_forma2D(0.0d0, 0.0d0, x, shp, xjac)
+               call f_forma2D(a, b, x, shp, xjac)
                call Matrices_de_calculo2D(shp, Nm, Bm, Ne, Be)
                call matriz_constantes_el(U, ndofel, de, x, jelem, t, Dmat2)
          
                do j = 1, nnod
                   k = conectividades(jelem, j+1)
-                  
-                  do i=1,dim
-                     DESP2D(2*j-1+i-1) = resNod(k,i)
-                  end do
+                  DESP2D(2*j-1) = resNod(k,1)
+                  DESP2D(2*j  ) = resNod(k,2)
+                  CEN(1) = CEN(1) + Nm(1,j)*resNod(k,3)
+                  CEN(2) = CEN(2) + Nm(1,j)*resNod(k,4)
                end do
          
                DEFORM = matmul(Be(1:3,:), DESP2D)
@@ -1326,27 +1331,19 @@
                Esf_VM   = sqrt( ((EsMax-EsMin)**2 + (EsMin-sigma_zz)**2 + (sigma_zz-EsMax)**2) / 2.d0 )
                Esf_Hid  = (EsMax + EsMin + sigma_zz) / 3.d0
                thao_oct = Esf_VM * sqrt(2.d0)/3.d0
-               OI  = thao_oct + kOI * Esf_Hid
-               BG  = CEN(1) - 0.5*CEN(2)
-               CMI = 0.5*BG + OI
+               OI       = thao_oct + kOI * Esf_Hid
+               BG  = CEN(1)
+               CMI = BG
          
-               resElem(jelem, 1) = DEFORM(1) !E11
-               resElem(jelem, 2) = DEFORM(2) !E22
-               resElem(jelem, 3) = 0.0 !E33 (Not implemented)
-               resElem(jelem, 4) = DEFORM(3) !E12
-               resElem(jelem, 5) = ESF(1) !S11
-               resElem(jelem, 6) = ESF(2) !S22
-               resElem(jelem, 7) = sigma_zz !S33
-               resElem(jelem, 8) = ESF(3) !S12
-               resElem(jelem, 9) = Esf_VM !S_Mises
-               resElem(jelem, 10) = Esf_Hid !S_Hyd
-               resElem(jelem, 11) = thao_oct !S_Oct
-               resElem(jelem, 12) = OI !OI
-               resElem(jelem, 13) = CEN(1) !C1
-               resElem(jelem, 14) = CEN(2) !C2
-               resElem(jelem, 15) = CEN(3) !C3
-               ! resElem(jelem, 15) = BG
-               ! resElem(jelem, 16) = CMI
+               resElem(jelem,1:4)  = (/ DEFORM(1:2), 0.d0, DEFORM(3) /)
+               resElem(jelem,5:8)  = (/ ESF(1:2), sigma_zz, ESF(3) /)
+               resElem(jelem,9)    = Esf_VM
+               resElem(jelem,10)   = Esf_Hid
+               resElem(jelem,11)   = thao_oct
+               resElem(jelem,12)   = OI
+               resElem(jelem,13:14)= CEN
+               resElem(jelem,15)   = BG
+               resElem(jelem,16)   = CMI
             end do
          else if (dim == 1) then
             do jelem = 1, NELEMS
@@ -1402,6 +1399,8 @@
       integer    i,j,KINC
 !
       do i=1,NUMNODE
+         resNod(i,5) = resNod(i,4) - resNod(i,3) ! BG = C2 - C1
+
          do j=1,nResNod
             if (KINC == 1) then
                cumulativeResNod(i,j) = resNod(i,j)
@@ -1430,7 +1429,7 @@
       return
       end
 !------------------------------------------------------------------------------------------
-!-------------------------------------------------------------detectBorders--------
+!-------------------------------------------------------------calculateCMIcriteria--------
 !
 !
 !       Funcion detectBorders()
@@ -1526,3 +1525,33 @@
 
       RETURN
       END
+
+!------------------------------------------------------------------------------------------
+!-------------------------------------------------------------MPC---------------------
+! Nodal version of user subroutine MPC
+!-------------------------------------------------------------------------------------------
+!       SUBROUTINE MPC(UE,A,JDOF,MDOF,N,JTYPE,X,U,UINIT,MAXDOF,
+!      1 LMPC,KSTEP,KINC,TIME,NT,NF,TEMP,FIELD,LTRAN,TRAN)
+! !
+!       INCLUDE 'ABA_PARAM.INC'
+! !
+!       DIMENSION UE(MDOF),A(MDOF,MDOF,N),JDOF(MDOF,N),X(6,N),
+!      1 U(MAXDOF,N),UINIT(MAXDOF,N),TIME(2),TEMP(NT,N),
+!      1 FIELD(NF,NT,N),LTRAN(N),TRAN(3,3,N)
+
+
+!       print *, ''
+!       print *, 'MPC called'
+!       print *, 'maxDOF:', MAXDOF
+!       print *, 'MDOF:', MDOF
+!       print *, 'N:', N
+!       print *, 'JTYPE:', JTYPE
+
+! !     user coding to define JDOF, UE, A and, optionally, LMPC
+!       IF (JTYPE .EQ. 1) THEN
+!          JDOF(1) = 13
+!          JDOF(2) = 2
+!       ENDIF
+
+!       RETURN
+!       END

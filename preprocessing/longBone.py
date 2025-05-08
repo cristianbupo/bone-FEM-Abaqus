@@ -202,7 +202,8 @@ def intersectMeshes(bone, elem1, nod1, elem2, nod2, adjacencyArray):
     cart_thick = bone.geom_vars.cart_thick
     max_length = cart_thick - plate_2
 
-    zonesLimits = [0.0, 0.0, 0.3, 0.45, 0.75, max_length]+referenceCoords[-1]
+    zonesLimits = [0.0, 0.0, 0.3/2.2, 0.45/2.2, 0.75/2.2, max_length]+referenceCoords[-1]
+    zonesLimits = [0.0, 0.0, 0.25/2.2, 0.32/2.2, 0.57/2.2, max_length]+referenceCoords[-1]
     
     closest_indexes = []
     for limit in zonesLimits:
@@ -707,11 +708,19 @@ def copyAnalysisFiles():
     #    '**'
     # )
 
-    formatFile(
-        os.path.join('master','runMaster.bat'),
-        os.path.join(boneConfig.inputPath, jobName + "Master.bat"),
-        jobName
-    )
+    version = 'mechanicsFirstStep'
+
+    if boneConfig.mode == 'original':
+        version = 'master'
+
+    dict = {
+        'jobName': jobName,
+        'version': version
+    }
+
+    g2g.writeOnFile(os.path.join('master','runMaster.bat'),
+                    os.path.join(boneConfig.inputPath, jobName + "Master.bat"),
+                    dict)
 
     # formatFile(
     #     os.path.join('master','runSimple.bat'),
