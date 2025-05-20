@@ -43,18 +43,6 @@
 
 !     CellData
       write(16, '(a46)') '<CellData Tensors="''E_Centroid'',''S_Centroid''">'
-      if (dim == 2) then
-         call writeDataArrayReal('E_Centroid', mElem(:, 1:4), NELEMS, 4)
-         call writeDataArrayReal('S_Centroid', mElem(:, 5:8), NELEMS, 4)
-         call writeDataArrayReal('S_Mises', mElem(:, 9), NELEMS, 1)
-         call writeDataArrayReal('S_Hyd', mElem(:, 10), NELEMS, 1)
-         call writeDataArrayReal('S_Oct', mElem(:, 11), NELEMS, 1)
-         call writeDataArrayReal('MG', mElem(:, 12), NELEMS, 1)
-         call writeDataArrayReal('C', mElem(:, 13:14), NELEMS, 2)
-         call writeDataArrayReal('BG', mElem(:, 15), NELEMS, 1)
-         call writeDataArrayReal('CMI', mElem(:, 16), NELEMS, 1)
-         call writeDataArrayReal('BorderElement', mElem(:, 17), NELEMS, 1)
-      end if
       call writeDataArrayInt('Region', grupoFisico(:, 2), NELEMS, 1)
       call writeProps()
       write(16,'(a11)') '</CellData>'
@@ -212,6 +200,18 @@
          write(str, '(I0)') num    ! Convert integer to string
       end function itoa
 !-------------------------------------------------------------------------------------------
+!-------------------------------------------------------------itoaN-------------------
+!
+!     Rutina para convertir un entero a cadena de caracteres (longitud variable)
+!
+!-------------------------------------------------------------------------------------------
+      function itoaN(num, nchar) result(str)
+         integer, intent(in) :: num
+         integer, intent(in) :: nchar
+         character(len=nchar) :: str
+         write(str, '(I0)') num
+      end function itoaN
+!-------------------------------------------------------------------------------------------
 !-------------------------------------------------------------getComponentString-------------------
 !
 !
@@ -296,61 +296,20 @@
             resNod(k, 2) = ARRAY(5)
             resNod(k, 3) = ARRAY(6)
             resNod(k, 4) = ARRAY(7)
-         ! resNod(k, 5) Reservado para el CMI
-         ! resNod(k, 6) Reservado para el nodo frontera
-         ! resNod(k, 7) = ARRAY(13) ! Dummy variable
-         ! if (dim==1) then
-         !    print *, resNod(k, 1), resNod(k, 2), resNod(k, 3)
-         ! endif
          END IF
 !
       END DO
 !
  110  CONTINUE
-      print *, 'KSTEP:', KSTEP, 'KINC:', KINC
       call GETOUTDIR(JOBDIR,LENJOBDIR)
       call GETJOBNAME(JOBNAME,LENJOBNAME)
-      print *, JOBDIR
-      print *, JOBNAME
+      
+      ! Asegurarse de que el directorio de trabajo existe
+      call system('mkdir "' // trim(jobdir) // '\results" >nul 2>&1')
 !     Cálculo de los esfuerzos y las deformaciones
-      if (dim == 2) then
-         call outsigma()
-         call accumulateResults(KINC)
-         write(loadString, '(I3.3)') KINC
-         write(stepString, '(I3.3)') KSTEP
-         folderName = trim(jobdir) // '\resultados\' // trim(jobname) // '\' // 'step' // trim(stepString) // '\'
-         call execute_command_line('if not exist ' // trim(folderName) // ' mkdir ' // trim(folderName))
-         filename = trim(folderName) // trim(jobname) // '_step' // trim(stepString) // '_load' // trim(loadString) // '.vtu'
-      else
-         filename = trim(jobdir) // '\result_'// trim(jobname) // '.vtu'
-      end if
+      filename = trim(jobdir) // '\results\result_'// trim(jobname) // trim(itoaN(kinc,6)) // '.vtu'
 !
 !     Escritura de los resultados en el archivo VTK
-      print *, 'Writing results in file: ', trim(filename)
       call writeVTKFile(filename, resNod, resElem)
-!
-!     Ultimo incremento del paso
-!    
-      if (KINC==nLoads .and. dim == 2) then
-         folderName = trim(jobdir) // '\resultados\' // trim(jobname)
-         filename = trim(folderName) // '\' // trim(jobname) // '_step' // trim(stepString)//'.vtu'
-!        
-!        Escritura de resultados
-         call writeVTKFile(filename, cumulativeResNod, cumulativeResElem)
-!
-!        Calculo de la condición de actualización de propiedades
-         if (KSTEP == 1) then
-            CMICriteria(:) = cumulativeResElem(:, 12)
-         else
-            CMICriteria(:) = cumulativeResElem(:, 16)
-            stdWeight = 1.0d0
-         end if
-
-         call calculateCMIthreshold()
-         
-!        Actualización de propiedades
-         call updateProps()
-      end if
-!
       return
       end

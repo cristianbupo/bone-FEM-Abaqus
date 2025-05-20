@@ -1,5 +1,9 @@
       module reading_utils
       implicit none
+
+   ! Precisión de los números reales
+   !   integer, parameter :: qp = selected_real_kind(33)
+
    ! Variables a ser leidas del archivo de entrada
       integer :: NUMNODE, NELEMS, dim, nnod
       integer :: nLoads, nResNod, nResElem
@@ -53,10 +57,6 @@
 
       subroutine initialize_arrays()
          implicit none
-      ! Initialize arrays to default values
-         print *, ''
-         print *, 'Initializing all arrays...'
-         print *, ''
 
          elementLoads = 0.d0
          elementFaces = 0
@@ -439,7 +439,7 @@
       character*276         line, key
       integer               ios, pos
       integer               i,j,k,elem
-!
+
       if (LOP.eq.0) then ! Variables llamadas al comienzo del análisis
          call GETOUTDIR(JOBDIR,LENJOBDIR)
          call GETJOBNAME(JOBNAME,LENJOBNAME)
@@ -450,21 +450,6 @@
          call read_file_integer(jobdir,'gruposFisicos.txt','Element Tag, Physical Group Tag',grupoFisico,NELEMS,2)
          call read_file_real(jobdir,'nodos.inp','*NODE,NSET=N2',nodes,NUMNODE,dim,gap=1)
          call read_file_integer(jobdir,'conectividades.inp','*ELEMENT,TYPE=U1,ELSET=UEL',conectividades,NELEMS,nnod+1)
-      ! call read_file_integer(jobdir,'adyacenciaElementos.inp','elem, face1, face2, face3, face4',adyacencias,NELEMS,nnod+1)
-      ! call read_file_integer(jobdir,'nFilasCargas.txt','',listNElementLoads,nLoads,1,noTitle=.true.)
-!
-         do i=1,nLoads
-            print*, listNElementLoads(i,1)
-         enddo
-!
-      else if (LOP.eq.1) then ! Variables llamadas al comienzo de cada paso
-!        Reinicialización de variables
-         call GETOUTDIR(JOBDIR,LENJOBDIR)
-         ! call read_loads(jobdir,'carga.inp',KINC,elementFaces,elementLoads,maxNElementLoads,2,1)
-      end if
-
-      if (KINC.eq.1) then ! Variables llamadas al comienzo de cada paso.'
-         call detectBorders(resElem(:,17),resNod(:,6))
       end if
       return
       end
