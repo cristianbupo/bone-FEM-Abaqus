@@ -490,6 +490,10 @@
 !     Inicializacion de matrices y variables
       m_k   =   0.d0
       p     =   0.d0
+      
+      grupo = grupoFisico(jelem,2)+1
+
+      if (grupo > 1) then
       ndofnod = ndofel/nnod 
       ndofdiff = 2
 !
@@ -514,7 +518,7 @@
       call vector_reaccion(u,ndofel,de,x,jelem,time(2),Reac)
       call matriz_masa(u,ndofel,de,x,jelem,time(2),Masa)
 
-      grupo = grupoFisico(jelem,2)+1
+      
       E  = propiedades(grupo,1)
       nu = propiedades(grupo,2)
       D  = propiedades(grupo,3)
@@ -572,11 +576,6 @@
                m_k(filg,colg) = m_k(filg,colg) - g(i)*Masa(k1,k2)
             enddo
 
-            ! do i = 1, ndofdiff
-            !    filg = fil + (i-1)
-            !    colg = col + (i-1)
-            !    m_k(filg,colg) = m_k(filg,colg) + D*Kdiff(k1,k2)   ! or –D_ij
-            ! end do
 
          enddo
       enddo
@@ -600,6 +599,7 @@
             enddo
          enddo
       enddo
+      endif
 !
       return
       end

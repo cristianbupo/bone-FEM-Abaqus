@@ -202,8 +202,7 @@ def intersectMeshes(bone, elem1, nod1, elem2, nod2, adjacencyArray):
     cart_thick = bone.geom_vars.cart_thick
     max_length = cart_thick - plate_2
 
-    zonesLimits = [0.0, 0.0, 0.3/2.2, 0.45/2.2, 0.75/2.2, max_length]+referenceCoords[-1]
-    zonesLimits = [0.0, 0.0, 0.25/2.2, 0.32/2.2, 0.57/2.2, max_length]+referenceCoords[-1]
+    zonesLimits = [0.0, 0.0, 0.12, 0.17, 0.29, max_length]+referenceCoords[-1]
     
     closest_indexes = []
     for limit in zonesLimits:
