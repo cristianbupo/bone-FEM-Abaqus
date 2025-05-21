@@ -16,7 +16,7 @@
 *USER ELEMENT,NODES=4,TYPE=U1,PROP=10,COORDINATES=2,VAR=16
 11,12,13,14,15,16,17,18,19,20
 *INCLUDE, INPUT=conectividades.inp 
-** *INCLUDE, INPUT=cuerpo.inp
+*INCLUDE, INPUT=cuerpo.inp
 ** Dummy material properties
 *UEL PROPERTY,ELSET=UEL
 0.0, 0.0, 0.0, 0.0, 0.0, 0.0

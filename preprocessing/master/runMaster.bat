@@ -1,4 +1,4 @@
-rmdir /S /Q resultados
+for /d %%i in (resultados*) do rmdir /S /Q "%%i"
 set project_path=C:\Users\crist\git\bone-FEM-Abaqus\processing
 set version={version}
 set user_file=general2DElasticDiffusion.for

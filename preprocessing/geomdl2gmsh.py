@@ -7,8 +7,8 @@ import xml.etree.ElementTree as ET
 import matplotlib.pyplot as plt
 
 
-def createTransfiniteSurface(edges, meshSize, reverse=False, direction="Right", ignorePoint=0):
-    adjacencies = createTransfiniteLine(edges, meshSize)
+def createTransfiniteSurface(edges, meshSize, reverse=False, direction="Right", ignorePoint=0, progressionList=[]):
+    adjacencies = createTransfiniteLine(edges, meshSize, progressionList)
     nEdges = len(edges)
     transfinitePoints = []
 
@@ -35,10 +35,14 @@ def createTransfiniteSurface(edges, meshSize, reverse=False, direction="Right", 
     gmsh.model.mesh.setTransfiniteSurface(surface, direction, transfinitePoints)
 
 
-def createTransfiniteLine(edges, meshSize):
+def createTransfiniteLine(edges, meshSize, progressionList):
     adjacencies = []
     for i, edge in enumerate(edges):
-        gmsh.model.mesh.setTransfiniteCurve(edge, meshSize[i])
+        print(edge)
+        print(meshSize)
+        print(progressionList)
+        print(f"Creating transfinite line for edge {edge} with mesh size {meshSize[i]} and progression {progressionList[i]}")
+        gmsh.model.mesh.setTransfiniteCurve(edge, meshSize[i], "Progression", progressionList[i])
         _, down = gmsh.model.getAdjacencies(1, edge)
         adjacencies.append(down)
 
@@ -195,11 +199,12 @@ def container2gmsh(bone, boneConfig, curvesMesh):
     setGmshOptions()
     parameters = createTrasnfiniteParameters(numberElements)
     for param in parameters:
-        createTransfiniteLine(param[0], param[1])
+        createTransfiniteLine(param[0], param[1], param[4])
 
     gmsh.model.occ.remove(gmsh.model.occ.getEntities(0), True)
 
-    createTransfiniteSurfaces(parameters)
+    for param in parameters:
+        createTransfiniteSurface(param[0], param[1], ignorePoint=param[2], reverse=param[3], progressionList=param[4]) 
     
     addPhysicalGroups(boneConfig)
 
@@ -285,6 +290,7 @@ def writeContainer(bone, boneConfig, curvesArea, all2DElements, adjacencyArray):
     contourLines = f2g.writeBoundaries(physicalGroups, inputPath)
     writeParameters(bone, boneConfig, tags, all2DElements, contourLines)
     
+    f2g.writeBody(physicalGroups, inputPath)
     f2g.writeSteps(boneConfig, number_steps, number_loads)
 
     if boneConfig.runFltk:
@@ -323,16 +329,17 @@ def container2advanceMesh(bone, boneConfig, curvesAdvance):
     setGmshOptions()
 
     parameters = [
-        ([2, 3, 4, 1], [vElems1, hElems, vElems1, hElems]),
-        ([5, 7, 6, 3], [vElems2, hElems, vElems2, hElems])
+        ([2, 3, 4, 1], [vElems1, hElems, vElems1, hElems], [], False, [1] * 4),
+        ([5, 7, 6, 3], [vElems2, hElems, vElems2, hElems], [], False, [1] * 4)
     ]
 
     for param in parameters:
-        createTransfiniteLine(param[0], param[1])
+        createTransfiniteLine(param[0], param[1], param[4])
 
     gmsh.model.occ.remove(gmsh.model.occ.getEntities(0), True)
 
-    createTransfiniteSurfaces(parameters)
+    for param in parameters:
+        createTransfiniteSurface(param[0], param[1], ignorePoint=param[2], reverse=param[3], progressionList=param[4]) 
 
     gmsh.model.mesh.generate(2)
 
@@ -638,65 +645,59 @@ def meshLineElements(numberElements):
     a2 = numberElements + 1
     a3 = 2 * numberElements + 1
     a4 = 2 * numberElements + 1
-    b = numberElements + 1
+    b = numberElements // 2
     c = 2 * numberElements + 1
     return a2, a3, a4, b, c
 
 def createTrasnfiniteParameters(numberElements, pixelInfo=None):
     a2, a3, a4, b, c = meshLineElements(numberElements)
 
+    list = [1] * 7
+    list[2] = -0.8
+    list[-1] = 0.8
     parameters = [
-        ([1, 2, 10, 5, 4, 3, 9], [a3, a3, b, a2, a3, a2, b], [1, 4, 5]),
-        ([4, 13, 11, 12], [a3, a4, a3, a4]),
-        ([3, 12, 14, 6], [a2, a4, a2, a4]),
-        ([5, 8, 15, 13], [a2, a4, a2, a4]),
-        ([11, 15, 7, 14], [a3, a2, a3, a2]),
-        ([19, 26, 17, 8], [c, a4, c, a4]),
-        ([18, 6, 16, 22], [c, a4, c, a4], True),
-        ([21, 27, 19, 10], [c, b, c, b]),
-        ([20, 9, 18, 24], [c, b, c, b], True),
-        ([7, 17, 23, 16], [a3, c, a3, c]),
-        ([25, 21, 2, 1, 20], [2*a3-1, c, a3, a3, c], [3])
+        ([1, 2, 10, 5, 4, 3, 9], [a3, a3, b, a2, a3, a2, b], [1, 4, 5], False, list),
+        ([4, 13, 11, 12], [a3, a4, a3, a4], [], False, [1] * 4),
+        ([3, 12, 14, 6], [a2, a4, a2, a4], [], False, [1] * 4),
+        ([5, 8, 15, 13], [a2, a4, a2, a4], [], False, [1] * 4),
+        ([11, 15, 7, 14], [a3, a2, a3, a2], [], False, [1] * 4),
+        
+        
+        
+        # ([19, 26, 17, 8], [c, a4, c, a4], [], False, [1] * 4),
+        # ([18, 6, 16, 22], [c, a4, c, a4], [], False, [1] * 4),
+        # ([21, 27, 19, 10], [c, b, c, b], [], False, [1] * 4),
+        # ([20, 9, 18, 24], [c, b, c, b], [], False, [1] * 4),
+        # ([7, 17, 23, 16], [a3, c, a3, c], [], False, [1] * 4),
+        # ([25, 21, 2, 1, 20], [2*a3-1, c, a3, a3, c], [3], False, [1] * 5)
 
     ]
 
-    if pixelInfo is not None:
-        elements6, nodes6, elements7, nodes7, elements8, nodes8 = pixelInfo
-        # Selection of nodes for border 6
-        p16 = [3, 12, 14] + elements6
-        p26 = [a2, a2, a2] + [1] * len(elements6)
-        p36 = list(range(4, len(nodes6) + 2))
+    # if pixelInfo is not None:
+    #     elements6, nodes6, elements7, nodes7, elements8, nodes8 = pixelInfo
+    #     # Selection of nodes for border 6
+    #     p16 = [3, 12, 14] + elements6
+    #     p26 = [a2, a2, a2] + [1] * len(elements6)
+    #     p36 = list(range(4, len(nodes6) + 2))
 
-        # Selection of nodes for border 7
-        p17 = [11, 15] + elements7 + [14]
-        p27 = [a3, a2] + [1] * len(elements7) + [a2]
-        p37 = list(range(3, len(nodes7) + 1))
+    #     # Selection of nodes for border 7
+    #     p17 = [11, 15] + elements7 + [14]
+    #     p27 = [a3, a2] + [1] * len(elements7) + [a2]
+    #     p37 = list(range(3, len(nodes7) + 1))
 
-        # Selection of nodes for border 8
-        p18 = [5] + elements8 + [15, 13]
-        p28 = [a2] + [1] * len(elements8) + [a2, a2]
-        p38 = list(range(2, len(nodes8)))
+    #     # Selection of nodes for border 8
+    #     p18 = [5] + elements8 + [15, 13]
+    #     p28 = [a2] + [1] * len(elements8) + [a2, a2]
+    #     p38 = list(range(2, len(nodes8)))
 
-        parameters = parameters[:-3]
-        parameters.extend([
-            (p16, p26, p36),
-            (p17, p27, p37),
-            (p18, p28, p38)
-        ])
+    #     parameters = parameters[:-3]
+    #     parameters.extend([
+    #         (p16, p26, p36),
+    #         (p17, p27, p37),
+    #         (p18, p28, p38)
+    #     ])
 
     return parameters
-
-
-def createTransfiniteSurfaces(parameters):
-    for param in parameters:
-        if len(param) == 3:
-            if isinstance(param[2], bool):
-                createTransfiniteSurface(param[0], param[1], reverse=param[2])      
-            else:
-                createTransfiniteSurface(param[0], param[1], ignorePoint=param[2])
-
-        else:
-            createTransfiniteSurface(param[0], param[1])
 
 
 def renumberElements():

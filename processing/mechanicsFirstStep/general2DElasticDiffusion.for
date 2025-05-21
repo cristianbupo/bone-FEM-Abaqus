@@ -430,10 +430,10 @@
 !
 !-------------------------------------------------------------------------------*/
 !-------------------------------------------------------------------------------*/
-      subroutine updateProps()
+      subroutine updateProps(KINC)
 !
       use reading_utils
-      logical :: update(nelems)
+      logical :: update(nelems), condition
       integer :: i, j, k, grupoFisicoActual
       integer :: newGroup(nelems)
 !
@@ -448,7 +448,13 @@
       do i=1,NELEMS
          grupoFisicoActual = grupoFisico(i,2)
 
-         if (grupoFisicoActual==5) then
+         condition = grupoFisicoActual.gt.0 .and. grupoFisicoActual.lt.7
+
+         if (KINC == 1) then
+            condition = condition .and. grupoFisicoActual.gt.2
+         endif
+
+         if (condition) then
             if (CMICriteria(i) >= CMIThreshold) then
                update(i) = .true.
                newGroup(i) = 8
@@ -584,12 +590,12 @@
                filg = fil+(i-1)
                filp = ff +(i-1)
                ! Ensamble del vector de carga
-               p(filg,1) = p(filg,1) + Mec(filp)
+               p(filg,1) = p(filg,1) - Mec(filp)
                do j=1,dim
                   colg = col+(j-1)
                   colp = cc +(j-1)
                   ! Ensamble de la matriz de rigidez elastica
-                  m_k(filg,colg) = m_k(filg,colg) + Kelast(filp,colp)
+                  m_k(filg,colg) = m_k(filg,colg) - Kelast(filp,colp)
                enddo
             enddo
 
@@ -597,20 +603,22 @@
             fil = fil + dim
             col = col + dim
 
-            if (grupo .le. 7) then
+            if ((grupo .ge. 2) .or. (grupo .le. 7)) then
+
+            ! Ensamble de las matrices de masa
+            m_k(fil,col+1) = m_k(fil,col+1) - f(1)*Masa(k1,k2) 
+            m_k(fil+1,col) = m_k(fil+1,col) - f(2)*Masa(k1,k2)
+
                do i=1,2
                   filg = fil + (i-1)
                   colg = col + (i-1)
                   ! Ensamble del vector de reaccion
-                  p(filg,1) = p(filg,1) - h(i)*Reac(1,k1) ! revisar
+                  p(filg,1) = p(filg,1) + h(i)*Reac(1,k1) ! revisar
                   ! Ensamble de la matriz de rigidez difusiva
-                  m_k(filg,colg) = m_k(filg,colg) - D(i)*Kdiff(k1,k2)
-                  m_k(filg,colg) = m_k(filg,colg) + g(i)*Masa(k1,k2)
+                  m_k(filg,colg) = m_k(filg,colg) + D(i)*Kdiff(k1,k2)
+                  m_k(filg,colg) = m_k(filg,colg) - g(i)*Masa(k1,k2)
                enddo
 
-               ! Ensamble de las matrices de masa
-               m_k(fil,col+1) = m_k(fil,col+1) + f(1)*Masa(k1,k2) 
-               m_k(fil+1,col) = m_k(fil+1,col) + f(2)*Masa(k1,k2)
             endif
 
             ! Actualizacion de los indices 
@@ -1445,13 +1453,13 @@
 !
 !
 !----------------------------------------------------------------------------
-      subroutine detectBorders(localVectorElem,localVectorNod)
+      subroutine detectBorders(localVectorElem,localVectorNod,KINC)
 !
       use reading_utils
 !
       logical :: belongsToLimit, condition
       logical :: nodoBorde(NUMNODE,1), elementoBorde(NELEMS,1)
-      integer :: limitGroup, limitElement, index1, index2
+      integer :: limitGroup, limitElement, index1, index2, KINC
       real*8 :: localVectorElem(NELEMS,1), localVectorNod(NUMNODE,1)
       real*8 :: grupoActual
       integer :: i,j
@@ -1460,14 +1468,15 @@
       elementoBorde = .false.
       
       do i=1,NELEMS
-         grupoActual = grupoFisico(i,2) + 1
+         grupoActual = grupoFisico(i,2)
          belongsToLimit = .false.
-         if (grupoActual == 8 .or. grupoActual == 9) then
+         if (grupoActual == 7 .or. grupoActual == 8) then
             do j=1,nnod
                limitElement = adyacencias(i,j+1)
                limitGroup = grupoFisico(limitElement,2) + 1
-               condition = (limitGroup /= 8) .and. (limitGroup/= 9) .and. (limitElement/= 0) .and. (limitGroup /= 1)
                
+               condition = (limitGroup .lt. 7) .and. (limitElement/= 0)
+
                if (condition) then
                   index1 = conectividades(i,j+1)
                   index2 = conectividades(i,mod(j,nnod)+2)
@@ -1545,3 +1554,77 @@
 
       RETURN
       END
+!-------------------------------------------------------------------------------------------
+!-------------------------------------------------------------UEXTERNALDB-------------------
+!
+!     Rutina para leer condiciones fuente y condiciones de archivos externos
+!
+!     Abre y cierra los archivos necesarios para el calculo
+!
+!-------------------------------------------------------------------------------------------
+!
+      subroutine UEXTERNALDB(LOP,LRESTART,TIME,DTIME,KSTEP,KINC)
+!
+      use debug_utils
+      use reading_utils
+      use writing_utils
+      include 'ABA_PARAM.INC'
+!
+      character(256)        JOBDIR
+      character(256)        JOBNAME
+
+      character*276         folderName
+      character*276         filename
+      character*276         line, key
+      character(21)         incString
+      character(21)         stepString
+
+      integer               ios, pos
+      integer               i,j,k,elem
+
+      call printStepInfo(LOP, KSTEP, KINC, 'UEXTERNALDB: ')
+
+      if (LOP.eq.0) then ! Variables llamadas al comienzo del análisis
+         call GETOUTDIR(JOBDIR,LENJOBDIR)
+         call GETJOBNAME(JOBNAME,LENJOBNAME)
+         call get_global_variables(jobdir,'parametros.txt')
+         call allocate_arrays()
+         call initialize_arrays()
+         call initialize_results()
+         call read_file_real(jobdir,'propiedades.csv','*UEL PROPERTY',propiedades,numMats,numProps)
+         call read_file_integer(jobdir,'gruposFisicos.txt','Element Tag, Physical Group Tag',grupoFisico,NELEMS,2)
+         call read_file_integer(jobdir,'gruposFisicosN.txt','Node Tag, Physical Group Tag',grupoFisicoN,NUMNODE,2)
+         call read_file_real(jobdir,'nodos.inp','*NODE,NSET=N2',nodes,NUMNODE,dim,gap=1)
+         call read_file_integer(jobdir,'conectividades.inp','*ELEMENT,TYPE=U1,ELSET=UEL',conectividades,NELEMS,nnod+1)
+         call read_file_integer(jobdir,'adyacenciaElementos.inp','elem, face1, face2, face3, face4',adyacencias,NELEMS,nnod+1)
+!
+      else if (LOP.eq.1) then ! Variables llamadas al comienzo de cada incremento
+         call GETOUTDIR(JOBDIR,LENJOBDIR)
+         call GETJOBNAME(JOBNAME,LENJOBNAME)
+
+         write(incString, '(I3.3)') KINC
+         write(stepString, '(I3.3)') KSTEP
+         folderName = trim(jobdir) // '\resultadosPre\' // trim(jobname) // '\' // 'step' // trim(stepString) // '\'
+         call execute_command_line('if not exist ' // trim(folderName) // ' mkdir ' // trim(folderName))
+         filename = trim(folderName) // trim(jobname) // '_step' // trim(stepString) // '_inc' // trim(incString) // '.vtu'
+         if (KSTEP.eq.1) then
+            call read_loads(jobdir,'carga.inp',KINC,elementFaces,elementLoads,maxNElementLoads,2,1)
+            call writeVTKFilePre(filename, resNod, resElem)
+         elseif (KSTEP.eq.2) then
+            if (KINC.eq.1) then
+               CMICriteria(:) = cumulativeResElem(:, 12) !MG
+               call calculateCMIthreshold() 
+               call updateProps(KINC) !Keep inside if statement to avoid reupdate
+               call detectBorders(borderVectorElem,borderVectorNod,KINC)
+               call writeVTKFilePre(filename, resNod, resElem)
+            else
+               CMICriteria(:) = resElem(:, 15) !C3
+               call calculateCMIthreshold()
+               call updateProps(KINC) !Keep inside if statement to avoid reupdate
+               call detectBorders(borderVectorElem,borderVectorNod,KINC)
+               call writeVTKFilePre(filename, resNod, resElem)
+            end if
+         endif
+      end if
+      return
+      end

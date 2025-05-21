@@ -485,7 +485,7 @@
       real*8  force, fx, fy
 !
       integer  grupo
-      real*8  E, nu, D, f(2), g(2), h(2)
+      real*8  E, nu, D(2), f(2), g(2), h(2)
 
 !     Inicializacion de matrices y variables
       m_k   =   0.d0
@@ -521,13 +521,14 @@
       
       E  = propiedades(grupo,1)
       nu = propiedades(grupo,2)
-      D  = propiedades(grupo,3)
-      f(1) = propiedades(grupo,4)
-      f(2) = propiedades(grupo,5)
-      g(1) = propiedades(grupo,6)   
-      g(2) = propiedades(grupo,7)
-      h(1) = propiedades(grupo,8)
-      h(2) = propiedades(grupo,9)
+      D(1)  = propiedades(grupo,3)
+      D(2)  = propiedades(grupo,4)
+      f(1) = propiedades(grupo,5)
+      f(2) = propiedades(grupo,6)
+      g(1) = propiedades(grupo,7)   
+      g(2) = propiedades(grupo,8)
+      h(1) = propiedades(grupo,9)
+      h(2) = propiedades(grupo,10)
 !     
 !      print *, ''
 !      print *, 'Grupo:', grupo
@@ -572,7 +573,7 @@
                ! Ensamble del vector de reaccion
                p(filg,1) = p(filg,1) + h(i)*Reac(1,k1)
                ! Ensamble de la matriz de rigidez difusiva
-               m_k(filg,colg) = m_k(filg,colg) + D*Kdiff(k1,k2)
+               m_k(filg,colg) = m_k(filg,colg) + D(i)*Kdiff(k1,k2)
                m_k(filg,colg) = m_k(filg,colg) - g(i)*Masa(k1,k2)
             enddo
 

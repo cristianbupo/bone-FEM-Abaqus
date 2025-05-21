@@ -134,7 +134,7 @@
     },
     "boneConfig":{
         "mode": {
-        "default": "new",
+        "default": "original",
         "help": "The name of the mode to be used: original or new"
         },
         "runFltk": {

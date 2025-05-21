@@ -86,7 +86,7 @@
         "mesh_vars": {
             "number_elements": {
                 "min_value": 20,
-                "default": 25,
+                "default": 30,
                 "short_name": "ne"
             }
         },
@@ -144,7 +144,7 @@
         "help": "The name of the mode to be used: original or new"
         },
         "runFltk": {
-        "default": false,
+        "default": true,
         "help": "Run gmsh with the generated meshes if specified."
         },
         "showLoad": {

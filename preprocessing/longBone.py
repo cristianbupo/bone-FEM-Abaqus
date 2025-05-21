@@ -367,6 +367,23 @@ def writeIntersectionData(elem1, nod1, elem2, nod2, extracted_rows,
             f.write("*NSET,NSET="+name+"\n")
             f2g.writeLines(nodeTags, f)
 
+    # Build groups based on is_below_list_nodes info
+    groups_by_below = defaultdict(list)
+    for i, group in enumerate(is_below_list_nodes):
+        # Append the node tag (from nod1[0]) to the list corresponding to its group
+        groups_by_below[group].append(nod1[0][i])
+
+    # Remove any empty groups (if any)
+    groups_by_below = {g: nodes for g, nodes in groups_by_below.items() if nodes}
+
+    # Then, when writing the file (for example, for the "cuerpo.inp" file):
+    cuerpoPath = os.path.join(boneConfig.inputPath, "cuerpo.inp")
+    with open(cuerpoPath, "a") as f:
+        for group, nodeTags in groups_by_below.items():
+            name = f"cuerpo{group}"
+            f.write("*NSET,NSET=" + name + "\n")
+            # Convert to list if not already (and sort if desired)
+            f2g.writeLines(sorted(nodeTags), f)
 
 def get_shared_nodes(nodes1, nodes2):
     """

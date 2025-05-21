@@ -66,6 +66,58 @@
       RETURN
       END subroutine writeVTKFile
 !-------------------------------------------------------------------------------------------
+!-------------------------------------------------------------writeVTKFilePre-------------------
+!
+!     Rutina para escribir datos en VTK
+!
+!     
+!
+!-------------------------------------------------------------------------------------------
+      subroutine writeVTKFilePre(filename, mNod, mElem)
+!  
+      use reading_utils
+      character*276         filename
+      integer i,j
+      real*8 mNod(NUMNODE, nResNod), mElem(NELEMS, nResElem) ! Matrices de nodos y elementos, mismo tamaño que matrices de resultados
+
+      open(UNIT=16,file=filename,action='write',status='UNKNOWN')
+      write(16,'(a73)') '<VTKFile type="UnstructuredGrid" version="1,0" byte_order="LittleEndian">'
+      write(16,'(a18)') '<UnstructuredGrid>'
+      write(16,'(a23,i0,a17,i0,a2)') '<Piece NumberOfPoints="', NUMNODE,'" NumberOfCells="', NELEMS, '">'
+
+      write(16,'(a8)') '<Points>'
+      call writeNodes()
+      write(16,'(a9)') '</Points>'
+!     
+      write(16,'(a7)') '<Cells>'
+      call writeDataArrayIntNoComp('connectivity',conectividades(:,2:nnod+1)-1, NELEMS, nnod)
+      call writeDataArrayIntNoComp('offsets',[(i * nnod, i = 1, NELEMS)], NELEMS, 1)
+      call writeDataArrayIntNoComp('types',[(3 * (nnod - 1), i = 1, NELEMS)], NELEMS, 1)
+      write(16,'(a8)') '</Cells>'
+!     
+!     PointData
+      write(16,'(a30)') '<PointData Vectors="''U'', ''C''">'
+      call writeDataArrayInt('Region', grupoFisicoN(:, 2), NUMNODE, 1)
+      call writeDataArrayReal('BorderNode', borderVectorNod, NUMNODE, 1)
+      write(16,'(a12)') '</PointData>'
+
+!     CellData
+      write(16, '(a46)') '<CellData Tensors="''E_Centroid'',''S_Centroid''">'
+      if (dim == 2) then
+         call writeDataArrayReal('BorderElement', borderVectorElem, NELEMS, 1)
+      end if
+      call writeDataArrayInt('Region', grupoFisico(:, 2), NELEMS, 1)
+      call writeProps()
+      write(16,'(a11)') '</CellData>'
+
+      write(16,'(a8)') '</Piece>'
+      write(16,'(a19)') '</UnstructuredGrid>'
+      write(16,'(a10)') '</VTKFile>'
+      close(16)
+!
+      RETURN
+      END subroutine writeVTKFilePre
+!-------------------------------------------------------------------------------------------
 !-------------------------------------------------------------writeDataArrayReal-------------------
 !
 !     Rutina para escribir datos en VTK
