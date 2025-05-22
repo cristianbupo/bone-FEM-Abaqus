@@ -368,16 +368,10 @@
       call writeVTKFile(filename, resNod, resElem)
 !
 !     Ultimo incremento del paso
-
-      if (KSTEP==2) then
-         folderName = trim(jobdir) // '\resultados\'
-         filename = trim(folderName) // trim(jobname) // '_step' //  trim(incString) // '.vtu'
-         call writeVTKFile(filename, resNod, resElem)
-      end if
 !    
       if (KSTEP == 1 .and. KINC == nLoads) then
-         folderName = trim(jobdir) // '\resultados\'
-         filename = trim(folderName) // '\' // trim(jobname) // '_step000.vtu'
+         folderName = trim(jobdir) // '\resultados\' // trim(jobname)
+         filename = trim(folderName) // '\' // trim(jobname) // '_step' // trim(stepString)//'.vtu'
 !        
 !        Escritura de resultados
          call writeVTKFile(filename, cumulativeResNod, cumulativeResElem)

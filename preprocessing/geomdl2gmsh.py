@@ -384,8 +384,7 @@ def loadVectors(bone, loadCurve):
 
     maxLength, midLength, minLength = f2g.characteristicLengths(loadCurve)
     
-    # if number_loads % 2 != 0: # Odd number of loads, ie. 5
-    if True:                # Always active
+    if number_loads % 2 != 0: # Odd number of loads, ie. 5
         concave_length = minLength + 1 * (midLength - minLength) / 5
         convex_length = midLength + 3 * (maxLength - midLength) / 5
 

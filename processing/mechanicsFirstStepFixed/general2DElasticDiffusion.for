@@ -376,7 +376,7 @@
 
       do jelem=1,NELEMS
          grupoFisicoActual = grupoFisico(jelem,2)
-         if ((grupoFisicoActual .ge. 2) .and. (grupoFisicoActual .le. 6)) then
+         if (grupoFisicoActual .eq. 5) then
             CMIcurrent = CMICriteria(jelem)
             CMIavg = CMIavg + CMIcurrent
             nCart = nCart + 1
@@ -448,12 +448,13 @@
       do i=1,NELEMS
          grupoFisicoActual = grupoFisico(i,2)
 
-         condition = grupoFisicoActual.gt.0 .and. grupoFisicoActual.lt.7
+         ! condition = grupoFisicoActual.gt.0 .and. grupoFisicoActual.lt.7
 
-         if (KINC == 1) then
-            condition = condition .and. grupoFisicoActual.gt.2
-         endif
+         ! if (KINC == 1) then
+         !    condition = condition .and. grupoFisicoActual.gt.2
+         ! endif
 
+         condition = grupoFisicoActual.eq. 5
          if (condition) then
             if (CMICriteria(i) >= CMIThreshold) then
                update(i) = .true.

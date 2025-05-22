@@ -86,7 +86,7 @@
         "mesh_vars": {
             "number_elements": {
                 "min_value": 20,
-                "default": 20,
+                "default": 26,
                 "short_name": "ne"
             }
         },
