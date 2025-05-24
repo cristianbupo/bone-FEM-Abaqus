@@ -1505,24 +1505,24 @@
       real :: factor
 
 !      user coding to define UE, A, JDOF, and, optionally, LMPC
-      IF (.false.) THEN
-         JDOF(2) = 20 ! Make unit variable the independent degree of freedom
-         A(1) = 1.0d0 ! Coefficient for unit variable
-         JDOF(1) = 13 ! Make C1 the dependent degree of freedom
-         factor = 2.0d0
-         A(2) = -factor ! Coefficient for C2
-         UE = factor*U(20,1)
+      ! IF (resNod(JTYPE,6)==1) THEN
+      !    JDOF(2) = 20 ! Make unit variable the independent degree of freedom
+      !    A(1) = 1.0d0 ! Coefficient for unit variable
+      !    JDOF(1) = 13 ! Make C1 the dependent degree of freedom
+      !    factor = 2.0d0
+      !    A(2) = -factor ! Coefficient for C2
+      !     UE = factor*U(20,1)
    
-      ELSEIF (.false.) THEN
-         JDOF(2) = 13 ! Make C1 the independent degree of freedom
-         A(1) = 1.0d0 ! Coefficient for C1
-         JDOF(1) = 14 ! Make C2 the dependent degree of freedom
-         factor = 1.0d0
-         A(2) = -factor ! Coefficient for C2
-         UE = factor*U(13,1)
-      ELSE
-         LMPC = 0
-      ENDIF
+      ! ELSEIF (.false.) THEN
+      !    JDOF(2) = 13 ! Make C1 the independent degree of freedom
+      !    A(1) = 1.0d0 ! Coefficient for C1
+      !    JDOF(1) = 14 ! Make C2 the dependent degree of freedom
+      !    factor = 1.0d0
+      !    A(2) = -factor ! Coefficient for C2
+      !    UE = factor*U(13,1)
+      ! ELSE
+      !    LMPC = 0
+      !  ENDIF
 
       RETURN
       END

@@ -51,6 +51,7 @@ __pycache__/*
 !*.FCStd
 !*.xml
 !*.csv
+!*.pvsm
 
 
 # Ignore local conec.for used during Abaqus runs
